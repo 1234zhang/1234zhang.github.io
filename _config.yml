@@ -3,11 +3,11 @@
 ## Source: https://github.com/hexojs/hexo/
 
 # Site
-title: zhang    
+title: brandon 
 subtitle:
-description:
+description: study hard
 keywords:
-author: John Doe
+author: brandon
 language: zh-CN
 timezone:
 
@@ -81,3 +81,29 @@ deploy:
   type: git
   repo: git@github.com:1234zhang/1234zhang.github.io.git
   branch: master
+
+# hexo-helper-live2d配置，参考https://github.com/EYHN/hexo-helper-live2d/blob/master/README.zh-CN.md
+live2d:
+  enable: true
+  pluginModelPath: assets/
+  model:
+      use: live2d-widget-model-z16
+  display:
+      position: left #在右边显示
+      width: 150 #看板的宽
+      height: 345 #看板的搞
+  mobile:
+      show: false
+
+# 配置动态背景
+canvas_nest:
+  enable: true
+  onmobile: true # display on mobile or not
+  color: '0,0,0' # RGB values, use ',' to separate
+  opacity: 0.5 # the opacity of line: 0~1
+  zIndex: -1 # z-index property of the background
+  count: 99 # the number of lines
+
+# Extensions
+## Plugins: http://hexo.io/plugins/
+plugins: hexo-generate-feed
