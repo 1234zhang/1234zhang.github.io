@@ -3,7 +3,7 @@ layout: '[layout]'
 title: Java基本数据类型与操作符
 date: 2019-09-20 21:18:48
 tags:
-    - java 基础
+    - java基础
 categories:
     - Java
     - Java基础
