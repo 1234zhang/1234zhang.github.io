@@ -1,8 +1,13 @@
 ---
 layout: '[layout]'
-title: 集合框架源码之list
+title: 集合框架源码之list(一)
 date: 2020-01-09 14:43:31
 tags:
+    - Java集合
+categories:
+    - Java
+    - 集合框架
+    - ArrayList
 ---
 # 写在前面的话
 众所周知，在面试的时候，集合框架是一定会考察的知识点。这个也是Java基础中很重要的一部分，在特定的场景之下选择合适的数据结构，能够提高代码的效率。比如这篇博客将要总结的ArrayList和LinkedList。这个是很鲜明的对比，由于内部实现的不同，在查找频繁的场景之下使用ArrayList,在插入频繁的情况之下使用LinkedList。所以了解其内部实现，能够有利于我们选择合适的工具，去高效完成我们的需求。
@@ -218,4 +223,216 @@ public void ensureCapacity(int minCapacity) {
 ```
 
 ## 删除元素
+```java
+    // 删除指定位置的某个元素
+    public E remove(int index) {
+        //检查index是否合法
+        Objects.checkIndex(index, size);
+        final Object[] es = elementData;
 
+        @SuppressWarnings("unchecked") 
+        E oldValue = (E) es[index];
+        fastRemove(es, index);
+
+        return oldValue;
+    }
+    // 删除在列表中第一次出现的指定元素。如果列表不含有指定元素，则不变。
+    //
+    public boolean remove(Object o) {
+        final Object[] es = elementData;
+        final int size = this.size;
+        int i = 0;
+        // break:标号 -> 表示：终止结束到标签
+        found: {
+            if (o == null) {
+                for (; i < size; i++)
+                    if (es[i] == null)
+                        break found;
+            } else {
+                for (; i < size; i++)
+                    if (o.equals(es[i]))
+                        break found;
+            }
+            return false;
+        }
+        fastRemove(es, i);
+        return true;
+    }
+    // 专用的删除方法，跳过边界检查并且不返回删除的值
+    private void fastRemove(Object[] es, int i) {
+        modCount++;
+        final int newSize;
+        if ((newSize = size - 1) > i)
+            // 删除指定位置之后，将后续元素向前移动
+            System.arraycopy(es, i + 1, es, i, newSize - i);
+        es[size = newSize] = null;
+    }
+```
+
+### 删除所有元素
+```java
+// 清除所有元素
+    public void clear() {
+        modCount++;
+        final Object[] es = elementData;
+        for (int to = size, i = size = 0; i < to; i++)
+            es[i] = null;
+    }
+```
+### 删除某个指定范围内的元素
+```java
+    /*
+        删除指定范围内的元素，将删除后的元素向左移动(减少其索引)
+        通过使用(fromIndex - toIndex)元素来缩短列表。
+    */
+    protected void removeRange(int fromIndex, int toIndex) {
+        if (fromIndex > toIndex) {
+            throw new IndexOutOfBoundsException(
+                    outOfBoundsMsg(fromIndex, toIndex));
+        }
+        modCount++;
+        shiftTailOverGap(elementData, fromIndex, toIndex);
+    }
+    // 通过向左移动，来减少从lo到li的距离
+    private void shiftTailOverGap(Object[] es, int lo, int hi) {
+        System.arraycopy(es, hi, es, lo, size - hi);
+        for (int to = size, i = (size -= hi - lo); i < to; i++)
+            es[i] = null;
+    }
+```
+
+### 删除某个包含在某个集合中的所有元素
+```java
+    // 集合c就是要在elementData数组中要删除的元素
+    // 该集合不能为空
+    public boolean removeAll(Collection<?> c) {
+        return batchRemove(c, false, 0, size);
+    }
+    // 该方法表示删除不在集合c中的元素
+    // 同样该集合c不能允许空元素
+     public boolean retainAll(Collection<?> c) {
+        return batchRemove(c, true, 0, size);
+    }
+```
+
+## 修改元素
+```java
+    public E set(int index, E element) {
+        // 确定修改元素的索引是否合法
+        Objects.checkIndex(index, size);
+        E oldValue = elementData(index);
+        elementData[index] = element;
+        return oldValue;
+    }
+```
+
+## 查找元素
+```java
+    // 查看元素是否在列表中
+    public boolean contains(Object o) {
+        return indexOf(o) >= 0;
+    }
+
+    // 返回元素第一次出现的索引，如果不包含则返回-1
+    public int indexOf(Object o) {
+        return indexOfRange(o, 0, size);
+    }
+    // 在数组中查找元素，返回第一次出现的位置
+    int indexOfRange(Object o, int start, int end) {
+        Object[] es = elementData;
+        if (o == null) {
+            for (int i = start; i < end; i++) {
+                if (es[i] == null) {
+                    return i;
+                }
+            }
+        } else {
+            for (int i = start; i < end; i++) {
+                if (o.equals(es[i])) {
+                    return i;
+                }
+            }
+        }
+        return -1;
+    }
+    // 返回最后元素最后一次出现的位置。
+    public int lastIndexOf(Object o) {
+        return lastIndexOfRange(o, 0, size);
+    }
+
+    int lastIndexOfRange(Object o, int start, int end) {
+        Object[] es = elementData;
+        if (o == null) {
+            for (int i = end - 1; i >= start; i--) {
+                if (es[i] == null) {
+                    return i;
+                }
+            }
+        } else {
+            for (int i = end - 1; i >= start; i--) {
+                if (o.equals(es[i])) {
+                    return i;
+                }
+            }
+        }
+        return -1;
+    }
+```
+
+## 序列化
+```java
+    private void writeObject(java.io.ObjectOutputStream s)
+        throws java.io.IOException {
+        // 写出元素计数以及任何隐藏的内容
+        int expectedModCount = modCount;
+        //执行默认的反序列化/序列化过程。将当前类的非静态和非瞬态字段写入此流
+        s.defaultWriteObject();
+
+        // 写出大小作为与clone()行为兼容的容量
+        s.writeInt(size);
+
+        // 按照正确的顺序写出元素
+        for (int i=0; i<size; i++) {
+            s.writeObject(elementData[i]);
+        }
+
+        if (modCount != expectedModCount) {
+            throw new ConcurrentModificationException();
+        }
+    }
+
+    private void readObject(java.io.ObjectInputStream s)
+        throws java.io.IOException, ClassNotFoundException {
+
+        // 读入大小以及隐藏元素
+        s.defaultReadObject();
+
+        // 读入容量
+        s.readInt(); // ignored
+
+        if (size > 0) {
+            // like clone(), allocate array based upon size not capacity
+            SharedSecrets.getJavaObjectInputStreamAccess().checkArray(s, Object[].class, size);
+            Object[] elements = new Object[size];
+
+            // 按照顺序读入所有元素
+            for (int i = 0; i < size; i++) {
+                elements[i] = s.readObject();
+            }
+
+            elementData = elements;
+        } else if (size == 0) {
+            elementData = EMPTY_ELEMENTDATA;
+        } else {
+            throw new java.io.InvalidObjectException("Invalid size: " + size);
+        }
+    }
+```
+
+关于列表的序列化中，没有使用默认的序列化，而是自己实现了序列化方法是因为，动态数组在操作的时候可能会造成大量的空元素，如果所有空元素都序列化了，会造成一定的资源浪费。
+
+## 为什么说ArrayList不适合频繁插入和删除操作
+在增加删除ArrayList中经常会调用System.arraycopy这个效率很低的操作来复制数组，所以导致ArrayList在插入和删除操作中效率不高
+
+(小小说一句：这个是2020年第一篇博客。许个小小的愿望，希望自己2020年能坚持写博客，希望能拿到一个大厂的正式offer，稳定的搬砖。。。)
+![](https://brandonxcc.top/日出.jpg)
