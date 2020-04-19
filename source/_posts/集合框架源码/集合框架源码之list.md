@@ -434,5 +434,14 @@ public void ensureCapacity(int minCapacity) {
 ## 为什么说ArrayList不适合频繁插入和删除操作
 在增加删除ArrayList中经常会调用System.arraycopy这个效率很低的操作来复制数组，所以导致ArrayList在插入和删除操作中效率不高
 
+## 关于快速失败和安全失败
+1. 快速失败
+    
+    在使用迭代器遍历一个集合对象的时候，如果遍历过程中对集合对象进行了修改(增、删、改)，则会抛出Concurrent Modification Exception。的错误
+    
+    原理:在集合中，维护了这么一个变量(modCount)
+
+2. 安全失败
+
 (小小说一句：这个是2020年第一篇博客。许个小小的愿望，希望自己2020年能坚持写博客，希望能拿到一个大厂的正式offer，稳定的搬砖。。。)
 ![](https://brandonxcc.top/日出.jpg)

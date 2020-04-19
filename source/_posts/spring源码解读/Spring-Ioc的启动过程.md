@@ -71,5 +71,6 @@ public void refresh() throws BeansException, IllegalStateException {
         }
     }
 ```
+
 到这里可以明白一个事情，虽然Application继承自beanFactory，但是不应该将ApplicationContext看作beanFactory的实现类；而是应当看作是内部持有一个beanFactory的实例，所有的BeanFacotory操作是委托给context去做的。
 
