@@ -3,4 +3,738 @@ layout: '[layout]'
 title: AQS源码解析(二)
 date: 2020-04-28 23:05:11
 tags:
+    - java并发
+categories:
+    - Java
+    - JUC
 ---
+
+# 前言
+看了上篇的描述之后，我觉得我应该已经对AQS的大概运行过程有了一个初步的了解，当然这远远不够。快扶我起来，我还能继续学！
+这篇将继续写有关AQS的相关知识，有关于公平与非公平锁，带条件的锁。还有关于中断的一些知识。废话不多说。咱们走着。
+
+# 公平锁与非公平锁
+首先咱们来谈谈关于Java的公平锁与非公平锁。公平锁是指多个线程按照申请锁的顺序来获取锁，线程直接进入队列中排队，队列中的第一个线程才能获得锁。公平锁的优点是等待锁的线程不会饿死。缺点是整体的吞吐效率相对非公平锁要低，等待队列中除了第一个以外的所有线程都要阻塞，cpu唤醒阻塞线程的开销比较大。
+
+非公平锁是多个线程加锁时直接尝试获取锁，获取不到的时候才会到队尾等待。但如果此时锁正好可以用了，那么这个线程可以无需阻塞直接获取到锁，所以非公平锁有可能出现后申请锁先获取到资源的场景。非公平锁的优点是可以减少唤起线程的开销，整体的吞吐效率比较高。缺点是有些处于等待队列的线程可能被饿死，获取等待很久才获取到锁。
+
+下图是公平锁
+
+![avatar](https://brandonxcc.top/Java公平锁.png)
+
+下图是非公平锁
+
+![avatar](https://brandonxcc.top/非公平锁.png)
+
+## 关于源码
+在ReentrantLock中，内部将两种锁都实现了。其中默认的是非公平锁，如果要使用公平锁，只需要在创建的时候带上true参数就可以了。
+
+```java
+    public ReentrantLock(boolean fair) {
+        sync = fair ? new FairSync() : new NonfairSync();
+    }
+```
+这个时候，我们再看看线程来的时候，公平锁与非公平锁是如何争夺资源的:
+
+公平锁的lock方法
+```java
+    static final class FairSync extends Sync {
+        private static final long serialVersionUID = -3000897897090466540L;
+        final void lock() {
+            acquire(1);
+        }
+        // AbstractQueuedSynchronizer.acquire(int arg)
+        public final void acquire(int arg) {
+            if (!tryAcquire(arg) &&
+                acquireQueued(addWaiter(Node.EXCLUSIVE), arg))
+                selfInterrupt();
+        }
+        @ReservedStackAccess
+        protected final boolean tryAcquire(int acquires) {
+            final Thread current = Thread.currentThread();
+            int c = getState();
+            if (c == 0) {
+                // 这里有一个判断阻塞队列中是否有元素
+                // 如果有元素，则老老实实的去排队
+                if (!hasQueuedPredecessors() &&
+                    compareAndSetState(0, acquires)) {
+                    setExclusiveOwnerThread(current);
+                    return true;
+                }
+            }
+            else if (current == getExclusiveOwnerThread()) {
+                int nextc = c + acquires;
+                if (nextc < 0)
+                    throw new Error("Maximum lock count exceeded");
+                setState(nextc);
+                return true;
+            }
+            return false;
+        }
+    }
+```
+
+下面是非公平锁的lock方法
+```java
+static final class NonfairSync extends Sync {
+    final void lock() {
+        // 2. 和公平锁相比，这里会直接先进行一次CAS，成功就返回了
+        if (compareAndSetState(0, 1))
+            setExclusiveOwnerThread(Thread.currentThread());
+        else
+            acquire(1);
+    }
+    // AbstractQueuedSynchronizer.acquire(int arg)
+    public final void acquire(int arg) {
+        if (!tryAcquire(arg) &&
+            acquireQueued(addWaiter(Node.EXCLUSIVE), arg))
+            selfInterrupt();
+    }
+    protected final boolean tryAcquire(int acquires) {
+        return nonfairTryAcquire(acquires);
+    }
+}
+/**
+ * Performs non-fair tryLock.  tryAcquire is implemented in
+ * subclasses, but both need nonfair try for trylock method.
+ */
+final boolean nonfairTryAcquire(int acquires) {
+    final Thread current = Thread.currentThread();
+    int c = getState();
+    if (c == 0) {
+        // 这里没有对阻塞队列进行判断
+        if (compareAndSetState(0, acquires)) {
+            setExclusiveOwnerThread(current);
+            return true;
+        }
+    }
+    else if (current == getExclusiveOwnerThread()) {
+        int nextc = c + acquires;
+        if (nextc < 0) // overflow
+            throw new Error("Maximum lock count exceeded");
+        setState(nextc);
+        return true;
+    }
+    return false;
+}
+```
+
+## 总结
+
+非公平锁与公平锁的区别：
+- 非公平锁在调用lock后，就会使用CAS进行一次枪锁，如果这个时候恰巧没有被占用，那么就直接获取锁然后返回了
+- 公平锁在CAS失败之后，和公平锁一样会调用tryAcquire方法，在tryAcquire方法中，如果发现这个锁被释放了，那么再进行一次CAS枪锁，如果失败就要在阻塞队列的队尾进行等待。公平锁会判断等待队列是否有线程处于等待状态，如果有则不去获取锁，直接到队尾进行等待。
+
+公平锁与非公平锁就这两点区别，如果两次CAS都不成功，都要到队尾进行等待被唤醒。
+
+# Condition
+Condition的使用场景，Condition经常使用在生产者消费者的场景中。
+```java
+import java.util.concurrent.locks.Condition;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
+
+class BoundedBuffer {
+    final Lock lock = new ReentrantLock();
+    // condition 依赖于lock来产生
+    final Condition notFull = lock.newCondition();
+    final Condition notEmpty = lock.newCondition();
+
+    final Object[] items = new Object[100];
+    int putptr, takeptr, count;
+
+    //生产
+    public void put(Object x) throws InterruptedException {
+        lock.lock();
+        try{
+            while (count == items.length) {
+                notFull.await();  // 队列已经满了，直到not full 才能继续生产。
+            }
+            items[putptr] = x;
+            if (++putptr == items.length) putptr = 0;
+            ++count;
+            notEmpty.signal();  // 生产成功， 队列已经not Empty了。
+        } finally {
+            lock.unlock();
+        }
+    }
+
+    public Object get() throws InterruptedException {
+        lock.lock();
+
+        try {
+            while (count == 0) {
+                notEmpty.await();
+            }
+            Object x = items[getptr];
+            if (++getptr == items.length) getptr = 0;
+            --count;
+            notFull.signal(); // 被消费了一个，已经not full了，可以开始生产。
+            return x;
+        } finally {
+            lock.unlock();
+        }
+    }
+}
+```
+这里我们可以看到，在使用condition时候，必须先持有相应的锁。这个和Object类中的方法有相似的语义，需要先持有某个对象的监视器锁才可以执行wait()、notify()或者notifyAll()方法。
+
+condition是依赖于ReentrantLock的，不管是调用await进入等待还是signal唤醒，都必须获取到锁才能进行操作。
+
+每个ReentrantLock实例可以通过多次调用newCondition产生多个ConditionObject的实例：
+
+```java
+final Condition newCondition() {
+    //实例化一个ConditionObject
+    return new ConditionObject();
+}
+```
+
+要熟悉Condition，我们首先要关注一下Condition实现类AbstractQueueSynchronizer类中的ConditionObject。
+```java
+public class ConditionObject implements Condition, java.io.Serializable {
+    private static final long serialVersionUID = 111111111111;
+    // 条件队列中的第一个节点
+    private transient Node firstWaiter;
+    // 条件队列中最后一个节点
+    private transient Node lastWaiter;
+}
+```
+
+在学习reentrantLock的时候，我们知道了阻塞队列，在学习condition的时候，我们要引入一个条件队列
+
+![条件队列](https://www.javadoop.com/blogimages/AbstractQueuedSynchronizer-2/aqs2-2.png)
+
+首先解释上面这张图
+1. 条件队列和阻塞队列都是Node的实例，条件队列中的Node要转移到阻塞队列中去
+2. ReentrantLock实例可以通过调用newCondition()来实现多个Condition实列，这里对应的是Condition1和Condition2表示生成的多个实例。ConditionObject只有两个属性firstWaiter和lastWaiter
+3. 每个condition都有一个关联的条件队列，比如线程1调用Condition1.await()方法，就会将线程1包装进Node实例中，然后加入到condition1这个条件队列中，并阻塞在这里，不再继续往下执行，条件队列是一个单向队列
+4. 调用condition1.signal()触发一次唤醒，此时唤醒的是队头，会将condition1对应条件队列的firstWaiter(队头)加入到阻塞队列队尾中，等待获取锁，获取锁之后，await方法才会返回，继续往下执行(这里要结合消费者和生产者的模型来看)。
+
+```
+ 这里就要简单回顾一下Node的属性了
+```
+```java
+volatile int waitStatus; // 可取值0、CANCELLED(1)、SIGNAL(-1)、CONDITION(-2)、PROPAGATE(-3)
+volatile Node prev; // 前驱节点
+volatile Node next; // 后继节点
+volatile Thread thread; // 当前线程
+Node nextWaiter; // 后继等待的节点
+```
+```
+prev和next实现双向链表，nextWaiter实现条件队列的单向链表
+```
+
+## await方法分析
+
+```java
+// 这个方法是可以被中断的，不可被中断的是另外一个方法awaitUninterruptibly()
+// 这个方法会被阻塞，直到调用signal或者被中断。
+public final void await() throws InterruptedException {
+    // 方法要响应中断，就要在最开始判断中断
+    if (Thread.interrupted())
+        throw new InterruptedException();
+    // 添加到Condition的条件队列中。
+    Node node = addConditionWaiter();
+    // 释放锁，释放的值是之前state的值
+    // 要调用await方法，首先线程要获得锁，既然获得了锁，等待的之前肯定要释放锁
+    int savedState = fullyRelease(node);
+    int interruptMode = 0;
+    // 这里跳出循环的两种方式
+    // 1. isOnSyncQueue(node)，返回true，说明已经转移到阻塞队列中了
+    // 2. checkInterruptWhileWaiting(node) != 0会break，然后跳出循环，表示线程被中断。
+    while (!isOnSyncQueue(node)) {
+        LockSupport.park(this);
+        if ((interruptMode = checkInterruptWhileWaiting(node)) != 0)
+            break;
+    }
+    // 被唤醒之后，进入阻塞队列，等待获取锁。
+    if (acquireQueued(node, savedState) && interruptMode != THROW_IE)
+        interruptMode = REINTERRUPT;
+    if (node.nextWaiter != null) // clean up if cancelled
+        unlinkCancelledWaiters();
+    if (interruptMode != 0)
+        reportInterruptAfterWait(interruptMode);
+}
+```
+
+## 将节点加入到条件队列
+addConditionWatier()是将当前节点加入到条件队列，这种条件队列内操作是线程安全的。
+```java
+    // 将当前线程对应的节点入队，插入队尾
+    private Node addConditionWaiter() {
+        Node t = lastWaiter;
+        // If lastWaiter is cancelled, clean out.
+        // 如果条件队列的队尾节点取消了排队，就把这个节点清除
+        // 如果waitstatus 不为node.CONDITION,则说明取消了在条件队列中排队。
+        if (t != null && t.waitStatus != Node.CONDITION) {
+            // 下面的方法会遍历这个队列，将取消等待的节点清除
+            unlinkCancelledWaiters();
+            t = lastWaiter;
+        }
+
+        // 在节点初始化时，要将waitStatus设置为node.CONDITION
+        Node node = new Node(Node.CONDITION);
+
+        // t 此时时lastWaiter队尾
+        // 如果队列为空的话
+        if (t == null)
+            firstWaiter = node;
+        else
+            t.nextWaiter = node;
+        lastWaiter = node;
+        return node;
+    }
+```
+在addWaiter方法中，有一个unlinkCancelledWaiters()方法，该方法用于清除已经取消排队的节点。
+
+如果在调用await方法的时候发生了取消操作，或者在节点入队的时候，发现最后一个节点是被取消的，会调用这个方法。
+
+```java
+// 等待队列是一个单向链表，遍历链表将已经取消的节点清除
+// 这个方法在本来注释中有一句"Called only while holding lock."
+// 说明只有在拥有锁的时候才能调用这个方法，则说明是线程安全的。
+private void unlinkCancelledWaiters() {
+    Node t = firstWaiter;
+    Node trail = null;
+    while (t != null) {
+        Node next = t.nextWaiter;
+        if (t.waitStatus != Node.CONDITION) {
+            t.nextWaiter = null;
+            if (trail == null)
+                firstWaiter = next;
+            else
+                trail.nextWaiter = next;
+            if (next == null)
+                lastWaiter = trail;
+        }
+        else
+            trail = t;
+        t = next;
+    }
+}
+```
+
+## 完全释放独占锁
+回到wait方法，节点入队以后，会调用`int savedState = fullyRelease(node);`方法来释放锁，这里是完全释放独占锁(fully release),因为ReentrantLock是可重入的。
+
+如果在执行condition1.await()之前，先执行了两次lock()操作，那么state为2，可以理解为该线程上了两把锁，这里await()方法必须将state设置为0，然后再进入挂起状态，这样其他线程才能持有锁。当它被唤醒的时候，它需要重新持有两把锁，才能继续下去。
+
+```java
+// 首先，要观察到返回值saveState代表release之前的state值
+// 对于简单的操作：先lock.lock(),然后condition1.await().
+// 那么state经过这个方法由1变成0，锁释放，此方法返回1
+// 相应的，如果lock重入了n次，savedState == n
+// 如果这个方法失败，会将节点设置为"取消"状态，并抛出异常IllegalMonitorStateException
+final int fullyRelease(Node node) {
+    try {
+        int savedState = getState();
+        // 使用当前的state作为操作，将锁完全释放掉。
+        if (release(savedState))
+            return savedState;
+        throw new IllegalMonitorStateException();
+    } catch (Throwable t) {
+        node.waitStatus = Node.CANCELLED;
+        throw t;
+    }
+}
+```
+如果一个线程在不持有lock的基础上，就去调用condition1.await()方法，它能进入条件队列，但在上面的方法中，使用release方法会返回false。就会抛出IllegalMonitorStateException错误，然后进入catch代码块。将waitState状态设置为取消，那么在下一个节点入队的时候，就会把这个取消的节点清除。
+
+## 等待进入阻塞队列
+await方法中，在释放了锁之后会进入下面的代码块中
+```java
+    int interruptMode = 0;
+    // 如果节点不在阻塞队列中
+    while (!isOnSyncQueue(node)) {
+        // 那么这个节点将会被挂起
+        LockSupport.park(this);
+        ...
+    }
+```
+isOnSyncQueue(Node node) 用于判断节点是否已经转移到阻塞队列中了
+```java
+// 在节点入条件队列的时候，初始化时设置了waitStatus = Node.CONDITION
+// 调用signal的时候，需要将节点从条件队列转移到阻塞队列
+// 这个方法用于判断node节点是否已经在阻塞队列中
+final boolean isOnSyncQueue(Node node) {
+    // 在从条件队列移动到阻塞队列的时候，waitStatus会置0
+    // 如果这个时候node.waitStatus还是-2的话，说明并没有转移到阻塞队列中
+    // 如果node的前驱prev指向还是null，说明肯定没有在阻塞队列中
+    if (node.waitStatus == Node.CONDITION || node.prev == null)
+        return false;
+        // 如果node有了后置节点，说明一定在阻塞队列中了。
+    if (node.next != null) // If has successor, it must be on queue
+        return true;
+    // 下面这个方法从阻塞队列的队尾开始从后往前遍历，如果找到相等的，说明在阻塞队列中，否则就不在
+    // 不能通过判断node.prev != null 来推断出node在阻塞队列中
+    // 在入阻塞队列的时候，是先将node.prev 指向tail
+    // 然后是CAS将自己设置为新的tail，这次的CAS是可能失败的。
+    return findNodeFromTail(node);
+}
+private boolean findNodeFromTail(Node node) {
+    Node t = tail;
+    for (;;) {
+        if (t == node)
+            return true;
+        if (t == null)
+            return false;
+        t = t.prev;
+    }
+```
+isOnSyncQueue(node)如果返回false，那么就会进入到LockSupport(this)，将当前线程挂起。
+
+## signal 唤醒线程，转移到阻塞队列
+唤醒操作通常由另外一个线程来操作，就像在消费者和生产者模型中，如果线程因为等待消费而被挂起，那么当生产者生产了一个东西之后，就会调用signal来唤醒消费线程。
+
+```java
+// 唤醒了等待最久的线程
+// 这里的唤醒其实就是将条件队列中对应的node转移到阻塞队列中
+public final void signal() {
+    // 当前调用signal的线程必须持有独占锁。
+    if (!isHeldExclusively()) {
+        throw new IllegalMonitorStateException();
+    }
+    Node first = firstWaiter;
+    if (first != null) {
+        doSignal(first);
+    }
+}
+
+// 从条件队列从头往后遍历，找出第一个需要转移的node
+// 因为线程有可能会取消排队，但可能还会在队列中。
+private void doSignal(Node first) {
+    do {
+        // firstWaiter指向first节点的下一个节点，因为firstWaiter将要离开了
+        // 如果将first移除之后，没有节点在等待了。那么就要将lastWaiter置为null
+        if ( (firstWaiter = first.nextWaiter) == null)
+            lastWaiter = null;
+        // first节点马上要去阻塞队列了，那么就要把条件队列的连接关系断了
+        first.nextWaiter = null;
+    } while (!transferForSignal(first) &&
+            (first = firstWaiter) != null);
+    // while循环，如果first转移不成功，那么就找下一个节点，以此类推
+    // 直到找到能够转移的节点
+}
+
+// 将节点从条件队列转移到阻塞队列中
+// true表示成功
+// false表示在signal之前，已经取消了排队。
+final boolean transferForSignal(Node node) {
+    // 这里如果cas失败了，说明此node的waitStatus已经不是Node.CONDITION,已经取消了排队
+    // 在条件队列里已经取消了排队，则也就不需要转移了。返回false，移向后一个节点
+    // 如果cas成功，则将ws设置为0
+    if (!node.compareAndSetWaitStatus(Node.CONDITION, 0))
+        return false;
+    // enq(node):自旋进入阻塞队列的队尾
+    // 这里的返回值p是node在阻塞队列的前驱节点。
+    Node p = enq(node);
+    int ws = p.waitStatus;
+    // ws > 0 说明node在阻塞队列中的前驱节点取消了等待锁，直接唤醒node对应的线程
+    // 如果ws <= 0 那么compareAndSetWaitStatus将会被调用
+    // 在上篇中说过当节点入队之后需要将前驱节点设置为Node.SIGNAL(-1)
+    if (ws > 0 || !p.compareAndSetWaitStatus(ws, Node.SIGNAL))
+        // 如果前驱节点取消或者设置失败，就会唤醒node对应线程。
+        LockSupport.unpark(node.thread);
+    return true;
+}
+```
+一般来说`ws > 0 || !p.compareAndSetWaitStatus(ws, Node.SIGNAL)`中，ws <= 0,而且!p.compareAndSetWaitStatus(ws, Node.SIGNAL) 会返回true，所以一般也不会进入if语句块中唤醒node对应的线程。然后这个方法返回true，也就意味着signal这个方法结束了，节点进入阻塞队列。
+
+假设发生了阻塞队列中的前驱节点取消等待，或者CAS失败，只要唤醒线程，让他进入到下一步即可。
+
+## 唤醒后检查中断状态
+在signal之后，线程由条件队列转移到了阻塞队列，之后就准备获取锁了。只要重新获取到了锁以后，继续往下执行
+
+```java
+int interruptMode = 0;
+while (!isOnSyncQueue(node)) {
+    // 线程挂起
+    LockSupport.park(this);
+
+    if ((interruptMode = checkInterruptWhileWaiting(node)) != 0)
+        break;
+}
+```
+interruptMode 可以取值为REINTERRUPT(1), THROW_IS(-1), 0
+- REINTERRUPT: 代表await返回的时候，需要重新设置中断状态
+- THROW_IE: 代表await返回的时候，需要抛出InterruptException异常
+- 0: 说明await期间，没有发生中断
+
+有三种情况会让LockSupport.park(this)这句话返回继续往下执行：
+- 常规路径：signal -> 转移节点到阻塞队列 -> 获取了锁(unpark)
+- 线程中断。在park的时候，另外一个线程对这个线程进行了中断
+- signal的时候，转移以后的前驱节点取消了，或者对前驱节点的CAS操作失败了
+- 假唤醒。 和Object.wait()类似，都存在的问题。
+
+线程唤醒之后第一步是调用checkInterruptWhileWaiting(node)这个方法，此方法用于判断是否在线程挂起期间发生了中断，如果发生中断，是signal调用之前中断的，还是signal之后发生
+
+```java
+// 1. 如果是在signal之前已经中断，返回THROW_IE
+// 2. 如果是signal之后中断，返回REINTERRUPT
+// 3. 没有发生中断则返回0
+private int checkInterruptWhileWaiting(Node node) {
+            return Thread.interrupted() ?
+                (transferAfterCancelledWait(node) ? THROW_IE : REINTERRUPT) :
+                0;
+        }
+```
+
+Thread.interrupted() 方法返回true，则说明已经被中断，需要重新设置中断设置
+
+如何判断中断发生在signal之前还是之后
+```java
+// 只有线程处于中断状态，才会调用此方法
+// 如果需要的话，将这个已经取消等待的节点转移到阻塞队列中
+// 如果该线程在signal之前中断，则返回true
+final boolean transferAfterCancelledWait(Node node) {
+    // 利用cas将节点设置为0
+    // 如果这步成功了，说明节点是在signal被中断的
+    // 因为如果在signal之后发生的话，signal方法中会将waitStatus设置为0
+    if (node.compareAndSetWaitStatus(Node.CONDITION, 0)) {
+        // 到这里说明cas成功，则将节点放入阻塞队列中
+        // 运行这步说明即便是中断了，节点还是会被转移到阻塞队列中
+        enq(node);
+        return true;
+    }
+    // 到这里说明cas失败了，因为signal方法将waitStatus设置为了0
+    // signal方法会将节点转移到阻塞队列中，但是可能还没完成，这边自旋等待其完成
+    // 发生signal调用之后，没完成转移之前发生了中断。这种情况还是比较少的。
+    while (!isOnSyncQueue(node))
+        Thread.yield();
+    return false;
+}
+```
+这里描绘了一个场景，本来有个线程在条件队列排队，但是因为被中断了，那么他会被唤醒。然后突然发现自己不是被signal(唤醒)的那个，但是他会自己主动加入到阻塞队列。
+
+## 获取独占锁
+while循环出来以后，是下面这段代码
+```java
+// await中的代码
+if (acquireQueued(node, savedState) && interruptMode != Throw_IE) {
+    interruptMode = REINTERRUPT;
+}
+```
+从while循环出来之后，我们已经确定节点在阻塞队列中，准备获取锁
+
+这里的acquireQueued(node, savedState)的第一个参数node之前经过enq(node)进入队列，参数savedState是之前释放锁前的state，则个方法返回的时候，代表线程已经获取了锁，而且state == savedState
+
+注意，在前面说过不管是否发生中断，都会进入阻塞队列中，而acquireQueued(node, savedState)的返回值就是代表线程是否被中断。如果返回true，说明被中断了，而且interruptMode != THROW_IE，说明在signal之前就发生中断了，这里将interruptMode设置为REINTERRUPT，用于待会重新中断。
+
+继续执行的话
+```java
+if (node.nextWaiter != null) // clean up if cancelled
+    unlinkCancelledWaiters();
+if (interruptMode != 0)
+    reportInterruptAfterWait(interruptMode);
+```
+这里的`node.nextWaiter != null` 是怎么满足的。在进行signal的时候，会将节点转移到阻塞队列中。有一步是node.nextWaiter = null，将断开节点和条件队列的联系
+
+可是，在`判断中断发生的时机中，会判断是signal执行前还是执行后`，如果signal之前就发生中断了，虽然节点会转移到阻塞队列中，但是并不会切断条件队列中的连接。也就是没有将node.nextWaiter设置为null。
+
+还有如果节点取消，也会调用unlinkCancelledWaiter这个方法。
+
+## 处理中断状态
+现在可以说说interruptMode是干啥用的了
+- 0：啥也不做，没有被中断过
+- THROW_IE: await方法抛出InterruptedException异常，因为他代表了在await期间发生过中断
+- REINTERRUPT: 重新中断当前线程，因为它代表了虽然await期间没有被中断过，但是在signal以后发生了中断。
+
+```java
+private void reportInterruptAfterWait(int interruptMode)
+    throws InterruptedException {
+    if (interruptMode == THROW_IE)
+        throw new InterruptedException();
+    else if (interruptMode == REINTERRUPT)
+        selfInterrupt();
+}
+```
+
+# AbstractQueuedSynchronizer独占锁的取消排队
+
+```java
+final boolean acquireQueued(final Node node, int arg) {
+    boolean failed = true;
+    try {
+        boolean interrupted = false;
+        for (;;) {
+            final Node p = node.predecessor();
+            if (p == head && tryAcquire(arg)) {
+                setHead(node);
+                p.next = null; // help GC
+                failed = false;
+                return interrupted;
+            }
+            if (shouldParkAfterFailedAcquire(p, node) &&
+                parkAndCheckInterrupt())
+                interrupted = true;
+        }
+    } finally {
+        if (failed)
+            cancelAcquire(node);
+    }
+}
+```
+
+到这个方法的时候，节点一定是入队成功的。
+
+```java
+private final boolean parkAndCheckInterrupt() {
+    LockSupport.park(this);
+    return Thread.interrupt();
+}
+```
+如果我们要取消一个线程的排队，我们需要在另外一个线程中对其进行中断。比如某个线程调用lock()一直不返回，我们需要中断它。一旦对其中断，此线程会从`LockSupport.park(this)`中被唤醒，然后Thread.interrupt()返回true。
+
+即便是中断唤醒了这个线程，也就只是设置了`interrupted = true`然后继续下一次循环。而且，由于`Thread.interrupted();`会清除中断状态，第二次进parkAndCheckInterrupt的时候，返回会是false。
+
+所以，在这个方法中，interrupt只是用来记录是否发生了中断，然后用于方法返回值，其他没有做任何相关事情。
+
+外层方法处理acquireQueued返回false的情况
+```java
+public final void acquire(int arg) {
+    if (!tryAcquire(arg) &&
+        acquireQueued(addWaiter(Node.EXCLUSIVE), arg))
+        selfInterrupt();
+}
+static void selfInterrupt() {
+    Thread.currentThread().interrupt();
+}
+```
+
+到此为止，可以知道lock()处理中断的方式是，中断归中断，锁还是要照样抢的，几乎没有关系(`interrupt = true 但是没有返回true状态，继续循环`)，只是在抢到锁之后，设置线程的中断状态而已，也不抛出任何异常。调用者获取锁之后，可以去检查是否发生了中断，也可以不理会(好流氓....)。
+
+现在来看看ReentrantLock的另外一个lock方法：
+```java
+public void lockInterruptibly() throws InterruptedException {
+    sync.acquireInterruptibly(1);
+}
+```
+方法多了一个 `throws InterruptedException`
+
+```java
+public final void acquireInterruptibly(int arg)
+        throws InterruptedException {
+    if (Thread.interrupted())
+        throw new InterruptedException();
+    if (!tryAcquire(arg))
+        doAcquireInterruptibly(arg);
+}
+
+private void doAcquireInterruptibly(int arg) throws InterruptedException {
+    final Node node = addWaiter(Node.EXCLUSIVE);
+    boolean failed = true;
+    try {
+        for (;;) {
+            final Node p = node.predecessor();
+            if (p == head && tryAcquire(arg)) {
+                setHead(node);
+                p.next = null; // help GC
+                failed = false;
+                return;
+            }
+            if (shouldParkAfterFailedAcquire(p, node) &&
+                parkAndCheckInterrupt())
+                // 就是这里了，一旦异常，马上结束这个方法，抛出异常。
+                // 这里不再只是标记这个方法的返回值代表中断状态
+                // 而是直接抛出异常，而且外层也不捕获，一直往外抛到 lockInterruptibly
+                throw new InterruptedException();
+        }
+    } finally {
+        // 如果通过 InterruptedException 异常出去，那么 failed 就是 true 了
+        if (failed)
+            cancelAcquire(node);
+    }
+}
+```
+
+```java
+private void cancelAcquire(Node node) {
+    // Ignore if node doesn't exist
+    if (node == null)
+        return;
+    node.thread = null;
+    // Skip cancelled predecessors
+    // 找一个合适的前驱。其实就是将它前面的队列中已经取消的节点都”请出去“
+    Node pred = node.prev;
+    while (pred.waitStatus > 0)
+        node.prev = pred = pred.prev;
+    // predNext is the apparent node to unsplice. CASes below will
+    // fail if not, in which case, we lost race vs another cancel
+    // or signal, so no further action is necessary.
+    Node predNext = pred.next;
+    // Can use unconditional write instead of CAS here.
+    // After this atomic step, other Nodes can skip past us.
+    // Before, we are free of interference from other threads.
+    node.waitStatus = Node.CANCELLED;
+    // If we are the tail, remove ourselves.
+    if (node == tail && compareAndSetTail(node, pred)) {
+        compareAndSetNext(pred, predNext, null);
+    } else {
+        // If successor needs signal, try to set pred's next-link
+        // so it will get one. Otherwise wake it up to propagate.
+        int ws;
+        if (pred != head &&
+            ((ws = pred.waitStatus) == Node.SIGNAL ||
+             (ws <= 0 && compareAndSetWaitStatus(pred, ws, Node.SIGNAL))) &&
+            pred.thread != null) {
+            Node next = node.next;
+            if (next != null && next.waitStatus <= 0)
+                compareAndSetNext(pred, predNext, next);
+        } else {
+            unparkSuccessor(node);
+        }
+        node.next = node; // help GC
+    }
+}
+```
+
+# Java线程中断和InterruptedException异常
+
+## 线程中断
+这里的中断不是类似于linux中的命令kill -9 pid，不是说我们要中断某个线程，这个线程就停止运行了。中断代表线程状态，每个线程都关联了一个中断状态，是一个true或者false的boolean值，初始值为false。与操作系统中的中断不同，这里更像一个状态。
+
+关于中断状态，需要重点关注Thread类中的一下几个方法
+```java
+// Thread 类中的实例方法，持有线程实例引用即可检测线程中的状态
+public boolean isInterrupted() {}
+
+// Thread中的静态方法， 检测调用这个方法是否已经被中断
+// 注意：这个方法返回中断状态的同时，会将线程的中断状态重置为false
+// 所以，如果我们调用两次这个方法的话，第二次的返回值就是false了
+public static boolean interrupted() {}
+
+// Thread类中的实例方法，用于设置一个线程的中断状态为true
+public void interrupt() {}
+```
+我们常说的中断一个线程，其实就是将这个线程的中断状态设置为true。如何使用这个状态则视情况而定。
+
+如果线程处于下面三种情况，那么线程被中断的时候，就能自动被感知到：
+1. 来自Object类的wait()、wait(long)、wait(long, int)，来自Thread类的join()、jon(long)、jon(long, int)
+    
+    这几个方法的相似之处就是，方法上都有：throws interruptedException
+    如果线程阻塞在这些方法上，这个时候如果其他线程对这个线程进行了中断，那么这个线程就会从这些方法中立即返回，抛出InterruptedException异常，同时重置中断状态为true
+
+2. 实现了InterruptibleChannel接口的类中的一些I/O阻塞操作，入DatagramChannel中的connect方法和receive方法
+
+    如果线程阻塞在这里，中断线程会导致这些方法抛出CloseByInterruptException并重置中断状态
+
+3. Selector中的select方法，一旦中断，方法立即返回
+
+对于上面三种是特殊的，因为他们能自动感知到中断，并且在做出相应操作之后都会重置中断状态为false。
+
+但是不只是上面三种状态能自动感知到中断，如果线程阻塞在LockSupport.park(Object obj)方法，也叫挂起，这个时候的中断也会导致线程唤醒，但是唤醒之后不会重置中断状态，所以唤醒之后去检测中断状态将是true。
+
+## InterruptedException概述
+这是一个特殊的异常，不是jvm对其有特殊的处理，而是使用场景比较特殊。通常，可以看到，像Object中的wait()方法，ReentrantLock中的lockInterruptibly()方法，thread中的sleep()方法等等，这些方法都带有`throws InterruptedException`，我们通常称这些方法为阻塞方法(blocking methos)
+
+阻塞方法有一个明显的特征就是，他们需要花费特别长的时间(非绝对，而是占用时间是不可预知的)，还有他们的方法结束返回往往依赖于外部条件，如wait方法依赖于其他线程notify，lock方法依赖于其他线程的unlock等等。
+
+当我们看到方法上带有`throws InterruptedException`时，我们大概就能知道，这个方法应该是阻塞方法，如果我们希望它能提前返回的话，可以通过中断来实现
+
+除了几个特殊的类（Object、Thread等）之外，感知中断并提前返回是通过轮询中断状态来实现的。我们自己需要写可中断的方法的时候，就是通过在合适的时机（通常在循环的开始处）去判断线程的中断状态，然后做出相应的操作。我们也要知道，如果我们一次循环花的时间比较长的话，那么就需要比较长的时间才能感知到线程中断了。
+
+# 参考文档
+[一行一行源码分析清楚AQS](https://www.javadoop.com/post/AbstractQueuedSynchronizer-2)
+
+![avatar](https://brandonxcc.top/20200510.jpg)
