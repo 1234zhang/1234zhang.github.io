@@ -1,95 +1,85 @@
-<!DOCTYPE HTML>
-<html>
-<head>
-  <meta charset="utf-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black">
-  <meta name="google-site-verification" content="" />
-  
-  <title>继承、多态、封装</title>
-  <meta name="author" content="brandon">
-  <meta name="description" content="study hard">
-  
-  
-  <meta property="og:title" content="继承、多态、封装"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta property="og:site_name" content="brandon"/>
-  <link href="/apple-touch-icon-precomposed.png" sizes="180x180" rel="apple-touch-icon-precomposed">
-  <link rel="alternate" href="/atom.xml" title="brandon" type="application/atom+xml">
-  <link rel="stylesheet" href="/css/m.min.css">
-  <link rel="icon" type="image/x-icon" href="/favicon.ico">
-  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML" async></script>
-<meta name="generator" content="Hexo 4.2.1"></head>
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head><meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
 
-<body>
-  <a id="top"></a>
-  <div id="main">
-    <div class="main-ctnr">
-      <div class="behind">
-  <a href="/" class="back black-color">
-    <svg class="i-close" viewBox="0 0 32 32" width="22" height="22" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="3">
-        <path d="M2 30 L30 2 M30 30 L2 2"></path>
-    </svg>
-  </a>
-  <div class="description">
-    &nbsp;
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+<meta name="description" content="继承、多态、封装"/><meta name="keywords" content="java基础, brandon" /><link rel="alternate" href="/atom.xml" title="brandon">
+<link rel="canonical" href="https://1234zhang.github.io/2019/09/21/Java基础/继承、多态、封装/"/>
+
+
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=" />
+
+<script id="baidu_push">
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+<script>
+  window.config = {"leancloud":"","toc":"","fancybox":"","pjax":"","latex":""};
+</script>
+
+    <title>继承、多态、封装 - brandon</title>
+  <meta name="generator" content="Hexo 4.2.1"></head>
+
+  <body><div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/." class="logo">brandon</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
   </div>
 </div>
 
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list"></ul>
+</nav>
+<div class="container" id="mobile-panel">
+      <header id="header" class="header"><div class="logo-wrapper">
+  <a href="/." class="logo">brandon</a>
+</div>
 
-  <article class="standard [layout]">
-    <div class="title">
-      
-  
-    <h1 class="page-title center">
-        继承、多态、封装
-    </h1>
-  
+<nav class="site-navbar"></nav>
+</header>
 
+      <main id="main" class="main">
+        <div class="content-wrapper">
+          <div id="content" class="content"><article class="post">
+    <header class="post-header">
+      <h1 class="post-title">继承、多态、封装
+        </h1>
 
-    </div>
-    <div class="meta center">
-      <time datetime="2019-09-21T05:48:24.000Z" itemprop="datePublished">
-  <svg class="i-calendar" viewBox="0 0 32 32" width="16" height="16" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
-    <path d="M2 6 L2 30 30 30 30 6 Z M2 15 L30 15 M7 3 L7 9 M13 3 L13 9 M19 3 L19 9 M25 3 L25 9"></path>
-  </svg>
-  &nbsp;
-  2019-09-21
-</time>
+      <div class="post-meta">
+        <span class="post-time">
+          2019-09-21
+        </span><span class="post-category">
+            <a href="/categories/Java/">Java</a>
+            <a href="/categories/Java/Java%E5%9F%BA%E7%A1%80/">Java基础</a>
+            </span>
+        </div>
+    </header>
 
-
-    
-    &nbsp;
-    <svg class="i-tag" viewBox="0 0 32 32" width="16" height="16" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
-      <circle cx="24" cy="8" r="2"></circle>
-      <path d="M2 18 L18 2 30 2 30 14 14 30 Z"></path>
-    </svg>
-    &nbsp;
-    <a href="/categories/Java/">Java</a>·<a href="/categories/Java/Java基础/">Java基础</a>
-
-
-
-
-    
-    &nbsp;
-    <svg class="i-tag" viewBox="0 0 32 32" width="16" height="16" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
-      <circle cx="24" cy="8" r="2"></circle>
-      <path d="M2 18 L18 2 30 2 30 14 14 30 Z"></path>
-    </svg>
-    &nbsp;
-    <a href="/tags/java基础/">java基础</a>
-
-
-    </div>
-    <hr>
-    
-      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#1、-封装"><span class="toc-text">1、 封装</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-1、封装定义"><span class="toc-text">1.1、封装定义</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-2、封装目的"><span class="toc-text">1.2、封装目的</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-3、封装的基本要求"><span class="toc-text">1.3、封装的基本要求</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-4、Java权限访问关键词"><span class="toc-text">1.4、Java权限访问关键词</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-4-1、-public关键字"><span class="toc-text">1.4.1、 public关键字</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#1-4-2、private关键字"><span class="toc-text">1.4.2、private关键字</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#1-4-3、-protected关键字"><span class="toc-text">1.4.3、 protected关键字</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#1-4-4-注意"><span class="toc-text">1.4.4 注意</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2、多态"><span class="toc-text">2、多态</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#2-1-向上转型"><span class="toc-text">2.1 向上转型</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#2-1-1-特性"><span class="toc-text">2.1.1 特性</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-2-向下转型"><span class="toc-text">2.2 向下转型</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#2-2-1-特性"><span class="toc-text">2.2.1 特性</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#2-2-1-1-父类引用的是子类对象。"><span class="toc-text">2.2.1.1 父类引用的是子类对象。</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#2-2-1-2-父类引用的是父类对象"><span class="toc-text">2.2.1.2 父类引用的是父类对象</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#2-2-1-3-注意：关于类加载时，子类方法是否加载进内存的问题"><span class="toc-text">2.2.1.3 注意：关于类加载时，子类方法是否加载进内存的问题</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-3-重载和重写"><span class="toc-text">2.3 重载和重写</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#2-3-1-重写-Override"><span class="toc-text">2.3.1 重写(Override)</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-3-2-重载-OverLoad"><span class="toc-text">2.3.2 重载(OverLoad)</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3、继承"><span class="toc-text">3、继承</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#3-1、接口和抽象类"><span class="toc-text">3.1、接口和抽象类</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#3-1-1-接口和抽象类的好处"><span class="toc-text">3.1.1 接口和抽象类的好处</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-1-2-接口和抽象类的区别"><span class="toc-text">3.1.2 接口和抽象类的区别</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-1-3-抽象类的使用"><span class="toc-text">3.1.3 抽象类的使用</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-2-1-4-接口的使用"><span class="toc-text">3.2.1.4 接口的使用</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-2-1-5-使用选择"><span class="toc-text">3.2.1.5 使用选择</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-2、super关键字"><span class="toc-text">3.2、super关键字</span></a></li></ol></li></ol>
-    
-    <div class="picture-container">
-      
-    </div>
-    <p>Java面向对象编程的三大特性：继承、多态、封装</p>
+    <div class="post-content"><p>Java面向对象编程的三大特性：继承、多态、封装</p>
 <h2 id="1、-封装"><a href="#1、-封装" class="headerlink" title="1、 封装"></a>1、 封装</h2><h3 id="1-1、封装定义"><a href="#1-1、封装定义" class="headerlink" title="1.1、封装定义"></a>1.1、封装定义</h3><p>隐藏对象属性和实现细节，仅仅对外公布访问方法，控制在程序中属性的读和写的访问级别</p>
 <h3 id="1-2、封装目的"><a href="#1-2、封装目的" class="headerlink" title="1.2、封装目的"></a>1.2、封装目的</h3><p>增强安全性和简化编程，使用者只需要调用暴露在外的访问方法，而不需要知道内部是如何实现的。</p>
 <h3 id="1-3、封装的基本要求"><a href="#1-3、封装的基本要求" class="headerlink" title="1.3、封装的基本要求"></a>1.3、封装的基本要求</h3><ul>
@@ -232,67 +222,50 @@
 
 <p><img src="https://brandonxcc.top/master.jpg" alt></p>
 
+      </div>
+      
+      <footer class="post-footer">
+        <div class="post-tags">
+            <a href="/tags/java%E5%9F%BA%E7%A1%80/">java基础</a>
+            </div>
+        
+        <nav class="post-nav"><a class="prev" href="/2019/09/22/Java%E5%9F%BA%E7%A1%80/object%E9%80%9A%E7%94%A8%E6%96%B9%E6%B3%95/">
+        <i class="iconfont icon-left"></i>
+        <span class="prev-text nav-default">object通用方法</span>
+        <span class="prev-text nav-mobile">Prev</span>
+      </a>
+    <a class="next" href="/2019/09/20/Java%E5%9F%BA%E7%A1%80/Java%E5%9F%BA%E6%9C%AC%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B%E4%B8%8E%E6%93%8D%E4%BD%9C%E7%AC%A6/">
+        <span class="next-text nav-default">Java基本数据类型与操作符</span>
+        <span class="prev-text nav-mobile">Next</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    </nav></footer>
+    </article></div><div class="comments" id="comments"></div></div>
+      </main>
 
-  </article>
-  </script>
-    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js">
-  </script>
-  <div class="busuanzi center">
-    页阅读量:&nbsp;<span id="busuanzi_value_page_pv"></span>&nbsp;・&nbsp;
-    站访问量:&nbsp;<span id="busuanzi_value_site_pv"></span>&nbsp;・&nbsp;
-    站访客数:&nbsp;<span id="busuanzi_value_site_uv"></span>
-  </div>
+      <footer id="footer" class="footer"><div class="copyright">
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a>
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/ahonn/hexo-theme-even" target="_blank" rel="noopener">Even</a>
+  </span>
 
-
-    
-
-
-
-
-
-    </div>
-  </div>
-  <footer class="page-footer"><div class="clearfix">
-</div>
-<div class="right-foot">
-    <div class="firstrow">
-        <a href="#top" target="_self">
-        <svg class="i-caret-right" viewBox="0 0 32 32" width="24" height="24" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="3">
-            <path d="M10 30 L26 16 10 2 Z"></path>
-        </svg>
-        </a>
-        © XXX 2016-2020
-    </div>
-    <div class="secondrow">
-        <a href="https://github.com/gaoryrt/hexo-theme-pln" target="_blank" rel="noopener">
-        Theme Pln
-        </a>
-    </div>
-</div>
-<div class="clearfix">
+  <span class="copyright-year">&copy;2020<span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">brandon</span>
+  </span>
 </div>
 </footer>
-  <script src="//cdn.bootcss.com/jquery/2.2.1/jquery.min.js"></script>
-<script src="/js/search.min.js"></script>
-<script type="text/javascript">
 
-// disqus scripts
-
-
-// dropdown scripts
-$(".dropdown").click(function(event) {
-  var current = $(this);
-  event.stopPropagation();
-  $(current).children(".dropdown-content")[($(current).children(".dropdown-content").hasClass("open"))?'removeClass':'addClass']("open")
-});
-$(document).click(function(){
-    $(".dropdown-content").removeClass("open");
-})
-
-var path = "/search.xml";
-searchFunc(path, 'local-search-input', 'local-search-result');
-
-</script>
-
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div><script type="text/javascript" src="/lib/jquery/jquery.min.js"></script>
+  <script type="text/javascript" src="/lib/slideout/slideout.js"></script>
+  <script type="text/javascript" src="/js/src/even.js?v="></script>
 <script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginModelPath":"assets/","model":{"jsonPath":"live2d-widget-model-z16"},"display":{"position":"left","width":150,"height":345},"mobile":{"show":false},"log":false,"pluginJsPath":"lib/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
 </html>

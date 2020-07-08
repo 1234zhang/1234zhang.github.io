@@ -1,95 +1,85 @@
-<!DOCTYPE HTML>
-<html>
-<head>
-  <meta charset="utf-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black">
-  <meta name="google-site-verification" content="" />
-  
-  <title>Java内存模型((六)</title>
-  <meta name="author" content="brandon">
-  <meta name="description" content="study hard">
-  
-  
-  <meta property="og:title" content="Java内存模型((六)"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta property="og:site_name" content="brandon"/>
-  <link href="/apple-touch-icon-precomposed.png" sizes="180x180" rel="apple-touch-icon-precomposed">
-  <link rel="alternate" href="/atom.xml" title="brandon" type="application/atom+xml">
-  <link rel="stylesheet" href="/css/m.min.css">
-  <link rel="icon" type="image/x-icon" href="/favicon.ico">
-  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML" async></script>
-<meta name="generator" content="Hexo 4.2.1"></head>
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head><meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
 
-<body>
-  <a id="top"></a>
-  <div id="main">
-    <div class="main-ctnr">
-      <div class="behind">
-  <a href="/" class="back black-color">
-    <svg class="i-close" viewBox="0 0 32 32" width="22" height="22" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="3">
-        <path d="M2 30 L30 2 M30 30 L2 2"></path>
-    </svg>
-  </a>
-  <div class="description">
-    &nbsp;
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+<meta name="description" content="Java内存模型((六)"/><meta name="keywords" content="Java并发编程, brandon" /><link rel="alternate" href="/atom.xml" title="brandon">
+<link rel="canonical" href="https://1234zhang.github.io/2019/08/05/内存模型/Java内存模型-六/"/>
+
+
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=" />
+
+<script id="baidu_push">
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+<script>
+  window.config = {"leancloud":"","toc":"","fancybox":"","pjax":"","latex":""};
+</script>
+
+    <title>Java内存模型((六) - brandon</title>
+  <meta name="generator" content="Hexo 4.2.1"></head>
+
+  <body><div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/." class="logo">brandon</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
   </div>
 </div>
 
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list"></ul>
+</nav>
+<div class="container" id="mobile-panel">
+      <header id="header" class="header"><div class="logo-wrapper">
+  <a href="/." class="logo">brandon</a>
+</div>
 
-  <article class="standard [layout]">
-    <div class="title">
-      
-  
-    <h1 class="page-title center">
-        Java内存模型((六)
-    </h1>
-  
+<nav class="site-navbar"></nav>
+</header>
 
+      <main id="main" class="main">
+        <div class="content-wrapper">
+          <div id="content" class="content"><article class="post">
+    <header class="post-header">
+      <h1 class="post-title">Java内存模型((六)
+        </h1>
 
-    </div>
-    <div class="meta center">
-      <time datetime="2019-08-05T12:17:56.000Z" itemprop="datePublished">
-  <svg class="i-calendar" viewBox="0 0 32 32" width="16" height="16" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
-    <path d="M2 6 L2 30 30 30 30 6 Z M2 15 L30 15 M7 3 L7 9 M13 3 L13 9 M19 3 L19 9 M25 3 L25 9"></path>
-  </svg>
-  &nbsp;
-  2019-08-05
-</time>
+      <div class="post-meta">
+        <span class="post-time">
+          2019-08-05
+        </span><span class="post-category">
+            <a href="/categories/Java/">Java</a>
+            <a href="/categories/Java/%E3%80%8Ajava%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%E8%89%BA%E6%9C%AF%E3%80%8B%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/">《java并发编程艺术》读书笔记</a>
+            </span>
+        </div>
+    </header>
 
-
-    
-    &nbsp;
-    <svg class="i-tag" viewBox="0 0 32 32" width="16" height="16" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
-      <circle cx="24" cy="8" r="2"></circle>
-      <path d="M2 18 L18 2 30 2 30 14 14 30 Z"></path>
-    </svg>
-    &nbsp;
-    <a href="/categories/Java/">Java</a>·<a href="/categories/Java/《java并发编程艺术》读书笔记/">《java并发编程艺术》读书笔记</a>
-
-
-
-
-    
-    &nbsp;
-    <svg class="i-tag" viewBox="0 0 32 32" width="16" height="16" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
-      <circle cx="24" cy="8" r="2"></circle>
-      <path d="M2 18 L18 2 30 2 30 14 14 30 Z"></path>
-    </svg>
-    &nbsp;
-    <a href="/tags/Java并发编程/">Java并发编程</a>
-
-
-    </div>
-    <hr>
-    
-      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#简介"><span class="toc-text">简介</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#final域的重排序规则"><span class="toc-text">final域的重排序规则</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#编译器和处理器要遵守的两个规则"><span class="toc-text">编译器和处理器要遵守的两个规则</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#写final域的重排序规则"><span class="toc-text">写final域的重排序规则</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#重排序规则的确保"><span class="toc-text">重排序规则的确保</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#读final域的重排序规则"><span class="toc-text">读final域的重排序规则</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#规则"><span class="toc-text">规则</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#规则说明"><span class="toc-text">规则说明</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#读重排序规则的确保"><span class="toc-text">读重排序规则的确保</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#final域为引用类型"><span class="toc-text">final域为引用类型</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#示例代码"><span class="toc-text">示例代码</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#对编译器和处理器增加的约束"><span class="toc-text">对编译器和处理器增加的约束</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#为什么final引用不能从构造函数内“溢出”"><span class="toc-text">为什么final引用不能从构造函数内“溢出”</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#保证写final域重排序规则的确保的前提"><span class="toc-text">保证写final域重排序规则的确保的前提</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#示例代码-1"><span class="toc-text">示例代码</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#代码说明"><span class="toc-text">代码说明</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#final语义在处理器中的实现"><span class="toc-text">final语义在处理器中的实现</span></a></li></ol>
-    
-    <div class="picture-container">
-      
-    </div>
-    <h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>final域的读和写更像是普通的变量访问</p>
+    <div class="post-content"><h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>final域的读和写更像是普通的变量访问</p>
 <a id="more"></a>
 <h2 id="final域的重排序规则"><a href="#final域的重排序规则" class="headerlink" title="final域的重排序规则"></a>final域的重排序规则</h2><h3 id="编译器和处理器要遵守的两个规则"><a href="#编译器和处理器要遵守的两个规则" class="headerlink" title="编译器和处理器要遵守的两个规则"></a>编译器和处理器要遵守的两个规则</h3><ul>
 <li>在构造函数内对一个final域的写入，与随后把这个被构造对象的引用赋值给一个引用变量，这两个操作之间不能重排序</li>
@@ -117,67 +107,50 @@
 <p><a href="https://mp.weixin.qq.com/s?__biz=MzAxODcyNjEzNQ==&mid=2247485263&idx=1&sn=995ba88b794aa7c3a54c55b5a9c398b1&chksm=9bd0aad7aca723c139473c59176db58d66d622649ecc606173f90c185287544dc8604b4441ef&scene=27#wechat_redirect" target="_blank" rel="noopener">happens-before</a></p>
 <p><a href="https://www.infoq.cn/article/double-checked-locking-with-delay-initialization" target="_blank" rel="noopener">双重锁定</a></p>
 
+      </div>
+      
+      <footer class="post-footer">
+        <div class="post-tags">
+            <a href="/tags/Java%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B/">Java并发编程</a>
+            </div>
+        
+        <nav class="post-nav"><a class="prev" href="/2019/08/06/%E5%A4%9A%E7%BA%BF%E7%A8%8B%E5%9F%BA%E7%A1%80/%E5%A4%9A%E7%BA%BF%E7%A8%8B%E5%9F%BA%E7%A1%80/">
+        <i class="iconfont icon-left"></i>
+        <span class="prev-text nav-default">多线程基础</span>
+        <span class="prev-text nav-mobile">Prev</span>
+      </a>
+    <a class="next" href="/2019/08/05/%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B/Java%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B-%E4%BA%94/">
+        <span class="next-text nav-default">Java内存模型(五)</span>
+        <span class="prev-text nav-mobile">Next</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    </nav></footer>
+    </article></div><div class="comments" id="comments"></div></div>
+      </main>
 
-  </article>
-  </script>
-    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js">
-  </script>
-  <div class="busuanzi center">
-    页阅读量:&nbsp;<span id="busuanzi_value_page_pv"></span>&nbsp;・&nbsp;
-    站访问量:&nbsp;<span id="busuanzi_value_site_pv"></span>&nbsp;・&nbsp;
-    站访客数:&nbsp;<span id="busuanzi_value_site_uv"></span>
-  </div>
+      <footer id="footer" class="footer"><div class="copyright">
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a>
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/ahonn/hexo-theme-even" target="_blank" rel="noopener">Even</a>
+  </span>
 
-
-    
-
-
-
-
-
-    </div>
-  </div>
-  <footer class="page-footer"><div class="clearfix">
-</div>
-<div class="right-foot">
-    <div class="firstrow">
-        <a href="#top" target="_self">
-        <svg class="i-caret-right" viewBox="0 0 32 32" width="24" height="24" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="3">
-            <path d="M10 30 L26 16 10 2 Z"></path>
-        </svg>
-        </a>
-        © XXX 2016-2020
-    </div>
-    <div class="secondrow">
-        <a href="https://github.com/gaoryrt/hexo-theme-pln" target="_blank" rel="noopener">
-        Theme Pln
-        </a>
-    </div>
-</div>
-<div class="clearfix">
+  <span class="copyright-year">&copy;2020<span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">brandon</span>
+  </span>
 </div>
 </footer>
-  <script src="//cdn.bootcss.com/jquery/2.2.1/jquery.min.js"></script>
-<script src="/js/search.min.js"></script>
-<script type="text/javascript">
 
-// disqus scripts
-
-
-// dropdown scripts
-$(".dropdown").click(function(event) {
-  var current = $(this);
-  event.stopPropagation();
-  $(current).children(".dropdown-content")[($(current).children(".dropdown-content").hasClass("open"))?'removeClass':'addClass']("open")
-});
-$(document).click(function(){
-    $(".dropdown-content").removeClass("open");
-})
-
-var path = "/search.xml";
-searchFunc(path, 'local-search-input', 'local-search-result');
-
-</script>
-
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div><script type="text/javascript" src="/lib/jquery/jquery.min.js"></script>
+  <script type="text/javascript" src="/lib/slideout/slideout.js"></script>
+  <script type="text/javascript" src="/js/src/even.js?v="></script>
 <script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginModelPath":"assets/","model":{"jsonPath":"live2d-widget-model-z16"},"display":{"position":"left","width":150,"height":345},"mobile":{"show":false},"log":false,"pluginJsPath":"lib/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
 </html>

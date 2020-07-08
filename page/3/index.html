@@ -1,799 +1,204 @@
-<!DOCTYPE HTML>
-<html>
-<head>
-  <meta charset="utf-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black">
-  <meta name="google-site-verification" content="" />
-  
-  <title>page</title>
-  <meta name="author" content="brandon">
-  <meta name="description" content="study hard">
-  
-  
-  
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta property="og:site_name" content="brandon"/>
-  <link href="/apple-touch-icon-precomposed.png" sizes="180x180" rel="apple-touch-icon-precomposed">
-  <link rel="alternate" href="/atom.xml" title="brandon" type="application/atom+xml">
-  <link rel="stylesheet" href="/css/m.min.css">
-  <link rel="icon" type="image/x-icon" href="/favicon.ico">
-  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML" async></script>
-<meta name="generator" content="Hexo 4.2.1"></head>
-
-<body>
-  <a id="top"></a>
-  <div id="main">
-    <div class="main-ctnr">
-      <nav class="navbar">
-  <div class="nav-container">
-  <div class="nav navbar-nav navbar-left">
-    <div class="navbar-header">
-      <a href="/" class="navbar-brand">XXX</a>
-    </div>
-    
-
-    <div class="dropdown">
-      <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-        <svg class="i-tag" viewBox="0 0 32 32" width="22" height="22" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
-          <circle cx="24" cy="8" r="2"></circle>
-          <path d="M2 18 L18 2 30 2 30 14 14 30 Z"></path>
-        </svg>
-      </span></a>
-
-      <ul class="dropdown-content">
-
-          
-           <div><a href="/categories/Java/">Java</a></div><div><a href="/categories/中间件/">中间件</a></div><div><a href="/categories/Java/Java流操作/">Java流操作</a></div><div><a href="/categories/Java/Java流操作/nio/">nio</a></div><div><a href="/categories/Java/JUC/">JUC</a></div><div><a href="/categories/Java/Java基础/">Java基础</a></div><div><a href="/categories/JVM/">JVM</a></div><div><a href="/categories/Java/算法/">算法</a></div><div><a href="/categories/spring-源码/">spring 源码</a></div><div><a href="/categories/Java/《java并发编程艺术》读书笔记/">《java并发编程艺术》读书笔记</a></div><div><a href="/categories/日记/">日记</a></div><div><a href="/categories/Java/集合框架/">集合框架</a></div><div><a href="/categories/Java/集合框架/ArrayList/">ArrayList</a></div><div><a href="/categories/Java/集合框架/HashMap/">HashMap</a></div>
-
-      </ul>
-
-    </div>
-    
-
-  </div>
-  <div id="site_search" class="">
-  <input type="text" id="local-search-input" name="q" placeholder="search" class="form-control"/>
-</div>
-<div id="local-search-result"></div>
-
-
-  <div class="nav navbar-nav navbar-right">
-    <div class="dropdown">
-      <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-        <svg class="i-link" viewBox="0 0 32 32" width="22" height="22" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
-          <path d="M18 8 C18 8 24 2 27 5 30 8 29 12 24 16 19 20 16 21 14 17 M14 24 C14 24 8 30 5 27 2 24 3 20 8 16 13 12 16 11 18 15"></path>
-        </svg>
-      </a>
-      <base href="/">
-      <ul class="dropdown-content">
-        
-          <div>
-            <a href="/links.html">
-        友情链接
-      </a>
-    </div>
-     
-          <div>
-            <a href="https://github.com/XXX/" target="_blank" rel="noopener">
-        Github
-      </a>
-    </div>
-     
-          <div>
-            <a href="http://weibo.com/XXX" target="_blank" rel="noopener">
-        微博
-      </a>
-    </div>
-     
-          <div>
-            <a href="https://www.zhihu.com/people/XXX" target="_blank" rel="noopener">
-        知乎
-      </a>
-    </div>
-     
-          <div>
-            <a href="/rss2.xml">
-        rss
-      </a>
-    </div>
-     
-          <div>
-            <a href="/">
-        关于我
-      </a>
-    </div>
-     
-    </ul>
-    </div>
-    <div class="archives"><a href="/archives">
-      <svg class="i-archive" viewBox="0 0 32 32" width="22" height="22" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
-        <path d="M4 10 L4 28 28 28 28 10 M2 4 L2 10 30 10 30 4 Z M12 15 L20 15"></path>
-      </svg>
-    </a></div>
-  </div>
-  </div>
-</nav>
-
-<ul class="posts">
-  
-    
-<li class="post-item">
-  
-  
-    <h1 class="index-title">
-        <a href="/2019/09/26/Java基础/Java泛型/">
-            Java泛型
-        </a>
-    </h1>
-  
-
-
-  <div class="excerpt">
-  
-    Java泛型是Java5引入的重要特性之一，无论是语法还是还是运用的环境中，Java泛型都与C++模板类似。但是这种相似仅仅只是停留在表面，Java语言的泛型完全通过编译器实现，由编译器执行类型检查和类型推断，然后生成普通的非泛型字节码(c
-  
-  <a href="/2019/09/26/Java基础/Java泛型/">
-    更多
-  </a>
-  </div>
-  <div class="index-meta">
-    <time datetime="2019-09-26T00:37:10.000Z" itemprop="datePublished">
-  <svg class="i-calendar" viewBox="0 0 32 32" width="16" height="16" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
-    <path d="M2 6 L2 30 30 30 30 6 Z M2 15 L30 15 M7 3 L7 9 M13 3 L13 9 M19 3 L19 9 M25 3 L25 9"></path>
-  </svg>
-  &nbsp;
-  2019-09-26
-</time>
-
-
-    
-    &nbsp;
-    <svg class="i-tag" viewBox="0 0 32 32" width="16" height="16" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
-      <circle cx="24" cy="8" r="2"></circle>
-      <path d="M2 18 L18 2 30 2 30 14 14 30 Z"></path>
-    </svg>
-    &nbsp;
-    <a href="/categories/Java/">Java</a>·<a href="/categories/Java/Java基础/">Java基础</a>
-
-
-
-
-    
-    &nbsp;
-    <svg class="i-tag" viewBox="0 0 32 32" width="16" height="16" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
-      <circle cx="24" cy="8" r="2"></circle>
-      <path d="M2 18 L18 2 30 2 30 14 14 30 Z"></path>
-    </svg>
-    &nbsp;
-    <a href="/tags/java基础/">java基础</a>
-
-
-  </div>
-</li>
-<hr>
-
-
-
-
-
-  
-    
-<li class="post-item">
-  
-  
-    <h1 class="index-title">
-        <a href="/2019/09/25/Java基础/匿名内部类以及lambda表达式/">
-            匿名内部类以及lambda表达式
-        </a>
-    </h1>
-  
-
-
-  <div class="excerpt">
-  
-    匿名内部类内部类可以将一个类的定义放在另一个类的定义内部，这就是内部类。内部类允许把一些逻辑相关的类组织放在一起。
-123456789101112131415161718192021内部类的创建。public class OutClass&
-  
-  <a href="/2019/09/25/Java基础/匿名内部类以及lambda表达式/">
-    更多
-  </a>
-  </div>
-  <div class="index-meta">
-    <time datetime="2019-09-25T06:46:57.000Z" itemprop="datePublished">
-  <svg class="i-calendar" viewBox="0 0 32 32" width="16" height="16" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
-    <path d="M2 6 L2 30 30 30 30 6 Z M2 15 L30 15 M7 3 L7 9 M13 3 L13 9 M19 3 L19 9 M25 3 L25 9"></path>
-  </svg>
-  &nbsp;
-  2019-09-25
-</time>
-
-
-    
-    &nbsp;
-    <svg class="i-tag" viewBox="0 0 32 32" width="16" height="16" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
-      <circle cx="24" cy="8" r="2"></circle>
-      <path d="M2 18 L18 2 30 2 30 14 14 30 Z"></path>
-    </svg>
-    &nbsp;
-    <a href="/categories/Java/">Java</a>·<a href="/categories/Java/Java基础/">Java基础</a>
-
-
-
-
-    
-    &nbsp;
-    <svg class="i-tag" viewBox="0 0 32 32" width="16" height="16" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
-      <circle cx="24" cy="8" r="2"></circle>
-      <path d="M2 18 L18 2 30 2 30 14 14 30 Z"></path>
-    </svg>
-    &nbsp;
-    <a href="/tags/java基础/">java基础</a>
-
-
-  </div>
-</li>
-<hr>
-
-
-
-
-
-  
-    
-<li class="post-item">
-  
-  
-    <h1 class="index-title">
-        <a href="/2019/09/24/Java基础/异常捕获/">
-            异常捕获
-        </a>
-    </h1>
-  
-
-
-  <div class="excerpt">
-  
-    在运行期间发生了错误，并且通过某种方式把适当的信息传递给某个解决问题的接收者。Java使用异常来提供一致的错误报告模型，并且通过编译器强制执行。
-异常的处理步骤当抛出异常之后，将会发生如下几件事情：
-
-使用new关键字在堆上创建对象。
-当前
-  
-  <a href="/2019/09/24/Java基础/异常捕获/">
-    更多
-  </a>
-  </div>
-  <div class="index-meta">
-    <time datetime="2019-09-24T07:32:27.000Z" itemprop="datePublished">
-  <svg class="i-calendar" viewBox="0 0 32 32" width="16" height="16" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
-    <path d="M2 6 L2 30 30 30 30 6 Z M2 15 L30 15 M7 3 L7 9 M13 3 L13 9 M19 3 L19 9 M25 3 L25 9"></path>
-  </svg>
-  &nbsp;
-  2019-09-24
-</time>
-
-
-    
-    &nbsp;
-    <svg class="i-tag" viewBox="0 0 32 32" width="16" height="16" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
-      <circle cx="24" cy="8" r="2"></circle>
-      <path d="M2 18 L18 2 30 2 30 14 14 30 Z"></path>
-    </svg>
-    &nbsp;
-    <a href="/categories/Java/">Java</a>·<a href="/categories/Java/Java基础/">Java基础</a>
-
-
-
-
-    
-    &nbsp;
-    <svg class="i-tag" viewBox="0 0 32 32" width="16" height="16" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
-      <circle cx="24" cy="8" r="2"></circle>
-      <path d="M2 18 L18 2 30 2 30 14 14 30 Z"></path>
-    </svg>
-    &nbsp;
-    <a href="/tags/java基础/">java基础</a>
-
-
-  </div>
-</li>
-<hr>
-
-
-
-
-
-  
-    
-<li class="post-item">
-  
-  
-    <h1 class="index-title">
-        <a href="/2019/09/22/Java基础/object通用方法/">
-            object通用方法
-        </a>
-    </h1>
-  
-
-
-  <div class="excerpt">
-  
-    123456789101112java Object是所有类的父类，提供11个基本方法public final native Class&lt;?&gt; getClass()public native int hashCode()publ
-  
-  <a href="/2019/09/22/Java基础/object通用方法/">
-    更多
-  </a>
-  </div>
-  <div class="index-meta">
-    <time datetime="2019-09-22T01:35:52.000Z" itemprop="datePublished">
-  <svg class="i-calendar" viewBox="0 0 32 32" width="16" height="16" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
-    <path d="M2 6 L2 30 30 30 30 6 Z M2 15 L30 15 M7 3 L7 9 M13 3 L13 9 M19 3 L19 9 M25 3 L25 9"></path>
-  </svg>
-  &nbsp;
-  2019-09-22
-</time>
-
-
-    
-    &nbsp;
-    <svg class="i-tag" viewBox="0 0 32 32" width="16" height="16" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
-      <circle cx="24" cy="8" r="2"></circle>
-      <path d="M2 18 L18 2 30 2 30 14 14 30 Z"></path>
-    </svg>
-    &nbsp;
-    <a href="/categories/Java/">Java</a>·<a href="/categories/Java/Java基础/">Java基础</a>
-
-
-
-
-    
-    &nbsp;
-    <svg class="i-tag" viewBox="0 0 32 32" width="16" height="16" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
-      <circle cx="24" cy="8" r="2"></circle>
-      <path d="M2 18 L18 2 30 2 30 14 14 30 Z"></path>
-    </svg>
-    &nbsp;
-    <a href="/tags/java基础/">java基础</a>
-
-
-  </div>
-</li>
-<hr>
-
-
-
-
-
-  
-    
-<li class="post-item">
-  
-  
-    <h1 class="index-title">
-        <a href="/2019/09/21/Java基础/继承、多态、封装/">
-            继承、多态、封装
-        </a>
-    </h1>
-  
-
-
-  <div class="excerpt">
-  
-    Java面向对象编程的三大特性：继承、多态、封装
-1、 封装1.1、封装定义隐藏对象属性和实现细节，仅仅对外公布访问方法，控制在程序中属性的读和写的访问级别
-1.2、封装目的增强安全性和简化编程，使用者只需要调用暴露在外的访问方法，而不需要
-  
-  <a href="/2019/09/21/Java基础/继承、多态、封装/">
-    更多
-  </a>
-  </div>
-  <div class="index-meta">
-    <time datetime="2019-09-21T05:48:24.000Z" itemprop="datePublished">
-  <svg class="i-calendar" viewBox="0 0 32 32" width="16" height="16" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
-    <path d="M2 6 L2 30 30 30 30 6 Z M2 15 L30 15 M7 3 L7 9 M13 3 L13 9 M19 3 L19 9 M25 3 L25 9"></path>
-  </svg>
-  &nbsp;
-  2019-09-21
-</time>
-
-
-    
-    &nbsp;
-    <svg class="i-tag" viewBox="0 0 32 32" width="16" height="16" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
-      <circle cx="24" cy="8" r="2"></circle>
-      <path d="M2 18 L18 2 30 2 30 14 14 30 Z"></path>
-    </svg>
-    &nbsp;
-    <a href="/categories/Java/">Java</a>·<a href="/categories/Java/Java基础/">Java基础</a>
-
-
-
-
-    
-    &nbsp;
-    <svg class="i-tag" viewBox="0 0 32 32" width="16" height="16" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
-      <circle cx="24" cy="8" r="2"></circle>
-      <path d="M2 18 L18 2 30 2 30 14 14 30 Z"></path>
-    </svg>
-    &nbsp;
-    <a href="/tags/java基础/">java基础</a>
-
-
-  </div>
-</li>
-<hr>
-
-
-
-
-
-  
-    
-<li class="post-item">
-  
-  
-    <h1 class="index-title">
-        <a href="/2019/09/20/Java基础/Java基本数据类型与操作符/">
-            Java基本数据类型与操作符
-        </a>
-    </h1>
-  
-
-
-  <div class="excerpt">
-  
-    Java数据类型分为内置类型和扩展类型两大类。内置类型就是基础类型，如short, int, long, float, double, boolean, byte, char. 扩展类型就是基本类型的扩展类。
-内置类型
-
-
-类型名称
-类型定
-  
-  <a href="/2019/09/20/Java基础/Java基本数据类型与操作符/">
-    更多
-  </a>
-  </div>
-  <div class="index-meta">
-    <time datetime="2019-09-20T13:18:48.000Z" itemprop="datePublished">
-  <svg class="i-calendar" viewBox="0 0 32 32" width="16" height="16" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
-    <path d="M2 6 L2 30 30 30 30 6 Z M2 15 L30 15 M7 3 L7 9 M13 3 L13 9 M19 3 L19 9 M25 3 L25 9"></path>
-  </svg>
-  &nbsp;
-  2019-09-20
-</time>
-
-
-    
-    &nbsp;
-    <svg class="i-tag" viewBox="0 0 32 32" width="16" height="16" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
-      <circle cx="24" cy="8" r="2"></circle>
-      <path d="M2 18 L18 2 30 2 30 14 14 30 Z"></path>
-    </svg>
-    &nbsp;
-    <a href="/categories/Java/">Java</a>·<a href="/categories/Java/Java基础/">Java基础</a>
-
-
-
-
-    
-    &nbsp;
-    <svg class="i-tag" viewBox="0 0 32 32" width="16" height="16" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
-      <circle cx="24" cy="8" r="2"></circle>
-      <path d="M2 18 L18 2 30 2 30 14 14 30 Z"></path>
-    </svg>
-    &nbsp;
-    <a href="/tags/java基础/">java基础</a>
-
-
-  </div>
-</li>
-<hr>
-
-
-
-
-
-  
-    
-<li class="post-item">
-  
-  
-    <h1 class="index-title">
-        <a href="/2019/09/19/日志/计算机网络基础/">
-            计算机网络基础
-        </a>
-    </h1>
-  
-
-
-  <div class="excerpt">
-  
-    最近在写一个服务器，涉及到了Java的网络编程，发现自己在这个方面还是很薄弱，所以找到了一本《Java网络编程》这本书。今天看了第一章。来小小总结一哈。
-网络网络的定义将地理位置不同的具有独立功能的多台计算机及其外部设备，通过通信线路连接起
-  
-  <a href="/2019/09/19/日志/计算机网络基础/">
-    更多
-  </a>
-  </div>
-  <div class="index-meta">
-    <time datetime="2019-09-19T14:02:19.000Z" itemprop="datePublished">
-  <svg class="i-calendar" viewBox="0 0 32 32" width="16" height="16" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
-    <path d="M2 6 L2 30 30 30 30 6 Z M2 15 L30 15 M7 3 L7 9 M13 3 L13 9 M19 3 L19 9 M25 3 L25 9"></path>
-  </svg>
-  &nbsp;
-  2019-09-19
-</time>
-
-
-    
-    &nbsp;
-    <svg class="i-tag" viewBox="0 0 32 32" width="16" height="16" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
-      <circle cx="24" cy="8" r="2"></circle>
-      <path d="M2 18 L18 2 30 2 30 14 14 30 Z"></path>
-    </svg>
-    &nbsp;
-    <a href="/categories/日记/">日记</a>
-
-
-
-
-    
-    &nbsp;
-    <svg class="i-tag" viewBox="0 0 32 32" width="16" height="16" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
-      <circle cx="24" cy="8" r="2"></circle>
-      <path d="M2 18 L18 2 30 2 30 14 14 30 Z"></path>
-    </svg>
-    &nbsp;
-    <a href="/tags/日记/">日记</a>
-
-
-  </div>
-</li>
-<hr>
-
-
-
-
-
-  
-    
-<li class="post-item">
-  
-  
-    <h1 class="index-title">
-        <a href="/2019/08/10/Java基础/static关键字/">
-            static、final关键字
-        </a>
-    </h1>
-  
-
-
-  <div class="excerpt">
-  
-    static 关键字static变量也称作静态变量，静态变量和静态变量的区别是：静态变量被所有的对象所共享，在内存中只有一个副本，它当且仅当在类初始化加载时会被初始化。而非静态变量是对象所拥有的，在创建对象的时候被初始化，存在多个副本，各个
-  
-  <a href="/2019/08/10/Java基础/static关键字/">
-    更多
-  </a>
-  </div>
-  <div class="index-meta">
-    <time datetime="2019-08-10T08:33:20.000Z" itemprop="datePublished">
-  <svg class="i-calendar" viewBox="0 0 32 32" width="16" height="16" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
-    <path d="M2 6 L2 30 30 30 30 6 Z M2 15 L30 15 M7 3 L7 9 M13 3 L13 9 M19 3 L19 9 M25 3 L25 9"></path>
-  </svg>
-  &nbsp;
-  2019-08-10
-</time>
-
-
-    
-    &nbsp;
-    <svg class="i-tag" viewBox="0 0 32 32" width="16" height="16" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
-      <circle cx="24" cy="8" r="2"></circle>
-      <path d="M2 18 L18 2 30 2 30 14 14 30 Z"></path>
-    </svg>
-    &nbsp;
-    <a href="/categories/Java/">Java</a>·<a href="/categories/Java/Java基础/">Java基础</a>
-
-
-
-
-    
-    &nbsp;
-    <svg class="i-tag" viewBox="0 0 32 32" width="16" height="16" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
-      <circle cx="24" cy="8" r="2"></circle>
-      <path d="M2 18 L18 2 30 2 30 14 14 30 Z"></path>
-    </svg>
-    &nbsp;
-    <a href="/tags/java基础/">java基础</a>
-
-
-  </div>
-</li>
-<hr>
-
-
-
-
-
-  
-    
-<li class="post-item">
-  
-  
-    <h1 class="index-title">
-        <a href="/2019/08/06/多线程基础/多线程基础/">
-            多线程基础
-        </a>
-    </h1>
-  
-
-
-  <div class="excerpt">
-  
-    <h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>现代操作系统在运行一个程序时，会为其创建一个进程。操作系统调度的最小单位是线程，也叫轻量级进程，在一个进程中可以创建多个线程，这些线程都有各自的计数器、堆栈和局部变量等属性，并且能够访问共享的内存变量。</p>
-<h3 id="为什么要使用多线程"><a href="#为什么要使用多线程" class="headerlink" title="为什么要使用多线程"></a>为什么要使用多线程</h3><ul>
-<li>更多的处理器核心</li>
-<li>更快的响应时间</li>
-<li>更好的编程模型
-  
-  <a href="/2019/08/06/多线程基础/多线程基础/">
-    更多
-  </a>
-  </div>
-  <div class="index-meta">
-    <time datetime="2019-08-06T14:51:32.000Z" itemprop="datePublished">
-  <svg class="i-calendar" viewBox="0 0 32 32" width="16" height="16" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
-    <path d="M2 6 L2 30 30 30 30 6 Z M2 15 L30 15 M7 3 L7 9 M13 3 L13 9 M19 3 L19 9 M25 3 L25 9"></path>
-  </svg>
-  &nbsp;
-  2019-08-06
-</time>
-
-
-    
-    &nbsp;
-    <svg class="i-tag" viewBox="0 0 32 32" width="16" height="16" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
-      <circle cx="24" cy="8" r="2"></circle>
-      <path d="M2 18 L18 2 30 2 30 14 14 30 Z"></path>
-    </svg>
-    &nbsp;
-    <a href="/categories/Java/">Java</a>·<a href="/categories/Java/《java并发编程艺术》读书笔记/">《java并发编程艺术》读书笔记</a>
-
-
-
-
-    
-    &nbsp;
-    <svg class="i-tag" viewBox="0 0 32 32" width="16" height="16" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
-      <circle cx="24" cy="8" r="2"></circle>
-      <path d="M2 18 L18 2 30 2 30 14 14 30 Z"></path>
-    </svg>
-    &nbsp;
-    <a href="/tags/Java并发编程/">Java并发编程</a>
-
-
-  </div>
-</li>
-<hr>
-
-
-
-
-
-  
-    
-<li class="post-item">
-  
-  
-    <h1 class="index-title">
-        <a href="/2019/08/05/内存模型/Java内存模型-六/">
-            Java内存模型((六)
-        </a>
-    </h1>
-  
-
-
-  <div class="excerpt">
-  
-    <h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>final域的读和写更像是普通的变量访问</p>
-  
-  <a href="/2019/08/05/内存模型/Java内存模型-六/">
-    更多
-  </a>
-  </div>
-  <div class="index-meta">
-    <time datetime="2019-08-05T12:17:56.000Z" itemprop="datePublished">
-  <svg class="i-calendar" viewBox="0 0 32 32" width="16" height="16" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
-    <path d="M2 6 L2 30 30 30 30 6 Z M2 15 L30 15 M7 3 L7 9 M13 3 L13 9 M19 3 L19 9 M25 3 L25 9"></path>
-  </svg>
-  &nbsp;
-  2019-08-05
-</time>
-
-
-    
-    &nbsp;
-    <svg class="i-tag" viewBox="0 0 32 32" width="16" height="16" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
-      <circle cx="24" cy="8" r="2"></circle>
-      <path d="M2 18 L18 2 30 2 30 14 14 30 Z"></path>
-    </svg>
-    &nbsp;
-    <a href="/categories/Java/">Java</a>·<a href="/categories/Java/《java并发编程艺术》读书笔记/">《java并发编程艺术》读书笔记</a>
-
-
-
-
-    
-    &nbsp;
-    <svg class="i-tag" viewBox="0 0 32 32" width="16" height="16" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
-      <circle cx="24" cy="8" r="2"></circle>
-      <path d="M2 18 L18 2 30 2 30 14 14 30 Z"></path>
-    </svg>
-    &nbsp;
-    <a href="/tags/Java并发编程/">Java并发编程</a>
-
-
-  </div>
-</li>
-<hr>
-
-
-
-
-
-  
-</ul>
-<ul class="pager">
-    <a class="extend prev" rel="prev" href="/page/2/">Prev</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><a class="extend next" rel="next" href="/page/4/">Next</a>
-</ul>
-
-
-    </div>
-  </div>
-  <footer class="page-footer"><div class="clearfix">
-</div>
-<div class="right-foot">
-    <div class="firstrow">
-        <a href="#top" target="_self">
-        <svg class="i-caret-right" viewBox="0 0 32 32" width="24" height="24" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="3">
-            <path d="M10 30 L26 16 10 2 Z"></path>
-        </svg>
-        </a>
-        © XXX 2016-2020
-    </div>
-    <div class="secondrow">
-        <a href="https://github.com/gaoryrt/hexo-theme-pln" target="_blank" rel="noopener">
-        Theme Pln
-        </a>
-    </div>
-</div>
-<div class="clearfix">
-</div>
-</footer>
-  <script src="//cdn.bootcss.com/jquery/2.2.1/jquery.min.js"></script>
-<script src="/js/search.min.js"></script>
-<script type="text/javascript">
-
-// disqus scripts
-
-
-// dropdown scripts
-$(".dropdown").click(function(event) {
-  var current = $(this);
-  event.stopPropagation();
-  $(current).children(".dropdown-content")[($(current).children(".dropdown-content").hasClass("open"))?'removeClass':'addClass']("open")
-});
-$(document).click(function(){
-    $(".dropdown-content").removeClass("open");
-})
-
-var path = "/search.xml";
-searchFunc(path, 'local-search-input', 'local-search-result');
-
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head><meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+<meta name="description" content="study hard"/><link rel="alternate" href="/atom.xml" title="brandon">
+<link rel="canonical" href="https://1234zhang.github.io/page/3/"/>
+
+
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=" />
+
+<script id="baidu_push">
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+<script>
+  window.config = {"leancloud":"","toc":"","fancybox":"","pjax":"","latex":""};
 </script>
 
+    <title>brandon</title>
+  <meta name="generator" content="Hexo 4.2.1"></head>
+
+  <body><div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/." class="logo">brandon</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list"></ul>
+</nav>
+<div class="container" id="mobile-panel">
+      <header id="header" class="header"><div class="logo-wrapper">
+  <a href="/." class="logo">brandon</a>
+</div>
+
+<nav class="site-navbar"></nav>
+</header>
+
+      <main id="main" class="main">
+        <div class="content-wrapper">
+          <div id="content" class="content"><section id="posts" class="posts"><section id="archive" class="archive"><div class="archive-post">
+        <span class="archive-post-time">
+          2019-09-26
+          </span>
+        <span class="archive-post-title">
+          <a href="/2019/09/26/Java%E5%9F%BA%E7%A1%80/Java%E6%B3%9B%E5%9E%8B/" class="archive-post-link">
+            Java泛型
+          </a>
+        </span>
+      </div>
+    <div class="archive-post">
+        <span class="archive-post-time">
+          2019-09-25
+          </span>
+        <span class="archive-post-title">
+          <a href="/2019/09/25/Java%E5%9F%BA%E7%A1%80/%E5%8C%BF%E5%90%8D%E5%86%85%E9%83%A8%E7%B1%BB%E4%BB%A5%E5%8F%8Alambda%E8%A1%A8%E8%BE%BE%E5%BC%8F/" class="archive-post-link">
+            匿名内部类以及lambda表达式
+          </a>
+        </span>
+      </div>
+    <div class="archive-post">
+        <span class="archive-post-time">
+          2019-09-24
+          </span>
+        <span class="archive-post-title">
+          <a href="/2019/09/24/Java%E5%9F%BA%E7%A1%80/%E5%BC%82%E5%B8%B8%E6%8D%95%E8%8E%B7/" class="archive-post-link">
+            异常捕获
+          </a>
+        </span>
+      </div>
+    <div class="archive-post">
+        <span class="archive-post-time">
+          2019-09-22
+          </span>
+        <span class="archive-post-title">
+          <a href="/2019/09/22/Java%E5%9F%BA%E7%A1%80/object%E9%80%9A%E7%94%A8%E6%96%B9%E6%B3%95/" class="archive-post-link">
+            object通用方法
+          </a>
+        </span>
+      </div>
+    <div class="archive-post">
+        <span class="archive-post-time">
+          2019-09-21
+          </span>
+        <span class="archive-post-title">
+          <a href="/2019/09/21/Java%E5%9F%BA%E7%A1%80/%E7%BB%A7%E6%89%BF%E3%80%81%E5%A4%9A%E6%80%81%E3%80%81%E5%B0%81%E8%A3%85/" class="archive-post-link">
+            继承、多态、封装
+          </a>
+        </span>
+      </div>
+    <div class="archive-post">
+        <span class="archive-post-time">
+          2019-09-20
+          </span>
+        <span class="archive-post-title">
+          <a href="/2019/09/20/Java%E5%9F%BA%E7%A1%80/Java%E5%9F%BA%E6%9C%AC%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B%E4%B8%8E%E6%93%8D%E4%BD%9C%E7%AC%A6/" class="archive-post-link">
+            Java基本数据类型与操作符
+          </a>
+        </span>
+      </div>
+    <div class="archive-post">
+        <span class="archive-post-time">
+          2019-09-19
+          </span>
+        <span class="archive-post-title">
+          <a href="/2019/09/19/%E6%97%A5%E5%BF%97/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E5%9F%BA%E7%A1%80/" class="archive-post-link">
+            计算机网络基础
+          </a>
+        </span>
+      </div>
+    <div class="archive-post">
+        <span class="archive-post-time">
+          2019-08-10
+          </span>
+        <span class="archive-post-title">
+          <a href="/2019/08/10/Java%E5%9F%BA%E7%A1%80/static%E5%85%B3%E9%94%AE%E5%AD%97/" class="archive-post-link">
+            static、final关键字
+          </a>
+        </span>
+      </div>
+    <div class="archive-post">
+        <span class="archive-post-time">
+          2019-08-06
+          </span>
+        <span class="archive-post-title">
+          <a href="/2019/08/06/%E5%A4%9A%E7%BA%BF%E7%A8%8B%E5%9F%BA%E7%A1%80/%E5%A4%9A%E7%BA%BF%E7%A8%8B%E5%9F%BA%E7%A1%80/" class="archive-post-link">
+            多线程基础
+          </a>
+        </span>
+      </div>
+    <div class="archive-post">
+        <span class="archive-post-time">
+          2019-08-05
+          </span>
+        <span class="archive-post-title">
+          <a href="/2019/08/05/%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B/Java%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B-%E5%85%AD/" class="archive-post-link">
+            Java内存模型((六)
+          </a>
+        </span>
+      </div>
+    </section><nav class="pagination"><a class="prev" href="/page/2/">
+        <i class="iconfont icon-left"></i>
+        <span class="prev-text">Prev</span>
+      </a>
+    <a class="next" href="/page/4/">
+        <span class="next-text">Next</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    </nav>
+    </section></div></div>
+      </main>
+
+      <footer id="footer" class="footer"><div class="copyright">
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a>
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/ahonn/hexo-theme-even" target="_blank" rel="noopener">Even</a>
+  </span>
+
+  <span class="copyright-year">&copy;2020<span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">brandon</span>
+  </span>
+</div>
+</footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div><script type="text/javascript" src="/lib/jquery/jquery.min.js"></script>
+  <script type="text/javascript" src="/lib/slideout/slideout.js"></script>
+  <script type="text/javascript" src="/js/src/even.js?v="></script>
 <script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginModelPath":"assets/","model":{"jsonPath":"live2d-widget-model-z16"},"display":{"position":"left","width":150,"height":345},"mobile":{"show":false},"log":false,"pluginJsPath":"lib/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
 </html>

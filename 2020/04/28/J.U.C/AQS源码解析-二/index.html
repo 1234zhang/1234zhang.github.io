@@ -1,95 +1,85 @@
-<!DOCTYPE HTML>
-<html>
-<head>
-  <meta charset="utf-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black">
-  <meta name="google-site-verification" content="" />
-  
-  <title>AQS源码解析(二)</title>
-  <meta name="author" content="brandon">
-  <meta name="description" content="study hard">
-  
-  
-  <meta property="og:title" content="AQS源码解析(二)"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta property="og:site_name" content="brandon"/>
-  <link href="/apple-touch-icon-precomposed.png" sizes="180x180" rel="apple-touch-icon-precomposed">
-  <link rel="alternate" href="/atom.xml" title="brandon" type="application/atom+xml">
-  <link rel="stylesheet" href="/css/m.min.css">
-  <link rel="icon" type="image/x-icon" href="/favicon.ico">
-  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML" async></script>
-<meta name="generator" content="Hexo 4.2.1"></head>
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head><meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
 
-<body>
-  <a id="top"></a>
-  <div id="main">
-    <div class="main-ctnr">
-      <div class="behind">
-  <a href="/" class="back black-color">
-    <svg class="i-close" viewBox="0 0 32 32" width="22" height="22" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="3">
-        <path d="M2 30 L30 2 M30 30 L2 2"></path>
-    </svg>
-  </a>
-  <div class="description">
-    &nbsp;
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+<meta name="description" content="AQS源码解析(二)"/><meta name="keywords" content="java并发, brandon" /><link rel="alternate" href="/atom.xml" title="brandon">
+<link rel="canonical" href="https://1234zhang.github.io/2020/04/28/J.U.C/AQS源码解析-二/"/>
+
+
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=" />
+
+<script id="baidu_push">
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+<script>
+  window.config = {"leancloud":"","toc":"","fancybox":"","pjax":"","latex":""};
+</script>
+
+    <title>AQS源码解析(二) - brandon</title>
+  <meta name="generator" content="Hexo 4.2.1"></head>
+
+  <body><div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/." class="logo">brandon</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
   </div>
 </div>
 
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list"></ul>
+</nav>
+<div class="container" id="mobile-panel">
+      <header id="header" class="header"><div class="logo-wrapper">
+  <a href="/." class="logo">brandon</a>
+</div>
 
-  <article class="standard [layout]">
-    <div class="title">
-      
-  
-    <h1 class="page-title center">
-        AQS源码解析(二)
-    </h1>
-  
+<nav class="site-navbar"></nav>
+</header>
 
+      <main id="main" class="main">
+        <div class="content-wrapper">
+          <div id="content" class="content"><article class="post">
+    <header class="post-header">
+      <h1 class="post-title">AQS源码解析(二)
+        </h1>
 
-    </div>
-    <div class="meta center">
-      <time datetime="2020-04-28T15:05:11.000Z" itemprop="datePublished">
-  <svg class="i-calendar" viewBox="0 0 32 32" width="16" height="16" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
-    <path d="M2 6 L2 30 30 30 30 6 Z M2 15 L30 15 M7 3 L7 9 M13 3 L13 9 M19 3 L19 9 M25 3 L25 9"></path>
-  </svg>
-  &nbsp;
-  2020-04-28
-</time>
+      <div class="post-meta">
+        <span class="post-time">
+          2020-04-28
+        </span><span class="post-category">
+            <a href="/categories/Java/">Java</a>
+            <a href="/categories/Java/JUC/">JUC</a>
+            </span>
+        </div>
+    </header>
 
-
-    
-    &nbsp;
-    <svg class="i-tag" viewBox="0 0 32 32" width="16" height="16" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
-      <circle cx="24" cy="8" r="2"></circle>
-      <path d="M2 18 L18 2 30 2 30 14 14 30 Z"></path>
-    </svg>
-    &nbsp;
-    <a href="/categories/Java/">Java</a>·<a href="/categories/Java/JUC/">JUC</a>
-
-
-
-
-    
-    &nbsp;
-    <svg class="i-tag" viewBox="0 0 32 32" width="16" height="16" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
-      <circle cx="24" cy="8" r="2"></circle>
-      <path d="M2 18 L18 2 30 2 30 14 14 30 Z"></path>
-    </svg>
-    &nbsp;
-    <a href="/tags/java并发/">java并发</a>
-
-
-    </div>
-    <hr>
-    
-      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#前言"><span class="toc-text">前言</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#公平锁与非公平锁"><span class="toc-text">公平锁与非公平锁</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#关于源码"><span class="toc-text">关于源码</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#总结"><span class="toc-text">总结</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Condition"><span class="toc-text">Condition</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#await方法分析"><span class="toc-text">await方法分析</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#将节点加入到条件队列"><span class="toc-text">将节点加入到条件队列</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#完全释放独占锁"><span class="toc-text">完全释放独占锁</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#等待进入阻塞队列"><span class="toc-text">等待进入阻塞队列</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#signal-唤醒线程，转移到阻塞队列"><span class="toc-text">signal 唤醒线程，转移到阻塞队列</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#唤醒后检查中断状态"><span class="toc-text">唤醒后检查中断状态</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#获取独占锁"><span class="toc-text">获取独占锁</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#处理中断状态"><span class="toc-text">处理中断状态</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#AbstractQueuedSynchronizer独占锁的取消排队"><span class="toc-text">AbstractQueuedSynchronizer独占锁的取消排队</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Java线程中断和InterruptedException异常"><span class="toc-text">Java线程中断和InterruptedException异常</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#线程中断"><span class="toc-text">线程中断</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#InterruptedException概述"><span class="toc-text">InterruptedException概述</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#参考文档"><span class="toc-text">参考文档</span></a></li></ol>
-    
-    <div class="picture-container">
-      
-    </div>
-    <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>看了上篇的描述之后，我觉得我应该已经对AQS的大概运行过程有了一个初步的了解，当然这远远不够。快扶我起来，我还能继续学！<br>这篇将继续写有关AQS的相关知识，有关于公平与非公平锁，带条件的锁。还有关于中断的一些知识。废话不多说。咱们走着。</p>
+    <div class="post-content"><h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>看了上篇的描述之后，我觉得我应该已经对AQS的大概运行过程有了一个初步的了解，当然这远远不够。快扶我起来，我还能继续学！<br>这篇将继续写有关AQS的相关知识，有关于公平与非公平锁，带条件的锁。还有关于中断的一些知识。废话不多说。咱们走着。</p>
 <h1 id="公平锁与非公平锁"><a href="#公平锁与非公平锁" class="headerlink" title="公平锁与非公平锁"></a>公平锁与非公平锁</h1><p>首先咱们来谈谈关于Java的公平锁与非公平锁。公平锁是指多个线程按照申请锁的顺序来获取锁，线程直接进入队列中排队，队列中的第一个线程才能获得锁。公平锁的优点是等待锁的线程不会饿死。缺点是整体的吞吐效率相对非公平锁要低，等待队列中除了第一个以外的所有线程都要阻塞，cpu唤醒阻塞线程的开销比较大。</p>
 <p>非公平锁是多个线程加锁时直接尝试获取锁，获取不到的时候才会到队尾等待。但如果此时锁正好可以用了，那么这个线程可以无需阻塞直接获取到锁，所以非公平锁有可能出现后申请锁先获取到资源的场景。非公平锁的优点是可以减少唤起线程的开销，整体的吞吐效率比较高。缺点是有些处于等待队列的线程可能被饿死，获取等待很久才获取到锁。</p>
 <p>下图是公平锁</p>
@@ -253,67 +243,50 @@
 <h1 id="参考文档"><a href="#参考文档" class="headerlink" title="参考文档"></a>参考文档</h1><p><a href="https://www.javadoop.com/post/AbstractQueuedSynchronizer-2" target="_blank" rel="noopener">一行一行源码分析清楚AQS</a></p>
 <p><img src="https://brandonxcc.top/20200510.jpg" alt="avatar"></p>
 
+      </div>
+      
+      <footer class="post-footer">
+        <div class="post-tags">
+            <a href="/tags/java%E5%B9%B6%E5%8F%91/">java并发</a>
+            </div>
+        
+        <nav class="post-nav"><a class="prev" href="/2020/05/13/J.U.C/AQSAQS%E6%BA%90%E7%A0%81%E4%B8%89/">
+        <i class="iconfont icon-left"></i>
+        <span class="prev-text nav-default">AQS源码解析三</span>
+        <span class="prev-text nav-mobile">Prev</span>
+      </a>
+    <a class="next" href="/2020/04/19/J.U.C/AQS%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90-%E4%B8%80/">
+        <span class="next-text nav-default">AQS源码解析(一)</span>
+        <span class="prev-text nav-mobile">Next</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    </nav></footer>
+    </article></div><div class="comments" id="comments"></div></div>
+      </main>
 
-  </article>
-  </script>
-    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js">
-  </script>
-  <div class="busuanzi center">
-    页阅读量:&nbsp;<span id="busuanzi_value_page_pv"></span>&nbsp;・&nbsp;
-    站访问量:&nbsp;<span id="busuanzi_value_site_pv"></span>&nbsp;・&nbsp;
-    站访客数:&nbsp;<span id="busuanzi_value_site_uv"></span>
-  </div>
+      <footer id="footer" class="footer"><div class="copyright">
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a>
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/ahonn/hexo-theme-even" target="_blank" rel="noopener">Even</a>
+  </span>
 
-
-    
-
-
-
-
-
-    </div>
-  </div>
-  <footer class="page-footer"><div class="clearfix">
-</div>
-<div class="right-foot">
-    <div class="firstrow">
-        <a href="#top" target="_self">
-        <svg class="i-caret-right" viewBox="0 0 32 32" width="24" height="24" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="3">
-            <path d="M10 30 L26 16 10 2 Z"></path>
-        </svg>
-        </a>
-        © XXX 2016-2020
-    </div>
-    <div class="secondrow">
-        <a href="https://github.com/gaoryrt/hexo-theme-pln" target="_blank" rel="noopener">
-        Theme Pln
-        </a>
-    </div>
-</div>
-<div class="clearfix">
+  <span class="copyright-year">&copy;2020<span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">brandon</span>
+  </span>
 </div>
 </footer>
-  <script src="//cdn.bootcss.com/jquery/2.2.1/jquery.min.js"></script>
-<script src="/js/search.min.js"></script>
-<script type="text/javascript">
 
-// disqus scripts
-
-
-// dropdown scripts
-$(".dropdown").click(function(event) {
-  var current = $(this);
-  event.stopPropagation();
-  $(current).children(".dropdown-content")[($(current).children(".dropdown-content").hasClass("open"))?'removeClass':'addClass']("open")
-});
-$(document).click(function(){
-    $(".dropdown-content").removeClass("open");
-})
-
-var path = "/search.xml";
-searchFunc(path, 'local-search-input', 'local-search-result');
-
-</script>
-
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div><script type="text/javascript" src="/lib/jquery/jquery.min.js"></script>
+  <script type="text/javascript" src="/lib/slideout/slideout.js"></script>
+  <script type="text/javascript" src="/js/src/even.js?v="></script>
 <script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginModelPath":"assets/","model":{"jsonPath":"live2d-widget-model-z16"},"display":{"position":"left","width":150,"height":345},"mobile":{"show":false},"log":false,"pluginJsPath":"lib/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
 </html>

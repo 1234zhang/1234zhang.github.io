@@ -1,758 +1,200 @@
-<!DOCTYPE HTML>
-<html>
-<head>
-  <meta charset="utf-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black">
-  <meta name="google-site-verification" content="" />
-  
-  <title>brandon</title>
-  <meta name="author" content="brandon">
-  <meta name="description" content="study hard">
-  
-  
-  
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta property="og:site_name" content="brandon"/>
-  <link href="/apple-touch-icon-precomposed.png" sizes="180x180" rel="apple-touch-icon-precomposed">
-  <link rel="alternate" href="/atom.xml" title="brandon" type="application/atom+xml">
-  <link rel="stylesheet" href="/css/m.min.css">
-  <link rel="icon" type="image/x-icon" href="/favicon.ico">
-  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML" async></script>
-<meta name="generator" content="Hexo 4.2.1"></head>
-
-<body>
-  <a id="top"></a>
-  <div id="main">
-    <div class="main-ctnr">
-      <nav class="navbar">
-  <div class="nav-container">
-  <div class="nav navbar-nav navbar-left">
-    <div class="navbar-header">
-      <a href="/" class="navbar-brand">XXX</a>
-    </div>
-    
-
-    <div class="dropdown">
-      <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-        <svg class="i-tag" viewBox="0 0 32 32" width="22" height="22" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
-          <circle cx="24" cy="8" r="2"></circle>
-          <path d="M2 18 L18 2 30 2 30 14 14 30 Z"></path>
-        </svg>
-      </span></a>
-
-      <ul class="dropdown-content">
-
-          
-           <div><a href="/categories/Java/">Java</a></div><div><a href="/categories/中间件/">中间件</a></div><div><a href="/categories/Java/Java流操作/">Java流操作</a></div><div><a href="/categories/Java/Java流操作/nio/">nio</a></div><div><a href="/categories/Java/JUC/">JUC</a></div><div><a href="/categories/Java/Java基础/">Java基础</a></div><div><a href="/categories/JVM/">JVM</a></div><div><a href="/categories/Java/算法/">算法</a></div><div><a href="/categories/spring-源码/">spring 源码</a></div><div><a href="/categories/Java/《java并发编程艺术》读书笔记/">《java并发编程艺术》读书笔记</a></div><div><a href="/categories/日记/">日记</a></div><div><a href="/categories/Java/集合框架/">集合框架</a></div><div><a href="/categories/Java/集合框架/ArrayList/">ArrayList</a></div><div><a href="/categories/Java/集合框架/HashMap/">HashMap</a></div>
-
-      </ul>
-
-    </div>
-    
-
-  </div>
-  <div id="site_search" class="">
-  <input type="text" id="local-search-input" name="q" placeholder="search" class="form-control"/>
-</div>
-<div id="local-search-result"></div>
-
-
-  <div class="nav navbar-nav navbar-right">
-    <div class="dropdown">
-      <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-        <svg class="i-link" viewBox="0 0 32 32" width="22" height="22" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
-          <path d="M18 8 C18 8 24 2 27 5 30 8 29 12 24 16 19 20 16 21 14 17 M14 24 C14 24 8 30 5 27 2 24 3 20 8 16 13 12 16 11 18 15"></path>
-        </svg>
-      </a>
-      <base href="/">
-      <ul class="dropdown-content">
-        
-          <div>
-            <a href="/links.html">
-        友情链接
-      </a>
-    </div>
-     
-          <div>
-            <a href="https://github.com/XXX/" target="_blank" rel="noopener">
-        Github
-      </a>
-    </div>
-     
-          <div>
-            <a href="http://weibo.com/XXX" target="_blank" rel="noopener">
-        微博
-      </a>
-    </div>
-     
-          <div>
-            <a href="https://www.zhihu.com/people/XXX" target="_blank" rel="noopener">
-        知乎
-      </a>
-    </div>
-     
-          <div>
-            <a href="/rss2.xml">
-        rss
-      </a>
-    </div>
-     
-          <div>
-            <a href="/">
-        关于我
-      </a>
-    </div>
-     
-    </ul>
-    </div>
-    <div class="archives"><a href="/archives">
-      <svg class="i-archive" viewBox="0 0 32 32" width="22" height="22" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
-        <path d="M4 10 L4 28 28 28 28 10 M2 4 L2 10 30 10 30 4 Z M12 15 L20 15"></path>
-      </svg>
-    </a></div>
-  </div>
-  </div>
-</nav>
-
-<ul class="posts">
-  
-    
-<li class="post-item">
-  
-  
-    <h1 class="index-title">
-        <a href="/2020/06/22/关于ReentrantReadWriteLock的那些事/">
-            关于ReentrantReadWriteLock的那些事
-        </a>
-    </h1>
-  
-
-
-  <div class="excerpt">
-  
-    关于ReentrantReadWriteLock的使用例子下面是javadoc中对ReentrantReadWriteLock的使用例子
-123456789101112131415161718192021222324252627282930
-  
-  <a href="/2020/06/22/关于ReentrantReadWriteLock的那些事/">
-    更多
-  </a>
-  </div>
-  <div class="index-meta">
-    <time datetime="2020-06-22T07:13:10.000Z" itemprop="datePublished">
-  <svg class="i-calendar" viewBox="0 0 32 32" width="16" height="16" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
-    <path d="M2 6 L2 30 30 30 30 6 Z M2 15 L30 15 M7 3 L7 9 M13 3 L13 9 M19 3 L19 9 M25 3 L25 9"></path>
-  </svg>
-  &nbsp;
-  2020-06-22
-</time>
-
-
-
-
-
-
-  </div>
-</li>
-<hr>
-
-
-
-
-
-  
-    
-<li class="post-item">
-  
-  
-    <h1 class="index-title">
-        <a href="/2020/05/17/J.U.C/concurrentHashmap源码解读/">
-            concurrentHashmap源码解读
-        </a>
-    </h1>
-  
-
-
-  <div class="excerpt">
-  
-    线程不安全的hashmap总所周知，hashmap是一个线程不安全的集合结构。在多线程的情况下，链表会成环。
-多线程的hashmap为什么会成环这个在jdk8以下会出现的问题，因为jdk7采用的是头插法，在进行扩容的时候会对原有的元素进行r
-  
-  <a href="/2020/05/17/J.U.C/concurrentHashmap源码解读/">
-    更多
-  </a>
-  </div>
-  <div class="index-meta">
-    <time datetime="2020-05-17T07:58:52.000Z" itemprop="datePublished">
-  <svg class="i-calendar" viewBox="0 0 32 32" width="16" height="16" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
-    <path d="M2 6 L2 30 30 30 30 6 Z M2 15 L30 15 M7 3 L7 9 M13 3 L13 9 M19 3 L19 9 M25 3 L25 9"></path>
-  </svg>
-  &nbsp;
-  2020-05-17
-</time>
-
-
-    
-    &nbsp;
-    <svg class="i-tag" viewBox="0 0 32 32" width="16" height="16" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
-      <circle cx="24" cy="8" r="2"></circle>
-      <path d="M2 18 L18 2 30 2 30 14 14 30 Z"></path>
-    </svg>
-    &nbsp;
-    <a href="/categories/Java/">Java</a>·<a href="/categories/Java/JUC/">JUC</a>
-
-
-
-
-    
-    &nbsp;
-    <svg class="i-tag" viewBox="0 0 32 32" width="16" height="16" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
-      <circle cx="24" cy="8" r="2"></circle>
-      <path d="M2 18 L18 2 30 2 30 14 14 30 Z"></path>
-    </svg>
-    &nbsp;
-    <a href="/tags/java并发/">java并发</a>
-
-
-  </div>
-</li>
-<hr>
-
-
-
-
-
-  
-    
-<li class="post-item">
-  
-  
-    <h1 class="index-title">
-        <a href="/2020/05/13/J.U.C/AQSAQS源码三/">
-            AQS源码解析三
-        </a>
-    </h1>
-  
-
-
-  <div class="excerpt">
-  
-    前言在前两篇中，分析了ReentrantLock内部的实现，以及Condition的实现使用。这篇将要分析countDownLatch有关的共享模式，和CyclicBarrier、Semaphore的实现，其实在有了前两篇的经验之后，会发现
-  
-  <a href="/2020/05/13/J.U.C/AQSAQS源码三/">
-    更多
-  </a>
-  </div>
-  <div class="index-meta">
-    <time datetime="2020-05-13T15:11:44.000Z" itemprop="datePublished">
-  <svg class="i-calendar" viewBox="0 0 32 32" width="16" height="16" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
-    <path d="M2 6 L2 30 30 30 30 6 Z M2 15 L30 15 M7 3 L7 9 M13 3 L13 9 M19 3 L19 9 M25 3 L25 9"></path>
-  </svg>
-  &nbsp;
-  2020-05-13
-</time>
-
-
-    
-    &nbsp;
-    <svg class="i-tag" viewBox="0 0 32 32" width="16" height="16" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
-      <circle cx="24" cy="8" r="2"></circle>
-      <path d="M2 18 L18 2 30 2 30 14 14 30 Z"></path>
-    </svg>
-    &nbsp;
-    <a href="/categories/Java/">Java</a>·<a href="/categories/Java/JUC/">JUC</a>
-
-
-
-
-    
-    &nbsp;
-    <svg class="i-tag" viewBox="0 0 32 32" width="16" height="16" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
-      <circle cx="24" cy="8" r="2"></circle>
-      <path d="M2 18 L18 2 30 2 30 14 14 30 Z"></path>
-    </svg>
-    &nbsp;
-    <a href="/tags/java并发/">java并发</a>
-
-
-  </div>
-</li>
-<hr>
-
-
-
-
-
-  
-    
-<li class="post-item">
-  
-  
-    <h1 class="index-title">
-        <a href="/2020/04/28/J.U.C/AQS源码解析-二/">
-            AQS源码解析(二)
-        </a>
-    </h1>
-  
-
-
-  <div class="excerpt">
-  
-    前言看了上篇的描述之后，我觉得我应该已经对AQS的大概运行过程有了一个初步的了解，当然这远远不够。快扶我起来，我还能继续学！这篇将继续写有关AQS的相关知识，有关于公平与非公平锁，带条件的锁。还有关于中断的一些知识。废话不多说。咱们走着。
-
-  
-  <a href="/2020/04/28/J.U.C/AQS源码解析-二/">
-    更多
-  </a>
-  </div>
-  <div class="index-meta">
-    <time datetime="2020-04-28T15:05:11.000Z" itemprop="datePublished">
-  <svg class="i-calendar" viewBox="0 0 32 32" width="16" height="16" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
-    <path d="M2 6 L2 30 30 30 30 6 Z M2 15 L30 15 M7 3 L7 9 M13 3 L13 9 M19 3 L19 9 M25 3 L25 9"></path>
-  </svg>
-  &nbsp;
-  2020-04-28
-</time>
-
-
-    
-    &nbsp;
-    <svg class="i-tag" viewBox="0 0 32 32" width="16" height="16" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
-      <circle cx="24" cy="8" r="2"></circle>
-      <path d="M2 18 L18 2 30 2 30 14 14 30 Z"></path>
-    </svg>
-    &nbsp;
-    <a href="/categories/Java/">Java</a>·<a href="/categories/Java/JUC/">JUC</a>
-
-
-
-
-    
-    &nbsp;
-    <svg class="i-tag" viewBox="0 0 32 32" width="16" height="16" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
-      <circle cx="24" cy="8" r="2"></circle>
-      <path d="M2 18 L18 2 30 2 30 14 14 30 Z"></path>
-    </svg>
-    &nbsp;
-    <a href="/tags/java并发/">java并发</a>
-
-
-  </div>
-</li>
-<hr>
-
-
-
-
-
-  
-    
-<li class="post-item">
-  
-  
-    <h1 class="index-title">
-        <a href="/2020/04/19/J.U.C/AQS源码解析-一/">
-            AQS源码解析(一)
-        </a>
-    </h1>
-  
-
-
-  <div class="excerpt">
-  
-    前言开始拜读Doug Lea大神的并发源码了，作为一个小菜鸡，可能理解不了太多这里面的一些编程思想，只希望能了解一个大概过程，在平时使用或者解决问题的时候有一个清晰的思路去分析问题的原因然后去解决这个问题。
-AbstractQueueSyn
-  
-  <a href="/2020/04/19/J.U.C/AQS源码解析-一/">
-    更多
-  </a>
-  </div>
-  <div class="index-meta">
-    <time datetime="2020-04-19T08:26:56.000Z" itemprop="datePublished">
-  <svg class="i-calendar" viewBox="0 0 32 32" width="16" height="16" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
-    <path d="M2 6 L2 30 30 30 30 6 Z M2 15 L30 15 M7 3 L7 9 M13 3 L13 9 M19 3 L19 9 M25 3 L25 9"></path>
-  </svg>
-  &nbsp;
-  2020-04-19
-</time>
-
-
-    
-    &nbsp;
-    <svg class="i-tag" viewBox="0 0 32 32" width="16" height="16" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
-      <circle cx="24" cy="8" r="2"></circle>
-      <path d="M2 18 L18 2 30 2 30 14 14 30 Z"></path>
-    </svg>
-    &nbsp;
-    <a href="/categories/Java/">Java</a>·<a href="/categories/Java/JUC/">JUC</a>
-
-
-
-
-    
-    &nbsp;
-    <svg class="i-tag" viewBox="0 0 32 32" width="16" height="16" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
-      <circle cx="24" cy="8" r="2"></circle>
-      <path d="M2 18 L18 2 30 2 30 14 14 30 Z"></path>
-    </svg>
-    &nbsp;
-    <a href="/tags/java并发/">java并发</a>
-
-
-  </div>
-</li>
-<hr>
-
-
-
-
-
-  
-    
-<li class="post-item">
-  
-  
-    <h1 class="index-title">
-        <a href="/2020/04/18/集合框架源码/集合源码之HashMap/">
-            集合源码之HashMap
-        </a>
-    </h1>
-  
-
-
-  <div class="excerpt">
-  
-    前言同样作为Java集合框架中使用频率最多的数据结构之一，hashmap的地位可谓是相当的高。在面试中出现的频率也是相当的高，所以这篇重在讨论hashmap相关的源码。同时对比jdk7与jdk8的实现有什么异同。
-jdk7的实现jdk7中的
-  
-  <a href="/2020/04/18/集合框架源码/集合源码之HashMap/">
-    更多
-  </a>
-  </div>
-  <div class="index-meta">
-    <time datetime="2020-04-18T07:21:10.000Z" itemprop="datePublished">
-  <svg class="i-calendar" viewBox="0 0 32 32" width="16" height="16" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
-    <path d="M2 6 L2 30 30 30 30 6 Z M2 15 L30 15 M7 3 L7 9 M13 3 L13 9 M19 3 L19 9 M25 3 L25 9"></path>
-  </svg>
-  &nbsp;
-  2020-04-18
-</time>
-
-
-    
-    &nbsp;
-    <svg class="i-tag" viewBox="0 0 32 32" width="16" height="16" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
-      <circle cx="24" cy="8" r="2"></circle>
-      <path d="M2 18 L18 2 30 2 30 14 14 30 Z"></path>
-    </svg>
-    &nbsp;
-    <a href="/categories/Java/">Java</a>·<a href="/categories/Java/集合框架/">集合框架</a>·<a href="/categories/Java/集合框架/HashMap/">HashMap</a>
-
-
-
-
-    
-    &nbsp;
-    <svg class="i-tag" viewBox="0 0 32 32" width="16" height="16" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
-      <circle cx="24" cy="8" r="2"></circle>
-      <path d="M2 18 L18 2 30 2 30 14 14 30 Z"></path>
-    </svg>
-    &nbsp;
-    <a href="/tags/Java集合/">Java集合</a>
-
-
-  </div>
-</li>
-<hr>
-
-
-
-
-
-  
-    
-<li class="post-item">
-  
-  
-    <h1 class="index-title">
-        <a href="/2020/04/12/spring源码解读/AOP原理/">
-            AOP原理
-        </a>
-    </h1>
-  
-
-
-  <div class="excerpt">
-  
-    AOP的目的AOP能够将那些与业务无关，却为业务逻辑共同调用的逻辑或者责任(例如：事务处理，日志管理，权限管理等等)封装起来，便于减少系统的重复代码，降低系统模块的耦合度，并且有利于未来的可拓展性和可维护性。
-AOP的使用
-导入aop包
- 
-  
-  <a href="/2020/04/12/spring源码解读/AOP原理/">
-    更多
-  </a>
-  </div>
-  <div class="index-meta">
-    <time datetime="2020-04-12T05:59:25.000Z" itemprop="datePublished">
-  <svg class="i-calendar" viewBox="0 0 32 32" width="16" height="16" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
-    <path d="M2 6 L2 30 30 30 30 6 Z M2 15 L30 15 M7 3 L7 9 M13 3 L13 9 M19 3 L19 9 M25 3 L25 9"></path>
-  </svg>
-  &nbsp;
-  2020-04-12
-</time>
-
-
-    
-    &nbsp;
-    <svg class="i-tag" viewBox="0 0 32 32" width="16" height="16" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
-      <circle cx="24" cy="8" r="2"></circle>
-      <path d="M2 18 L18 2 30 2 30 14 14 30 Z"></path>
-    </svg>
-    &nbsp;
-    <a href="/categories/spring-源码/">spring 源码</a>
-
-
-
-
-    
-    &nbsp;
-    <svg class="i-tag" viewBox="0 0 32 32" width="16" height="16" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
-      <circle cx="24" cy="8" r="2"></circle>
-      <path d="M2 18 L18 2 30 2 30 14 14 30 Z"></path>
-    </svg>
-    &nbsp;
-    <a href="/tags/spring/">spring</a>
-
-
-  </div>
-</li>
-<hr>
-
-
-
-
-
-  
-    
-<li class="post-item">
-  
-  
-    <h1 class="index-title">
-        <a href="/2020/04/11/spring源码解读/bean生命周期/">
-            bean生命周期
-        </a>
-    </h1>
-  
-
-
-  <div class="excerpt">
-  
-    前言bean是一个被实例化，组装并通过spring IOC容器管理的对象。这些bean都是由用容器提供的配置元数据构成的。
-下列是每个bean定义的属性，也即是配置元信息
-
-
-
-属性
-描述
-
-
-
-class
-这个属性是强制的，并且指定用来创
-  
-  <a href="/2020/04/11/spring源码解读/bean生命周期/">
-    更多
-  </a>
-  </div>
-  <div class="index-meta">
-    <time datetime="2020-04-11T06:49:06.000Z" itemprop="datePublished">
-  <svg class="i-calendar" viewBox="0 0 32 32" width="16" height="16" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
-    <path d="M2 6 L2 30 30 30 30 6 Z M2 15 L30 15 M7 3 L7 9 M13 3 L13 9 M19 3 L19 9 M25 3 L25 9"></path>
-  </svg>
-  &nbsp;
-  2020-04-11
-</time>
-
-
-    
-    &nbsp;
-    <svg class="i-tag" viewBox="0 0 32 32" width="16" height="16" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
-      <circle cx="24" cy="8" r="2"></circle>
-      <path d="M2 18 L18 2 30 2 30 14 14 30 Z"></path>
-    </svg>
-    &nbsp;
-    <a href="/categories/spring-源码/">spring 源码</a>
-
-
-
-
-    
-    &nbsp;
-    <svg class="i-tag" viewBox="0 0 32 32" width="16" height="16" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
-      <circle cx="24" cy="8" r="2"></circle>
-      <path d="M2 18 L18 2 30 2 30 14 14 30 Z"></path>
-    </svg>
-    &nbsp;
-    <a href="/tags/spring/">spring</a>
-
-
-  </div>
-</li>
-<hr>
-
-
-
-
-
-  
-    
-<li class="post-item">
-  
-  
-    <h1 class="index-title">
-        <a href="/2020/03/28/redis相关学习/">
-            redis相关学习
-        </a>
-    </h1>
-  
-
-
-  <div class="excerpt">
-  
-    写在前面的话redis作为一个开源的，高级键值存储和一个适用的解决方案，已经越来越在构建高性能，高扩展的WEB应用上发挥着举足轻重的作用。
-当如今互联网技术架构中Redis已经成为应用最为广泛的中间件之一，他也是中高级后端工程技术面试中面试
-  
-  <a href="/2020/03/28/redis相关学习/">
-    更多
-  </a>
-  </div>
-  <div class="index-meta">
-    <time datetime="2020-03-28T06:18:01.000Z" itemprop="datePublished">
-  <svg class="i-calendar" viewBox="0 0 32 32" width="16" height="16" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
-    <path d="M2 6 L2 30 30 30 30 6 Z M2 15 L30 15 M7 3 L7 9 M13 3 L13 9 M19 3 L19 9 M25 3 L25 9"></path>
-  </svg>
-  &nbsp;
-  2020-03-28
-</time>
-
-
-
-
-
-
-  </div>
-</li>
-<hr>
-
-
-
-
-
-  
-    
-<li class="post-item">
-  
-  
-    <h1 class="index-title">
-        <a href="/2020/01/11/高性能MySQL/Shchema与数据优化/">
-            Schema与数据优化
-        </a>
-    </h1>
-  
-
-
-  <div class="excerpt">
-  
-    写在前面的话本篇主要是《高性能MySQL》，一书的读书笔记。良好的逻辑设计和物理设计是高性能的基石，这往往需要权衡各个方面的各种因素。
-选择优化的数据类型选择正确的数据类型对获得更高效的性能至关重要，在进行数据类型选择的时候，主要遵从如下几
-  
-  <a href="/2020/01/11/高性能MySQL/Shchema与数据优化/">
-    更多
-  </a>
-  </div>
-  <div class="index-meta">
-    <time datetime="2020-01-11T02:28:32.000Z" itemprop="datePublished">
-  <svg class="i-calendar" viewBox="0 0 32 32" width="16" height="16" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
-    <path d="M2 6 L2 30 30 30 30 6 Z M2 15 L30 15 M7 3 L7 9 M13 3 L13 9 M19 3 L19 9 M25 3 L25 9"></path>
-  </svg>
-  &nbsp;
-  2020-01-11
-</time>
-
-
-
-
-
-    
-    &nbsp;
-    <svg class="i-tag" viewBox="0 0 32 32" width="16" height="16" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
-      <circle cx="24" cy="8" r="2"></circle>
-      <path d="M2 18 L18 2 30 2 30 14 14 30 Z"></path>
-    </svg>
-    &nbsp;
-    <a href="/tags/MySQL/">MySQL</a>
-
-
-  </div>
-</li>
-<hr>
-
-
-
-
-
-  
-</ul>
-<ul class="pager">
-    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><a class="extend next" rel="next" href="/page/2/">Next</a>
-</ul>
-
-
-    </div>
-  </div>
-  <footer class="page-footer"><div class="clearfix">
-</div>
-<div class="right-foot">
-    <div class="firstrow">
-        <a href="#top" target="_self">
-        <svg class="i-caret-right" viewBox="0 0 32 32" width="24" height="24" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="3">
-            <path d="M10 30 L26 16 10 2 Z"></path>
-        </svg>
-        </a>
-        © XXX 2016-2020
-    </div>
-    <div class="secondrow">
-        <a href="https://github.com/gaoryrt/hexo-theme-pln" target="_blank" rel="noopener">
-        Theme Pln
-        </a>
-    </div>
-</div>
-<div class="clearfix">
-</div>
-</footer>
-  <script src="//cdn.bootcss.com/jquery/2.2.1/jquery.min.js"></script>
-<script src="/js/search.min.js"></script>
-<script type="text/javascript">
-
-// disqus scripts
-
-
-// dropdown scripts
-$(".dropdown").click(function(event) {
-  var current = $(this);
-  event.stopPropagation();
-  $(current).children(".dropdown-content")[($(current).children(".dropdown-content").hasClass("open"))?'removeClass':'addClass']("open")
-});
-$(document).click(function(){
-    $(".dropdown-content").removeClass("open");
-})
-
-var path = "/search.xml";
-searchFunc(path, 'local-search-input', 'local-search-result');
-
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head><meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+<meta name="description" content="study hard"/><link rel="alternate" href="/atom.xml" title="brandon">
+<link rel="canonical" href="https://1234zhang.github.io/"/>
+
+
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=" />
+
+<script id="baidu_push">
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+<script>
+  window.config = {"leancloud":"","toc":"","fancybox":"","pjax":"","latex":""};
 </script>
 
+    <title>brandon</title>
+  <meta name="generator" content="Hexo 4.2.1"></head>
+
+  <body><div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/." class="logo">brandon</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list"></ul>
+</nav>
+<div class="container" id="mobile-panel">
+      <header id="header" class="header"><div class="logo-wrapper">
+  <a href="/." class="logo">brandon</a>
+</div>
+
+<nav class="site-navbar"></nav>
+</header>
+
+      <main id="main" class="main">
+        <div class="content-wrapper">
+          <div id="content" class="content"><section id="posts" class="posts"><section id="archive" class="archive"><div class="archive-post">
+        <span class="archive-post-time">
+          2020-06-22
+          </span>
+        <span class="archive-post-title">
+          <a href="/2020/06/22/%E5%85%B3%E4%BA%8EReentrantReadWriteLock%E7%9A%84%E9%82%A3%E4%BA%9B%E4%BA%8B/" class="archive-post-link">
+            关于ReentrantReadWriteLock的那些事
+          </a>
+        </span>
+      </div>
+    <div class="archive-post">
+        <span class="archive-post-time">
+          2020-05-17
+          </span>
+        <span class="archive-post-title">
+          <a href="/2020/05/17/J.U.C/concurrentHashmap%E6%BA%90%E7%A0%81%E8%A7%A3%E8%AF%BB/" class="archive-post-link">
+            concurrentHashmap源码解读
+          </a>
+        </span>
+      </div>
+    <div class="archive-post">
+        <span class="archive-post-time">
+          2020-05-13
+          </span>
+        <span class="archive-post-title">
+          <a href="/2020/05/13/J.U.C/AQSAQS%E6%BA%90%E7%A0%81%E4%B8%89/" class="archive-post-link">
+            AQS源码解析三
+          </a>
+        </span>
+      </div>
+    <div class="archive-post">
+        <span class="archive-post-time">
+          2020-04-28
+          </span>
+        <span class="archive-post-title">
+          <a href="/2020/04/28/J.U.C/AQS%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90-%E4%BA%8C/" class="archive-post-link">
+            AQS源码解析(二)
+          </a>
+        </span>
+      </div>
+    <div class="archive-post">
+        <span class="archive-post-time">
+          2020-04-19
+          </span>
+        <span class="archive-post-title">
+          <a href="/2020/04/19/J.U.C/AQS%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90-%E4%B8%80/" class="archive-post-link">
+            AQS源码解析(一)
+          </a>
+        </span>
+      </div>
+    <div class="archive-post">
+        <span class="archive-post-time">
+          2020-04-18
+          </span>
+        <span class="archive-post-title">
+          <a href="/2020/04/18/%E9%9B%86%E5%90%88%E6%A1%86%E6%9E%B6%E6%BA%90%E7%A0%81/%E9%9B%86%E5%90%88%E6%BA%90%E7%A0%81%E4%B9%8BHashMap/" class="archive-post-link">
+            集合源码之HashMap
+          </a>
+        </span>
+      </div>
+    <div class="archive-post">
+        <span class="archive-post-time">
+          2020-04-12
+          </span>
+        <span class="archive-post-title">
+          <a href="/2020/04/12/spring%E6%BA%90%E7%A0%81%E8%A7%A3%E8%AF%BB/AOP%E5%8E%9F%E7%90%86/" class="archive-post-link">
+            AOP原理
+          </a>
+        </span>
+      </div>
+    <div class="archive-post">
+        <span class="archive-post-time">
+          2020-04-11
+          </span>
+        <span class="archive-post-title">
+          <a href="/2020/04/11/spring%E6%BA%90%E7%A0%81%E8%A7%A3%E8%AF%BB/bean%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F/" class="archive-post-link">
+            bean生命周期
+          </a>
+        </span>
+      </div>
+    <div class="archive-post">
+        <span class="archive-post-time">
+          2020-03-28
+          </span>
+        <span class="archive-post-title">
+          <a href="/2020/03/28/redis%E7%9B%B8%E5%85%B3%E5%AD%A6%E4%B9%A0/" class="archive-post-link">
+            redis相关学习
+          </a>
+        </span>
+      </div>
+    <div class="archive-post">
+        <span class="archive-post-time">
+          2020-01-11
+          </span>
+        <span class="archive-post-title">
+          <a href="/2020/01/11/%E9%AB%98%E6%80%A7%E8%83%BDMySQL/Shchema%E4%B8%8E%E6%95%B0%E6%8D%AE%E4%BC%98%E5%8C%96/" class="archive-post-link">
+            Schema与数据优化
+          </a>
+        </span>
+      </div>
+    </section><nav class="pagination"><a class="next" href="/page/2/">
+        <span class="next-text">Next</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    </nav>
+    </section></div></div>
+      </main>
+
+      <footer id="footer" class="footer"><div class="copyright">
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a>
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/ahonn/hexo-theme-even" target="_blank" rel="noopener">Even</a>
+  </span>
+
+  <span class="copyright-year">&copy;2020<span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">brandon</span>
+  </span>
+</div>
+</footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div><script type="text/javascript" src="/lib/jquery/jquery.min.js"></script>
+  <script type="text/javascript" src="/lib/slideout/slideout.js"></script>
+  <script type="text/javascript" src="/js/src/even.js?v="></script>
 <script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginModelPath":"assets/","model":{"jsonPath":"live2d-widget-model-z16"},"display":{"position":"left","width":150,"height":345},"mobile":{"show":false},"log":false,"pluginJsPath":"lib/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
 </html>
