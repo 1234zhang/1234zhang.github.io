@@ -1,0 +1,178 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="google-site-verification" content="" />
+  
+  <title>Java内存模型(四)</title>
+  <meta name="author" content="brandon">
+  <meta name="description" content="study hard">
+  
+  
+  <meta property="og:title" content="Java内存模型(四)"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta property="og:site_name" content="brandon"/>
+  <link href="/apple-touch-icon-precomposed.png" sizes="180x180" rel="apple-touch-icon-precomposed">
+  <link rel="alternate" href="/atom.xml" title="brandon" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/m.min.css">
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML" async></script>
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+<body>
+  <a id="top"></a>
+  <div id="main">
+    <div class="main-ctnr">
+      <div class="behind">
+  <a href="/" class="back black-color">
+    <svg class="i-close" viewBox="0 0 32 32" width="22" height="22" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="3">
+        <path d="M2 30 L30 2 M30 30 L2 2"></path>
+    </svg>
+  </a>
+  <div class="description">
+    &nbsp;
+  </div>
+</div>
+
+
+  <article class="standard [layout]">
+    <div class="title">
+      
+  
+    <h1 class="page-title center">
+        Java内存模型(四)
+    </h1>
+  
+
+
+    </div>
+    <div class="meta center">
+      <time datetime="2019-08-05T08:29:09.000Z" itemprop="datePublished">
+  <svg class="i-calendar" viewBox="0 0 32 32" width="16" height="16" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
+    <path d="M2 6 L2 30 30 30 30 6 Z M2 15 L30 15 M7 3 L7 9 M13 3 L13 9 M19 3 L19 9 M25 3 L25 9"></path>
+  </svg>
+  &nbsp;
+  2019-08-05
+</time>
+
+
+    
+    &nbsp;
+    <svg class="i-tag" viewBox="0 0 32 32" width="16" height="16" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
+      <circle cx="24" cy="8" r="2"></circle>
+      <path d="M2 18 L18 2 30 2 30 14 14 30 Z"></path>
+    </svg>
+    &nbsp;
+    <a href="/categories/Java/">Java</a>·<a href="/categories/Java/《java并发编程艺术》读书笔记/">《java并发编程艺术》读书笔记</a>
+
+
+
+
+    
+    &nbsp;
+    <svg class="i-tag" viewBox="0 0 32 32" width="16" height="16" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
+      <circle cx="24" cy="8" r="2"></circle>
+      <path d="M2 18 L18 2 30 2 30 14 14 30 Z"></path>
+    </svg>
+    &nbsp;
+    <a href="/tags/Java并发编程/">Java并发编程</a>
+
+
+    </div>
+    <hr>
+    
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#简介"><span class="toc-text">简介</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#volatile的特性"><span class="toc-text">volatile的特性</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#可见性"><span class="toc-text">可见性</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#原子性"><span class="toc-text">原子性</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#volatile写-读建立的happens-before关系"><span class="toc-text">volatile写-读建立的happens-before关系</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#内存语义角度"><span class="toc-text">内存语义角度</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#实例代码与图解"><span class="toc-text">实例代码与图解</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#volatile读-写的内存语义"><span class="toc-text">volatile读-写的内存语义</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#写一个volatile变量"><span class="toc-text">写一个volatile变量</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#读一个volatile变量"><span class="toc-text">读一个volatile变量</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#volatile内存语义的实现"><span class="toc-text">volatile内存语义的实现</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#JMM实现volatile写-读的内存语义"><span class="toc-text">JMM实现volatile写&#x2F;读的内存语义</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#内存屏障的插入"><span class="toc-text">内存屏障的插入</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#volatile写后面的StoreLoad屏障"><span class="toc-text">volatile写后面的StoreLoad屏障</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#复杂volatile读写指令序列图"><span class="toc-text">复杂volatile读写指令序列图</span></a></li></ol></li></ol>
+    
+    <div class="picture-container">
+      
+    </div>
+    <h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>这篇主要是关于volatile相关的概念，比如volatile的内存语义，以及内存语义的实现</p>
+<a id="more"></a>
+
+<h2 id="volatile的特性"><a href="#volatile的特性" class="headerlink" title="volatile的特性"></a>volatile的特性</h2><h3 id="可见性"><a href="#可见性" class="headerlink" title="可见性"></a>可见性</h3><p>对一个volatile变量的读，总是能看到(任意线程)对这个volatile变量最后的写入。一个变量的单个读/写操作，与一个普通变量的读/写操作都是使用同一个锁来同步，他们之间的执行效果相同。</p>
+<h3 id="原子性"><a href="#原子性" class="headerlink" title="原子性"></a>原子性</h3><p>对任意单个volatile变量的读/写具有原子性，包括64位的long型和double型变量。但类似volatile++这种复合操作不具有原子性</p>
+<h2 id="volatile写-读建立的happens-before关系"><a href="#volatile写-读建立的happens-before关系" class="headerlink" title="volatile写-读建立的happens-before关系"></a>volatile写-读建立的happens-before关系</h2><h3 id="内存语义角度"><a href="#内存语义角度" class="headerlink" title="内存语义角度"></a>内存语义角度</h3><p>volatile的读-写与锁的释放-获取具有相同效果。</p>
+<h3 id="实例代码与图解"><a href="#实例代码与图解" class="headerlink" title="实例代码与图解"></a>实例代码与图解</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">VolatileExample</span></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> a = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">volatile</span> <span class="keyword">boolean</span> flag = <span class="keyword">false</span>;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">writer</span><span class="params">()</span></span>&#123;</span><br><span class="line">        i = <span class="number">1</span>;                     <span class="comment">//1</span></span><br><span class="line">        flag = <span class="keyword">true</span>;               <span class="comment">//2</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">reader</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(flag)&#123;                  <span class="comment">// 3</span></span><br><span class="line">            <span class="keyword">int</span> i = a;             <span class="comment">// 4</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>happens-before关系<br><img src="https://brandon-blog.oss-cn-beijing.aliyuncs.com/JMM/JavaVolatile%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B.png" alt></p>
+<h2 id="volatile读-写的内存语义"><a href="#volatile读-写的内存语义" class="headerlink" title="volatile读-写的内存语义"></a>volatile读-写的内存语义</h2><h3 id="写一个volatile变量"><a href="#写一个volatile变量" class="headerlink" title="写一个volatile变量"></a>写一个volatile变量</h3><p>当写一个volatile变量时，JMM会把该线程对应的本地内存种的共享变量值刷新到主内存。</p>
+<h3 id="读一个volatile变量"><a href="#读一个volatile变量" class="headerlink" title="读一个volatile变量"></a>读一个volatile变量</h3><p>当读一个volatile变量时，JMM会把该线程对应的本地内存置为无效。线程接下来将从主内存中读取共享变量。</p>
+<h2 id="volatile内存语义的实现"><a href="#volatile内存语义的实现" class="headerlink" title="volatile内存语义的实现"></a>volatile内存语义的实现</h2><h3 id="JMM实现volatile写-读的内存语义"><a href="#JMM实现volatile写-读的内存语义" class="headerlink" title="JMM实现volatile写/读的内存语义"></a>JMM实现volatile写/读的内存语义</h3><p>JMM为了实现volatile内存语义，JMM会分别限制编译器重排序和处理器重排序。<br>volatile重排序表：<br><img src="https://brandon-blog.oss-cn-beijing.aliyuncs.com/JMM/volatile%E9%87%8D%E6%8E%92%E5%BA%8F%E8%A7%84%E5%88%99%E8%A1%A8.png" alt="avatar"></p>
+<h3 id="内存屏障的插入"><a href="#内存屏障的插入" class="headerlink" title="内存屏障的插入"></a>内存屏障的插入</h3><p>为了实现volatile的内存语义，编译器在生成字节码的时候，会在指令序列中插入内存屏障来禁止特定类型的处理器重排序。下面是基于保守策略的JMM内存屏障插入策略</p>
+<ul>
+<li>在每个volatile写操作的前面插入一个StoreStore屏障</li>
+<li>在每个volatile写操作的后面插入一个StoreLoad屏障</li>
+<li>在每个volatile读操作的后面插入一个LoadLoad屏障</li>
+<li>在每个volatile读操作的后面插入一个LoadStore屏障</li>
+</ul>
+<p>volatile写插入内存屏障后生成的指令序列示意图<br><img src="https://brandon-blog.oss-cn-beijing.aliyuncs.com/JMM/voaltile%E6%8C%87%E4%BB%A4%E5%BA%8F%E5%88%97%E5%9B%BE.png" alt="avatar"></p>
+<h3 id="volatile写后面的StoreLoad屏障"><a href="#volatile写后面的StoreLoad屏障" class="headerlink" title="volatile写后面的StoreLoad屏障"></a>volatile写后面的StoreLoad屏障</h3><p>此屏障的作用是避免volatile写与后面可能有的volaitle读/写操作重排序。因为编译器常常无法准确判断在一个volaitle写的后面是否需要插入一个StoreLoad屏障(比如一个voaltile写之后方法立即reture)，为了保证能正确实现volatile的内存语义，在每个voaltile写的后面插入一个StoreLoad屏障。因为volatile写-读内存语义的常见使用模式是：一个线程写volatile变量，多个读线程读同一个volatile变量。当读线程数量大大超过写线程时，选择在volatile写之后插入StoreLoad屏障将带来可观的执行效率的提升。</p>
+<h3 id="复杂volatile读写指令序列图"><a href="#复杂volatile读写指令序列图" class="headerlink" title="复杂volatile读写指令序列图"></a>复杂volatile读写指令序列图</h3><p><img src="https://brandon-blog.oss-cn-beijing.aliyuncs.com/JMM/%E5%A4%8D%E6%9D%82%E6%8C%87%E4%BB%A4%E5%BA%8F%E5%88%97%E5%9B%BE.png" alt="avatar"></p>
+
+
+  </article>
+  </script>
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js">
+  </script>
+  <div class="busuanzi center">
+    页阅读量:&nbsp;<span id="busuanzi_value_page_pv"></span>&nbsp;・&nbsp;
+    站访问量:&nbsp;<span id="busuanzi_value_site_pv"></span>&nbsp;・&nbsp;
+    站访客数:&nbsp;<span id="busuanzi_value_site_uv"></span>
+  </div>
+
+
+    
+
+
+
+
+
+    </div>
+  </div>
+  <footer class="page-footer"><div class="clearfix">
+</div>
+<div class="right-foot">
+    <div class="firstrow">
+        <a href="#top" target="_self">
+        <svg class="i-caret-right" viewBox="0 0 32 32" width="24" height="24" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="3">
+            <path d="M10 30 L26 16 10 2 Z"></path>
+        </svg>
+        </a>
+        © XXX 2016-2020
+    </div>
+    <div class="secondrow">
+        <a href="https://github.com/gaoryrt/hexo-theme-pln" target="_blank" rel="noopener">
+        Theme Pln
+        </a>
+    </div>
+</div>
+<div class="clearfix">
+</div>
+</footer>
+  <script src="//cdn.bootcss.com/jquery/2.2.1/jquery.min.js"></script>
+<script src="/js/search.min.js"></script>
+<script type="text/javascript">
+
+// disqus scripts
+
+
+// dropdown scripts
+$(".dropdown").click(function(event) {
+  var current = $(this);
+  event.stopPropagation();
+  $(current).children(".dropdown-content")[($(current).children(".dropdown-content").hasClass("open"))?'removeClass':'addClass']("open")
+});
+$(document).click(function(){
+    $(".dropdown-content").removeClass("open");
+})
+
+var path = "/search.xml";
+searchFunc(path, 'local-search-input', 'local-search-result');
+
+</script>
+
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginModelPath":"assets/","model":{"jsonPath":"live2d-widget-model-z16"},"display":{"position":"left","width":150,"height":345},"mobile":{"show":false},"log":false,"pluginJsPath":"lib/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+</html>

@@ -1,0 +1,234 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="google-site-verification" content="" />
+  
+  <title>Schema与数据优化</title>
+  <meta name="author" content="brandon">
+  <meta name="description" content="study hard">
+  
+  
+  <meta property="og:title" content="Schema与数据优化"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta property="og:site_name" content="brandon"/>
+  <link href="/apple-touch-icon-precomposed.png" sizes="180x180" rel="apple-touch-icon-precomposed">
+  <link rel="alternate" href="/atom.xml" title="brandon" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/m.min.css">
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML" async></script>
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+<body>
+  <a id="top"></a>
+  <div id="main">
+    <div class="main-ctnr">
+      <div class="behind">
+  <a href="/" class="back black-color">
+    <svg class="i-close" viewBox="0 0 32 32" width="22" height="22" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="3">
+        <path d="M2 30 L30 2 M30 30 L2 2"></path>
+    </svg>
+  </a>
+  <div class="description">
+    &nbsp;
+  </div>
+</div>
+
+
+  <article class="standard [layout]">
+    <div class="title">
+      
+  
+    <h1 class="page-title center">
+        Schema与数据优化
+    </h1>
+  
+
+
+    </div>
+    <div class="meta center">
+      <time datetime="2020-01-11T02:28:32.000Z" itemprop="datePublished">
+  <svg class="i-calendar" viewBox="0 0 32 32" width="16" height="16" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
+    <path d="M2 6 L2 30 30 30 30 6 Z M2 15 L30 15 M7 3 L7 9 M13 3 L13 9 M19 3 L19 9 M25 3 L25 9"></path>
+  </svg>
+  &nbsp;
+  2020-01-11
+</time>
+
+
+
+
+
+    
+    &nbsp;
+    <svg class="i-tag" viewBox="0 0 32 32" width="16" height="16" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
+      <circle cx="24" cy="8" r="2"></circle>
+      <path d="M2 18 L18 2 30 2 30 14 14 30 Z"></path>
+    </svg>
+    &nbsp;
+    <a href="/tags/MySQL/">MySQL</a>
+
+
+    </div>
+    <hr>
+    
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#写在前面的话"><span class="toc-text">写在前面的话</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#选择优化的数据类型"><span class="toc-text">选择优化的数据类型</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#整数类型"><span class="toc-text">整数类型</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#实数类型"><span class="toc-text">实数类型</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#字符串类型"><span class="toc-text">字符串类型</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#日期和时间类型"><span class="toc-text">日期和时间类型</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#位数据类型"><span class="toc-text">位数据类型</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#选择标识符"><span class="toc-text">选择标识符</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#MySQL-schema设计中的陷阱"><span class="toc-text">MySQL schema设计中的陷阱</span></a></li></ol>
+    
+    <div class="picture-container">
+      
+    </div>
+    <h1 id="写在前面的话"><a href="#写在前面的话" class="headerlink" title="写在前面的话"></a>写在前面的话</h1><p>本篇主要是《高性能MySQL》，一书的读书笔记。良好的逻辑设计和物理设计是高性能的基石，这往往需要权衡各个方面的各种因素。</p>
+<h1 id="选择优化的数据类型"><a href="#选择优化的数据类型" class="headerlink" title="选择优化的数据类型"></a>选择优化的数据类型</h1><p>选择正确的数据类型对获得更高效的性能至关重要，在进行数据类型选择的时候，主要遵从如下几个原则:</p>
+<ul>
+<li><p>更小的通常更好</p>
+<p>  一般情况下，应该尽量选择可以正确存储数据的最小数据类型。更小的数据类型通常更快，占用的内存空间更小。在进行查询操作的时候，有更少的I/O操作。</p>
+</li>
+<li><p>简单更好</p>
+<p>  简单数据类型操作通常需要更少的CPU内存。例如：整型比字符操作代价更低，因为字符集和校对规则使字符比整型更复杂。在进行设计的时候，我们应该优先选择使用MySQL内建类型(datetime, timestamp)来代替字符串来存储时间，使用整型来存储IP地址</p>
+</li>
+<li><p>尽量避免NULL</p>
+<p>  如果使用null的列，对MySQL更难优化，因为可为null的列使得索引和索引统计值都更加复杂。可为null的列会使用更多的存储空间</p>
+<h2 id="整数类型"><a href="#整数类型" class="headerlink" title="整数类型"></a>整数类型</h2><p>分为两种类型的数，整数分为两种，分别是有符号数和无符号数。有符号数和无符号数有相同的存储空间，并具有相同的性能，因此可以根据实际情况选择合适的类型。</p>
+</li>
+</ul>
+<p>MySQL对整数类型指定宽度(例如int(11))，这个对大多数应用是没有意义的，这个的主要目的是为了方便可视化界面的显示，但并不影响数据的存储。所以int(1)和int(11)对于存储和计算来说，是相同的。</p>
+<h2 id="实数类型"><a href="#实数类型" class="headerlink" title="实数类型"></a>实数类型</h2><p>MySQL既支持精确类型又支持非精确类型。FLOAT和DOUBLE类型支持标准的浮点运算进行近似计算。</p>
+<p>DECIMAL类型用于存储精确的小数，支持精确计算。因为CPU不支持DECIMAL的直接计算，是MySQL自身实现了DECIMAL的高精度计算。所以在计算性能方面，浮点数运算明显更快。所以我们可以得出的是DECIMAL只是一种存储格式，在计算的时候DECIMAL会转换成DOUBLE类型。</p>
+<p>因为需要额外的空间和计算开销，所以应该尽量只在对小数进行精确计算时才使用DECIMAL。但在数据量比较大的时候，可以考虑使用BIGINT代替DECIMAL，这样可以同时避免浮点存储计算不精确和DECIMAL精确计算代价高的缺点。</p>
+<h2 id="字符串类型"><a href="#字符串类型" class="headerlink" title="字符串类型"></a>字符串类型</h2><p>从MySQL4.1开始每个字符串列可以定义自己的字符集和排序规则(校对规则)。</p>
+<ul>
+<li><p>VARCHAR</p>
+<p>  VARCHAR类型用于存储可变长字符串，最常见的字符串数据类型。比定长类型更加节省空间。他只使用必要的空间(越短的字符串使用越少的空间)。<br>  VARCHAR需要使用1或2个字节记录字符串的长度：如果列的<code>最大长度小于或等于255字节</code>，则只使用1个字节表示，否则使用2个字节表表示。<br>  VARCHAR节省了存储空间，所以对性能也有帮助。但是由于行是变长的，在UPDATE可能使得行变得比原来更长，这就需要做额外的工作。如果一个行占用的空间增长，并且在页内没有更多的存储空间可以存储。不同的存储引擎对这个解决方法不同，MyISAM会将行拆分成不同的片段存储，InnoDB则需要分裂页来使行可以放进页内。</p>
+</li>
+<li><p>CHAR</p>
+<p>  当存储CHAR值的时候，MySQL会删除所有的末尾空格。CHAR值会根据需要采用空格进行填充以方便比较。以下是对该行为的测试(所用mysql8.0.11)<br>  <img src="https://brandonxcc.top/char%E6%8F%92%E5%85%A5%E8%AF%AD%E5%8F%A5.png" alt><br>  <img src="https://brandonxcc.top/char%E6%9F%A5%E8%AF%A2%E8%AF%AD%E5%8F%A5.png" alt><br>  但是使用varchar就会保存末尾的空格<br>  <img src="https://brandonxcc.top/varchar%E6%9F%A5%E8%AF%A2.png" alt><br>  CHAR适合存储一些很短的字符串，或者所有字符串都接近一个长度。对于经常变更的数据，CHAR也比VARCHAR更好，因为定长的CHAR很少产生一些碎片。对于存储一些非常短的列，char也比varchar更加有优势，比如使用char(1) 来存储只有Y和N的值，如果单个字符集只需要一个字节，但是varchar(1)则需要两个字节，因为还有一个额外记录长度的字节。</p>
+</li>
+<li><p>更大的空间并不是明智的</p>
+<p>使用varchar(5)与使用varchar(200)来存储’hello’所用的空间是一致的。但是更长的列会消耗更多的内存，因为MySQL通常会分配固定大小的内存块来保存内部值。尤其是使用内存临时表进行排序或操作时会特别糟糕。</p>
+</li>
+</ul>
+<h2 id="日期和时间类型"><a href="#日期和时间类型" class="headerlink" title="日期和时间类型"></a>日期和时间类型</h2><p>MySQL可以使用很多类型来保存时间和时间值。MySQL能存储的最小时间粒度为秒。但是MySQL也可以使用微秒级的粒度进行临时运算。</p>
+<ul>
+<li><p>DATETIME</p>
+<p>  这个类型能保存大范围的值，从1001年到9999年，精度为秒。把日期和时间封装到格式为YYYYMMDDHHMMSS的整数中，与时区无关。使用8个字节的存储空间。</p>
+</li>
+<li><p>TIMESTAMP </p>
+<p>  与unix时间戳相同。TIMESTAMP只使用4个字节的存储空间，表示的范围比DATETIME要小得多。</p>
+</li>
+</ul>
+<h2 id="位数据类型"><a href="#位数据类型" class="headerlink" title="位数据类型"></a>位数据类型</h2><p>使用紧凑的位存储数据。所有位数据，不管底层存储格式和处理方式如何，从技术上来说都是字符串类型。</p>
+<ul>
+<li><p>BIT</p>
+<p>使用BIT列在一列中存储一个或者多个true/false值，BIT(1)定义一个包含单个位的字段，BIT(2)存储2个位，依次类推。BIT列列的最大长度是64个位。</p>
+<p>MySQL把BIT当作字符串类型，而不是数据类型。当检索BIT(1)的值的时候，结果是一个包含二进制0或者1的值的字符串。而不是ASCII码的”0”或者”1”。在数字上下文检索的时候，结果是将位字符串转换成数字。</p>
+</li>
+<li><p>SET</p>
+<p>如果需要保存很多的true/false的值，可以考虑合并这些列到一个SET数据类型中，他在MySQL内部是以一系列打包的位的集合来表示的。使用FIND_IN_SET()和FIELD()这样的函数，方便在查询中使用。他的主要的缺点是改变列的定义的代价比较高：需要ALTER TABLE。</p>
+<h2 id="选择标识符"><a href="#选择标识符" class="headerlink" title="选择标识符"></a>选择标识符</h2><p>一般来说更有可能用标识列与其他值进行比较，或者通过标识列寻找其他列。标识列也可能在另外的表中作为外键使用，所以为标识列选择数据类型时，应该选择跟关联表中对应列一样的类型</p>
+</li>
+</ul>
+<p>选择标识列的时候，不仅仅需要考虑存储类型，还需要考虑MySQL对这种类型怎么执行计算和比较。一旦选择了一种类型，要确保在所有关联表中都使用同样的类型，而且类型之间需要精确匹配，包括unsigned这种类型。</p>
+<p>在满足值的范围需求，并且预留未来增长的空间的前提之下，应该选择最小的数据类型。有时候可以省下几个字节，就是这几个字节可以导致较大的性能差异。下面是一些使用技巧。</p>
+<ul>
+<li><p>整数类型：整数类型是标识列最好的选择，因为他们很快并且可以使用auto_increment</p>
+</li>
+<li><p>ENUM和SET</p>
+<p> 对于标识符来说，ENUM和SET是一个糟糕的选择，尽管对某些只包含固定状态或者类型的静态“定义表”来说可能是没有问题的。使用枚举类型作为标识列是可行的，但是大部分情况下都要避免这么做。</p>
+</li>
+<li><p>字符串类型</p>
+<p>  如果可能，应该避免使用字符串类型作为标识列，因为他们很消耗空间，并且通常比数字类型慢。</p>
+</li>
+</ul>
+<h1 id="MySQL-schema设计中的陷阱"><a href="#MySQL-schema设计中的陷阱" class="headerlink" title="MySQL schema设计中的陷阱"></a>MySQL schema设计中的陷阱</h1><ul>
+<li><p>太多的列</p>
+<p>  MySQL的存储引擎API工作时候需要在服务器层和存储引擎层之间通过行缓冲格式拷贝数据，然后在服务器层将缓冲内容解码成各个列。从行缓冲中将编码过的列转换成行数据结构的操作代价是非常高的。如果计划使用数千个字段，必须意识到服务器的性能运行特征会有一些不同。</p>
+</li>
+<li><p>太多的关联</p>
+<p>  所谓“实体 - 属性 - 值”设计模式是一个常见的糟糕的设计模式，尤其是在MySQL下不能靠谱的工作。MySQL限制了每个关联操作最多只能有61个表，但EAV数据库需要许多自关联。如果希望查询执行得快并且并发性好，单个查询最好在12个表以内做关联。</p>
+</li>
+<li><p>全能的枚举</p>
+<p>  防止过度使用枚举(ENUM)。</p>
+  <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">create</span> <span class="keyword">table</span> ... (country enum(<span class="string">''</span>, <span class="string">'1'</span>,<span class="string">'2'</span>));</span><br></pre></td></tr></table></figure>
+
+<p>  这样的模式是非常糟糕的。而且在添加枚举值的时候，需要使用alter table来修改整个表的值，在MySQL5.0之前，alter是一个阻塞操作。即便是在MySQL5.0之后如果不是在列表的末尾添加值，也会一样需要alter table</p>
+</li>
+<li><p>变相的枚举</p>
+<p>  枚举列允许在列中存储一组定义值中的单个值，集合(SET)列则允许在列中存储一组定义值的一个或者多个。有时候可能容易导致混乱</p>
+  <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">create</span> <span class="keyword">table</span> ... (is_default <span class="keyword">set</span>(<span class="string">'y'</span>,<span class="string">'n'</span>) <span class="keyword">not</span> <span class="literal">null</span> <span class="keyword">default</span> <span class="string">'n'</span>)</span><br></pre></td></tr></table></figure>
+
+<p>  👆 如果是真和假两种情况不会同时出现，那么毫不疑问应该使用枚举列代表集合列</p>
+</li>
+<li><p>非此发明的null</p>
+<p>  之前提及避免使用null，并且应该尽可能的考虑替代方案。即使需要存储一个事实上的“空值”到表中的时候，也不一定使用null，可以使用0、某个特殊值、空字符串来代替。</p>
+<p>  但是遵循这个原则也不要走极端。当确实需要表示未知值的时候，也不要抗拒使用null。在一些场景中，使用null可能会比某个神奇常数更好。从特定类型的值域中选择一个不可能的值，例如使用一个-1表示未知的整数，可能导致代码复杂更多，并且容易引入bug。</p>
+<p>  <img src="https://brandonxcc.top/%E6%A8%B1%E5%90%B9%E9%9B%AA.jpg" alt></p>
+</li>
+</ul>
+
+
+  </article>
+  </script>
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js">
+  </script>
+  <div class="busuanzi center">
+    页阅读量:&nbsp;<span id="busuanzi_value_page_pv"></span>&nbsp;・&nbsp;
+    站访问量:&nbsp;<span id="busuanzi_value_site_pv"></span>&nbsp;・&nbsp;
+    站访客数:&nbsp;<span id="busuanzi_value_site_uv"></span>
+  </div>
+
+
+    
+
+
+
+
+
+    </div>
+  </div>
+  <footer class="page-footer"><div class="clearfix">
+</div>
+<div class="right-foot">
+    <div class="firstrow">
+        <a href="#top" target="_self">
+        <svg class="i-caret-right" viewBox="0 0 32 32" width="24" height="24" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="3">
+            <path d="M10 30 L26 16 10 2 Z"></path>
+        </svg>
+        </a>
+        © XXX 2016-2020
+    </div>
+    <div class="secondrow">
+        <a href="https://github.com/gaoryrt/hexo-theme-pln" target="_blank" rel="noopener">
+        Theme Pln
+        </a>
+    </div>
+</div>
+<div class="clearfix">
+</div>
+</footer>
+  <script src="//cdn.bootcss.com/jquery/2.2.1/jquery.min.js"></script>
+<script src="/js/search.min.js"></script>
+<script type="text/javascript">
+
+// disqus scripts
+
+
+// dropdown scripts
+$(".dropdown").click(function(event) {
+  var current = $(this);
+  event.stopPropagation();
+  $(current).children(".dropdown-content")[($(current).children(".dropdown-content").hasClass("open"))?'removeClass':'addClass']("open")
+});
+$(document).click(function(){
+    $(".dropdown-content").removeClass("open");
+})
+
+var path = "/search.xml";
+searchFunc(path, 'local-search-input', 'local-search-result');
+
+</script>
+
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginModelPath":"assets/","model":{"jsonPath":"live2d-widget-model-z16"},"display":{"position":"left","width":150,"height":345},"mobile":{"show":false},"log":false,"pluginJsPath":"lib/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+</html>

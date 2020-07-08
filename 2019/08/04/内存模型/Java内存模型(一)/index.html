@@ -1,0 +1,208 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="google-site-verification" content="" />
+  
+  <title>Java内存模型(一)</title>
+  <meta name="author" content="brandon">
+  <meta name="description" content="study hard">
+  
+  
+  <meta property="og:title" content="Java内存模型(一)"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta property="og:site_name" content="brandon"/>
+  <link href="/apple-touch-icon-precomposed.png" sizes="180x180" rel="apple-touch-icon-precomposed">
+  <link rel="alternate" href="/atom.xml" title="brandon" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/m.min.css">
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML" async></script>
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+<body>
+  <a id="top"></a>
+  <div id="main">
+    <div class="main-ctnr">
+      <div class="behind">
+  <a href="/" class="back black-color">
+    <svg class="i-close" viewBox="0 0 32 32" width="22" height="22" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="3">
+        <path d="M2 30 L30 2 M30 30 L2 2"></path>
+    </svg>
+  </a>
+  <div class="description">
+    &nbsp;
+  </div>
+</div>
+
+
+  <article class="standard post">
+    <div class="title">
+      
+  
+    <h1 class="page-title center">
+        Java内存模型(一)
+    </h1>
+  
+
+
+    </div>
+    <div class="meta center">
+      <time datetime="2019-08-04T08:06:15.000Z" itemprop="datePublished">
+  <svg class="i-calendar" viewBox="0 0 32 32" width="16" height="16" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
+    <path d="M2 6 L2 30 30 30 30 6 Z M2 15 L30 15 M7 3 L7 9 M13 3 L13 9 M19 3 L19 9 M25 3 L25 9"></path>
+  </svg>
+  &nbsp;
+  2019-08-04
+</time>
+
+
+    
+    &nbsp;
+    <svg class="i-tag" viewBox="0 0 32 32" width="16" height="16" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
+      <circle cx="24" cy="8" r="2"></circle>
+      <path d="M2 18 L18 2 30 2 30 14 14 30 Z"></path>
+    </svg>
+    &nbsp;
+    <a href="/categories/Java/">Java</a>·<a href="/categories/Java/《java并发编程艺术》读书笔记/">《java并发编程艺术》读书笔记</a>
+
+
+
+
+    
+    &nbsp;
+    <svg class="i-tag" viewBox="0 0 32 32" width="16" height="16" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
+      <circle cx="24" cy="8" r="2"></circle>
+      <path d="M2 18 L18 2 30 2 30 14 14 30 Z"></path>
+    </svg>
+    &nbsp;
+    <a href="/tags/Java并发编程/">Java并发编程</a>
+
+
+    </div>
+    <hr>
+    
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#摘要"><span class="toc-text">摘要</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Java内存模型的基础"><span class="toc-text">Java内存模型的基础</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#并发编程的两个问题"><span class="toc-text">并发编程的两个问题</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Java内存模型的抽象结构"><span class="toc-text">Java内存模型的抽象结构</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#从源代码到指令序列的重排序"><span class="toc-text">从源代码到指令序列的重排序</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#并发编程模型的分类"><span class="toc-text">并发编程模型的分类</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#happens-before简介"><span class="toc-text">happens-before简介</span></a></li></ol></li></ol>
+    
+    <div class="picture-container">
+      
+    </div>
+    <p>一直在看Java多线程，就没有系统的写过总结跟读书笔记，正好在暑假有多的时间，可以系统的学习一下Java多线程，找到一本《Java并发编程艺术》也是学长比较推荐的一本书吧。好好读一下， 打算是，学完这本书之后能够在实际项目中运用起来。自己一直有一个疑惑，如何在实战项目中运用并发的知识，感觉一直好像没怎么使用过，所以一直比较疑惑。这个是书的第三章，Java的内存模型。Java线程之间的通信对程序员完全透明，内存可见性问题很容易困扰Java程序员</p>
+<h2 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h2><ul>
+<li>Java内存模型的基础，介绍内存模型相关概念</li>
+<li>Java内存模型的顺序一致性，主要介绍重排序与顺序一致性内存模型</li>
+<li>同步原语，主要包括synchronized、volatile和final的内存语义以及重排序规则在处理器中的实现。</li>
+<li>Java内存模型的设计</li>
+</ul>
+<a id="more"></a>
+
+
+<h2 id="Java内存模型的基础"><a href="#Java内存模型的基础" class="headerlink" title="Java内存模型的基础"></a>Java内存模型的基础</h2><h3 id="并发编程的两个问题"><a href="#并发编程的两个问题" class="headerlink" title="并发编程的两个问题"></a>并发编程的两个问题</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">1.线程之间如何通信</span><br><span class="line">2.线程之间如何同步</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>线程之间的通信是指以何种机制来交换信息(主要方法：共享内存和消息传递)</li>
+<li>线程之间的同步是指：用于控制不同线程之间操作发生相对顺序的机制</li>
+<li>Java采用的是共享内存模型，Java线程之间通信总是隐式进行，整个通信过程对程序员完全透明。<h3 id="Java内存模型的抽象结构"><a href="#Java内存模型的抽象结构" class="headerlink" title="Java内存模型的抽象结构"></a>Java内存模型的抽象结构</h3></li>
+<li>Java中所有实例域、静态域和数组元素都存储在一堆内存中，堆内存在线程之间共享。局部变量，方法定义参数和异常处理器参数不会在线程之间共享。</li>
+<li>Java线程之间的通信由Java内存模型(JMM)控制，JMM决定一个线程对共享变量的写入何时对另一个线程可见。</li>
+<li>内存模型的抽象结构：JMM定义了线程与主内存之间的抽象关系，线程之间的共享变量存储在主内存中，每个线程都有一个私有的本地内存，本地内存中存储了该线程以读/写共享变量的副本。本地内存是JMM的一个抽线概念，并不是真实存在的。<ul>
+<li><img src="https://brandon-blog.oss-cn-beijing.aliyuncs.com/JMM/Java%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B%E6%8A%BD%E8%B1%A1%E7%BB%93%E6%9E%84.png" alt></li>
+</ul>
+</li>
+<li>Java线程之间的通信过程：<ul>
+<li>线程A把本地内存A中更新过的共享变量刷新到主内存中去</li>
+<li>线程B到主内存中去读取线程A之前更新过的共享变量<h3 id="从源代码到指令序列的重排序"><a href="#从源代码到指令序列的重排序" class="headerlink" title="从源代码到指令序列的重排序"></a>从源代码到指令序列的重排序</h3></li>
+</ul>
+</li>
+<li>编译器优化的重排序。编译器在不改变单线程程序语义的前提下，可以重新安排语句的执行顺序。</li>
+<li>指令级并行的重排序。现代处理器采用了指令级并行技术来将多条指令重叠执行。如果不存在数据依赖性，处理器可以改变语句对应机器执行顺序。</li>
+<li>内存系统的重排序。由于处理器使用缓存和读写缓冲区，这使得加载和存储操作看上去可能在乱序执行。</li>
+<li>JMM属于语言级的内存模型，他确保在不同的编译器和不同的处理器平台上，通过禁止特定类型的编译器重排序和处理器重排序，为程序员提供一致的内存可见性保证。<h3 id="并发编程模型的分类"><a href="#并发编程模型的分类" class="headerlink" title="并发编程模型的分类"></a>并发编程模型的分类</h3></li>
+<li>现代的处理器使用写缓冲区临时保存向内存写入的数据。但每个处理器上的写缓冲区，仅仅对它所在的处理器可见。这个特性会对内存操作的执行顺序产生重要的影响：处理器对内存的读/写操作的执行顺序，不一定与内存实际发生的读/写一致。</li>
+<li>为了保证内存可见性，Java编译器在生成指令序列的适当位置会插入内存屏障指令来禁止特定类型的处理器重排序</li>
+<li>内存屏障类型：<ul>
+<li>LoadLoad：load1; LoadLoad; Load2, 确保Load1数据的装载先于Load2以所有后续装载指令的装载</li>
+<li>StoreStore：Store1; StoreStore; Store2, 确保Store1数据对其他处理器可见(刷新到内存)先于Store2及所有后续存储指令的存储</li>
+<li>LoadStore：Load1; LoadStore; Store2, 确保Load1数据装载先于Store2及所有后续的存储指令刷新到内存</li>
+<li>StoreLoad：Store1;StoreLoad;Load2，确保Store1数据对其他处理器变得可见(指刷新到内存)先于Load2及所有后续装载指令的装载。StoreLoad 会使该屏障之前的所有内存访问指令(存储和装载指令)完成之后，才执行该屏障之后的内存访问指令。<h3 id="happens-before简介"><a href="#happens-before简介" class="headerlink" title="happens-before简介"></a>happens-before简介</h3></li>
+</ul>
+</li>
+<li>happens-before规则：<ul>
+<li>程序顺序规则：一个线程中的每个操作，hanppens-before于该线程中任意后续操作</li>
+<li>监视器规则：对一个锁的解锁，happens-before于随后对这个锁的加锁。</li>
+<li>volatile变量规则：对一个volatile域的写，happens-before于任意后续对这个volatile域的读。</li>
+<li>传递性：如果A happens-before B，而B happens-before C 那么A happens-before C</li>
+</ul>
+</li>
+<li>happens-before 与JMM之间的关系<ul>
+<li><img src="https://brandon-blog.oss-cn-beijing.aliyuncs.com/JMM/JMM%E4%B8%8Ehappens-before%E7%9A%84%E5%85%B3%E7%B3%BB.png" alt>  </li>
+</ul>
+</li>
+</ul>
+
+
+  </article>
+  </script>
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js">
+  </script>
+  <div class="busuanzi center">
+    页阅读量:&nbsp;<span id="busuanzi_value_page_pv"></span>&nbsp;・&nbsp;
+    站访问量:&nbsp;<span id="busuanzi_value_site_pv"></span>&nbsp;・&nbsp;
+    站访客数:&nbsp;<span id="busuanzi_value_site_uv"></span>
+  </div>
+
+
+    
+
+
+
+
+
+    </div>
+  </div>
+  <footer class="page-footer"><div class="clearfix">
+</div>
+<div class="right-foot">
+    <div class="firstrow">
+        <a href="#top" target="_self">
+        <svg class="i-caret-right" viewBox="0 0 32 32" width="24" height="24" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="3">
+            <path d="M10 30 L26 16 10 2 Z"></path>
+        </svg>
+        </a>
+        © XXX 2016-2020
+    </div>
+    <div class="secondrow">
+        <a href="https://github.com/gaoryrt/hexo-theme-pln" target="_blank" rel="noopener">
+        Theme Pln
+        </a>
+    </div>
+</div>
+<div class="clearfix">
+</div>
+</footer>
+  <script src="//cdn.bootcss.com/jquery/2.2.1/jquery.min.js"></script>
+<script src="/js/search.min.js"></script>
+<script type="text/javascript">
+
+// disqus scripts
+
+
+// dropdown scripts
+$(".dropdown").click(function(event) {
+  var current = $(this);
+  event.stopPropagation();
+  $(current).children(".dropdown-content")[($(current).children(".dropdown-content").hasClass("open"))?'removeClass':'addClass']("open")
+});
+$(document).click(function(){
+    $(".dropdown-content").removeClass("open");
+})
+
+var path = "/search.xml";
+searchFunc(path, 'local-search-input', 'local-search-result');
+
+</script>
+
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginModelPath":"assets/","model":{"jsonPath":"live2d-widget-model-z16"},"display":{"position":"left","width":150,"height":345},"mobile":{"show":false},"log":false,"pluginJsPath":"lib/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+</html>

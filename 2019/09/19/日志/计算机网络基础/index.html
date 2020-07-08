@@ -1,0 +1,166 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="google-site-verification" content="" />
+  
+  <title>计算机网络基础</title>
+  <meta name="author" content="brandon">
+  <meta name="description" content="study hard">
+  
+  
+  <meta property="og:title" content="计算机网络基础"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta property="og:site_name" content="brandon"/>
+  <link href="/apple-touch-icon-precomposed.png" sizes="180x180" rel="apple-touch-icon-precomposed">
+  <link rel="alternate" href="/atom.xml" title="brandon" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/m.min.css">
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML" async></script>
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+<body>
+  <a id="top"></a>
+  <div id="main">
+    <div class="main-ctnr">
+      <div class="behind">
+  <a href="/" class="back black-color">
+    <svg class="i-close" viewBox="0 0 32 32" width="22" height="22" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="3">
+        <path d="M2 30 L30 2 M30 30 L2 2"></path>
+    </svg>
+  </a>
+  <div class="description">
+    &nbsp;
+  </div>
+</div>
+
+
+  <article class="standard [layout]">
+    <div class="title">
+      
+  
+    <h1 class="page-title center">
+        计算机网络基础
+    </h1>
+  
+
+
+    </div>
+    <div class="meta center">
+      <time datetime="2019-09-19T14:02:19.000Z" itemprop="datePublished">
+  <svg class="i-calendar" viewBox="0 0 32 32" width="16" height="16" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
+    <path d="M2 6 L2 30 30 30 30 6 Z M2 15 L30 15 M7 3 L7 9 M13 3 L13 9 M19 3 L19 9 M25 3 L25 9"></path>
+  </svg>
+  &nbsp;
+  2019-09-19
+</time>
+
+
+    
+    &nbsp;
+    <svg class="i-tag" viewBox="0 0 32 32" width="16" height="16" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
+      <circle cx="24" cy="8" r="2"></circle>
+      <path d="M2 18 L18 2 30 2 30 14 14 30 Z"></path>
+    </svg>
+    &nbsp;
+    <a href="/categories/日记/">日记</a>
+
+
+
+
+    
+    &nbsp;
+    <svg class="i-tag" viewBox="0 0 32 32" width="16" height="16" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
+      <circle cx="24" cy="8" r="2"></circle>
+      <path d="M2 18 L18 2 30 2 30 14 14 30 Z"></path>
+    </svg>
+    &nbsp;
+    <a href="/tags/日记/">日记</a>
+
+
+    </div>
+    <hr>
+    
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#网络"><span class="toc-text">网络</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#网络的定义"><span class="toc-text">网络的定义</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#网络中的相关概念"><span class="toc-text">网络中的相关概念</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#网络的分层"><span class="toc-text">网络的分层</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#七层网络结构"><span class="toc-text">七层网络结构</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#TCP-IP"><span class="toc-text">TCP&#x2F;IP</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#五层网络结构"><span class="toc-text">五层网络结构</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#客户端和服务端"><span class="toc-text">客户端和服务端</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#后记。。。。。"><span class="toc-text">后记。。。。。</span></a></li></ol>
+    
+    <div class="picture-container">
+      
+    </div>
+    <p>  最近在写一个服务器，涉及到了Java的网络编程，发现自己在这个方面还是很<br>薄弱，所以找到了一本《Java网络编程》这本书。今天看了第一章。来小小总结一哈。</p>
+<h2 id="网络"><a href="#网络" class="headerlink" title="网络"></a>网络</h2><h3 id="网络的定义"><a href="#网络的定义" class="headerlink" title="网络的定义"></a>网络的定义</h3><p>将地理位置不同的具有独立功能的多台计算机及其外部设备，通过通信线路连接起来，在网络操作系统，网络管理软件及其网络通信协议的管理和协商下，实现资源的共享和信息传递的计算机系统。</p>
+<h3 id="网络中的相关概念"><a href="#网络中的相关概念" class="headerlink" title="网络中的相关概念"></a>网络中的相关概念</h3><ul>
+<li>网络中的每台机器称之为节点(node)，具有完整功能的计算机节点也称之为主机(host)</li>
+<li>每个网络中的节点都有地址，用于唯一标识节点的一个字节序列。</li>
+<li>所有现代网络都是包交换网络：流经网络的数据分割成小块，称之为包(package,也称之为分组).</li>
+<li>网络中通过协议(protocol)来定义通信的规则。<br>  <img src="https://brandonxcc.top/protocol.png" alt><h2 id="网络的分层"><a href="#网络的分层" class="headerlink" title="网络的分层"></a>网络的分层</h2>在网络中，对等层的协议之间进行通信，例如传输层中的tcp协议只与传输层的tcp进行信息的传递。在网络分层中，下层为上层提供服务，上层接收下层来的服务。<h3 id="七层网络结构"><a href="#七层网络结构" class="headerlink" title="七层网络结构"></a>七层网络结构</h3><img src="https://brandonxcc.top/isoModel.png" alt><h3 id="TCP-IP"><a href="#TCP-IP" class="headerlink" title="TCP/IP"></a>TCP/IP</h3><img src="https://brandonxcc.top/TCPIPprotocol.png" alt><h3 id="五层网络结构"><a href="#五层网络结构" class="headerlink" title="五层网络结构"></a>五层网络结构</h3><img src="https://brandonxcc.top/%E4%BA%94%E5%B1%82%E7%BD%91%E7%BB%9C%E7%BB%93%E6%9E%84.png" alt><h2 id="客户端和服务端"><a href="#客户端和服务端" class="headerlink" title="客户端和服务端"></a>客户端和服务端</h2>现代网路编程都基于客户/服务端模式，在服务端进行数据的处理，以及网站性能的优化。Web服务端响应Web客户端的请求，数据处理在服务端上，会发送请求数据的客户端。处理最初的请求，几乎所有数据都从服务端发送到客户端。</li>
+</ul>
+<h2 id="后记。。。。。"><a href="#后记。。。。。" class="headerlink" title="后记。。。。。"></a>后记。。。。。</h2><p>今天就学这么多，乱七八糟的事情有点烦。。<br>算是一点小吐槽，今天就开始写日记了，每天记录一点自己的学习生活。感觉自己的学生时代也没多久了。。。<br>一直挺期待上班的，不知道会是什么感觉。。。<br>定个小目标，这个寒假一定要找到一个实习！！！<br>今天是桌面镇楼</p>
+<p><img src="https://brandonxcc.top/rabbit.jpg" alt></p>
+
+
+  </article>
+  </script>
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js">
+  </script>
+  <div class="busuanzi center">
+    页阅读量:&nbsp;<span id="busuanzi_value_page_pv"></span>&nbsp;・&nbsp;
+    站访问量:&nbsp;<span id="busuanzi_value_site_pv"></span>&nbsp;・&nbsp;
+    站访客数:&nbsp;<span id="busuanzi_value_site_uv"></span>
+  </div>
+
+
+    
+
+
+
+
+
+    </div>
+  </div>
+  <footer class="page-footer"><div class="clearfix">
+</div>
+<div class="right-foot">
+    <div class="firstrow">
+        <a href="#top" target="_self">
+        <svg class="i-caret-right" viewBox="0 0 32 32" width="24" height="24" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="3">
+            <path d="M10 30 L26 16 10 2 Z"></path>
+        </svg>
+        </a>
+        © XXX 2016-2020
+    </div>
+    <div class="secondrow">
+        <a href="https://github.com/gaoryrt/hexo-theme-pln" target="_blank" rel="noopener">
+        Theme Pln
+        </a>
+    </div>
+</div>
+<div class="clearfix">
+</div>
+</footer>
+  <script src="//cdn.bootcss.com/jquery/2.2.1/jquery.min.js"></script>
+<script src="/js/search.min.js"></script>
+<script type="text/javascript">
+
+// disqus scripts
+
+
+// dropdown scripts
+$(".dropdown").click(function(event) {
+  var current = $(this);
+  event.stopPropagation();
+  $(current).children(".dropdown-content")[($(current).children(".dropdown-content").hasClass("open"))?'removeClass':'addClass']("open")
+});
+$(document).click(function(){
+    $(".dropdown-content").removeClass("open");
+})
+
+var path = "/search.xml";
+searchFunc(path, 'local-search-input', 'local-search-result');
+
+</script>
+
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginModelPath":"assets/","model":{"jsonPath":"live2d-widget-model-z16"},"display":{"position":"left","width":150,"height":345},"mobile":{"show":false},"log":false,"pluginJsPath":"lib/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+</html>

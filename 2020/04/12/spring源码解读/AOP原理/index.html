@@ -1,0 +1,240 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="google-site-verification" content="" />
+  
+  <title>AOP原理</title>
+  <meta name="author" content="brandon">
+  <meta name="description" content="study hard">
+  
+  
+  <meta property="og:title" content="AOP原理"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta property="og:site_name" content="brandon"/>
+  <link href="/apple-touch-icon-precomposed.png" sizes="180x180" rel="apple-touch-icon-precomposed">
+  <link rel="alternate" href="/atom.xml" title="brandon" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/m.min.css">
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML" async></script>
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+<body>
+  <a id="top"></a>
+  <div id="main">
+    <div class="main-ctnr">
+      <div class="behind">
+  <a href="/" class="back black-color">
+    <svg class="i-close" viewBox="0 0 32 32" width="22" height="22" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="3">
+        <path d="M2 30 L30 2 M30 30 L2 2"></path>
+    </svg>
+  </a>
+  <div class="description">
+    &nbsp;
+  </div>
+</div>
+
+
+  <article class="standard [layout]">
+    <div class="title">
+      
+  
+    <h1 class="page-title center">
+        AOP原理
+    </h1>
+  
+
+
+    </div>
+    <div class="meta center">
+      <time datetime="2020-04-12T05:59:25.000Z" itemprop="datePublished">
+  <svg class="i-calendar" viewBox="0 0 32 32" width="16" height="16" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
+    <path d="M2 6 L2 30 30 30 30 6 Z M2 15 L30 15 M7 3 L7 9 M13 3 L13 9 M19 3 L19 9 M25 3 L25 9"></path>
+  </svg>
+  &nbsp;
+  2020-04-12
+</time>
+
+
+    
+    &nbsp;
+    <svg class="i-tag" viewBox="0 0 32 32" width="16" height="16" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
+      <circle cx="24" cy="8" r="2"></circle>
+      <path d="M2 18 L18 2 30 2 30 14 14 30 Z"></path>
+    </svg>
+    &nbsp;
+    <a href="/categories/spring-源码/">spring 源码</a>
+
+
+
+
+    
+    &nbsp;
+    <svg class="i-tag" viewBox="0 0 32 32" width="16" height="16" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
+      <circle cx="24" cy="8" r="2"></circle>
+      <path d="M2 18 L18 2 30 2 30 14 14 30 Z"></path>
+    </svg>
+    &nbsp;
+    <a href="/tags/spring/">spring</a>
+
+
+    </div>
+    <hr>
+    
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#AOP的目的"><span class="toc-text">AOP的目的</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#AOP的使用"><span class="toc-text">AOP的使用</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#AOP的原理"><span class="toc-text">AOP的原理</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#EnableAspectJAutoProxy注解"><span class="toc-text">@EnableAspectJAutoProxy注解</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#使用AspectJAutoProxyRegistar给容器中注册一个什么bean"><span class="toc-text">使用AspectJAutoProxyRegistar给容器中注册一个什么bean?</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#AnnotationAwareAspectJAutoProxyCreator-有什么用"><span class="toc-text">AnnotationAwareAspectJAutoProxyCreator 有什么用?</span></a></li></ol></li></ol></li></ol>
+    
+    <div class="picture-container">
+      
+    </div>
+    <h1 id="AOP的目的"><a href="#AOP的目的" class="headerlink" title="AOP的目的"></a>AOP的目的</h1><p>AOP能够将那些与业务无关，却为业务逻辑共同调用的逻辑或者责任(例如：事务处理，日志管理，权限管理等等)封装起来，便于减少系统的重复代码，降低系统模块的耦合度，并且有利于未来的可拓展性和可维护性。</p>
+<h1 id="AOP的使用"><a href="#AOP的使用" class="headerlink" title="AOP的使用"></a>AOP的使用</h1><ol>
+<li><p>导入aop包</p>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&lt;dependency&gt;</span><br><span class="line">    &lt;groupId&gt;org.springframework&lt;/groupId&gt;</span><br><span class="line">    &lt;artifactId&gt;spring-aspects&lt;/artifactId&gt;</span><br><span class="line">    &lt;version&gt;5.2.5.RELEASE&lt;/version&gt;</span><br><span class="line">&lt;/dependency&gt;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>定义一个业务逻辑实现类；在业务逻辑进行运行的时候，将日志进行打印</p>
+ <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 定义的一个业务逻辑，计算两数之和。</span></span><br><span class="line">    <span class="keyword">package</span> com.brandon.aop;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MathMulity</span> </span>&#123;</span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">add</span><span class="params">(<span class="keyword">int</span> i, <span class="keyword">int</span> j)</span></span>&#123;</span><br><span class="line">            <span class="keyword">return</span> i + j;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>定义一个日志切面类，在运行求和运算的时候，在必要的时候进行日志的打印</p>
+</li>
+<li><p>给切面方法加上注解(@Aspect)表示这是一个切面方法</p>
+ <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.brandon.aop;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> org.aspectj.lang.annotation.*;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Aspect</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">LogAspects</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Pointcut</span>(value = <span class="string">"execution(public int com.brandon.aop.MathMulity.*(..))"</span>)</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">pointCut</span><span class="params">()</span></span>&#123;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="meta">@Before</span>(<span class="string">"pointCut()"</span>) <span class="comment">// 目标方法之前运行</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">logStart</span><span class="params">()</span></span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"计算开始"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="meta">@After</span>(<span class="string">"pointCut()"</span>) <span class="comment">// 目标方法之后运行</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">end</span><span class="params">()</span></span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"计算结束"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="meta">@AfterReturning</span>(<span class="string">"pointCut()"</span>)<span class="comment">// 目标方法正常返回之后运行</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">logReturning</span><span class="params">()</span></span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"returning : &#123;&#125;"</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@AfterThrowing</span>(<span class="string">"pointCut()"</span>)<span class="comment">//目标方法出现异常之后运行</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">exception</span><span class="params">()</span></span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"计算异常。。。。"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">     <span class="comment">/* 环绕通知方法可以包含上面四种通知方法，环绕通知的功能最全面。</span></span><br><span class="line"><span class="comment">     环绕通知需要携带 ProceedingJoinPoint 类型的参数，且环绕通知必须有返回值, 返回值即为目标方法的返回值。</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="comment">/*@Around("pointCut()")</span></span><br><span class="line"><span class="comment">    public Object around(ProceedingJoinPoint pjp)&#123;</span></span><br><span class="line"><span class="comment">        System.out.println("around 方法运行");</span></span><br><span class="line"><span class="comment">        return new Object();</span></span><br><span class="line"><span class="comment">    &#125;*/</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>将所有的组件注册到容器中，并且给配置类加上@EnableAspectJAutoProxy 使得aop开启</p>
+ <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@EnableAspectJAutoProxy</span></span><br><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MainConfigOfAOP</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> MathMulity <span class="title">mulity</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> MathMulity();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> LogAspects <span class="title">logAspects</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> LogAspects();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<h1 id="AOP的原理"><a href="#AOP的原理" class="headerlink" title="AOP的原理"></a>AOP的原理</h1><h2 id="EnableAspectJAutoProxy注解"><a href="#EnableAspectJAutoProxy注解" class="headerlink" title="@EnableAspectJAutoProxy注解"></a>@EnableAspectJAutoProxy注解</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">    <span class="comment">// 注解的实现</span></span><br><span class="line">    <span class="meta">@Target</span>(&#123;ElementType.TYPE&#125;)</span><br><span class="line">    <span class="meta">@Retention</span>(RetentionPolicy.RUNTIME)</span><br><span class="line">    <span class="meta">@Documented</span></span><br><span class="line">    <span class="meta">@Import</span>(&#123;AspectJAutoProxyRegistrar.class&#125;)</span><br><span class="line">    <span class="keyword">public</span> <span class="meta">@interface</span> EnableAspectJAutoProxy &#123;</span><br><span class="line">        <span class="function"><span class="keyword">boolean</span> <span class="title">proxyTargetClass</span><span class="params">()</span> <span class="keyword">default</span> <span class="keyword">false</span></span>;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">boolean</span> <span class="title">exposeProxy</span><span class="params">()</span> <span class="keyword">default</span> <span class="keyword">false</span></span>;</span><br><span class="line">    &#125;</span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">使用@Import(),给容器导入了AspectJAutoProxyRegistrar这个类。</span></span><br><span class="line"><span class="comment">并使用AspectJAutoProxyRegistrar自定义的向容器注册bean</span></span><br><span class="line"><span class="comment">*/</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="使用AspectJAutoProxyRegistar给容器中注册一个什么bean"><a href="#使用AspectJAutoProxyRegistar给容器中注册一个什么bean" class="headerlink" title="使用AspectJAutoProxyRegistar给容器中注册一个什么bean?"></a>使用AspectJAutoProxyRegistar给容器中注册一个什么bean?</h3><p>看到这里我心中有一个疑问，要给容器中注册一个什么bean呢?, 为了解答这个疑问，debug走起！</p>
+<ol>
+<li><p>打断点</p>
+ <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//我把断点打到下面的位置，</span></span><br><span class="line"> <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">registerBeanDefinitions</span><span class="params">(AnnotationMetadata importingClassMetadata, BeanDefinitionRegistry registry)</span> </span>&#123;</span><br><span class="line">     <span class="comment">// 断点打到这里，这里是注册的地方</span></span><br><span class="line">    AopConfigUtils.registerAspectJAnnotationAutoProxyCreatorIfNecessary(registry); </span><br><span class="line">    AnnotationAttributes enableAspectJAutoProxy = AnnotationConfigUtils.attributesFor(importingClassMetadata, EnableAspectJAutoProxy.class);</span><br><span class="line">    <span class="keyword">if</span> (enableAspectJAutoProxy != <span class="keyword">null</span>) &#123;</span><br><span class="line">        <span class="keyword">if</span> (enableAspectJAutoProxy.getBoolean(<span class="string">"proxyTargetClass"</span>)) &#123;</span><br><span class="line">            AopConfigUtils.forceAutoProxyCreatorToUseClassProxying(registry);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (enableAspectJAutoProxy.getBoolean(<span class="string">"exposeProxy"</span>)) &#123;</span><br><span class="line">            AopConfigUtils.forceAutoProxyCreatorToExposeProxy(registry);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>运行</p>
+<p> 接下来的步骤主要是来创建一个AnnotationAwareAspectJAutoProxyCreator(注解模式下的AspectJ自动代理创建器)</p>
+ <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">    <span class="meta">@Nullable</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> BeanDefinition <span class="title">registerAspectJAnnotationAutoProxyCreatorIfNecessary</span><span class="params">(BeanDefinitionRegistry registry)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> registerAspectJAnnotationAutoProxyCreatorIfNecessary(registry, (Object)<span class="keyword">null</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Nullable</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> BeanDefinition <span class="title">registerAspectJAnnotationAutoProxyCreatorIfNecessary</span><span class="params">(BeanDefinitionRegistry registry, @Nullable Object source)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> registerOrEscalateApcAsRequired(AnnotationAwareAspectJAutoProxyCreator.class, registry, source);</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 下面进入registerOrEscalateApcAsRequired方法，然后判断registry中是否有AnnotationAwareAspectJAutoProxyCreator，</span></span><br><span class="line"><span class="comment">// 如果没有就进行创建</span></span><br><span class="line"><span class="keyword">if</span> (registry.containsBeanDefinition(<span class="string">"org.springframework.aop.config.internalAutoProxyCreator"</span>))&#123;...&#125;</span><br><span class="line"><span class="keyword">else</span>&#123;</span><br><span class="line">    RootBeanDefinition beanDefinition = <span class="keyword">new</span> RootBeanDefinition(cls);</span><br><span class="line">        beanDefinition.setSource(source);</span><br><span class="line">        beanDefinition.getPropertyValues().add(<span class="string">"order"</span>, -<span class="number">2147483648</span>);</span><br><span class="line">        beanDefinition.setRole(<span class="number">2</span>);</span><br><span class="line">        registry.registerBeanDefinition(<span class="string">"org.springframework.aop.config.internalAutoProxyCreator"</span>, beanDefinition);</span><br><span class="line">        <span class="comment">//创建完成之后，返回这个bean定义。</span></span><br><span class="line">        <span class="keyword">return</span> beanDefinition;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<h3 id="AnnotationAwareAspectJAutoProxyCreator-有什么用"><a href="#AnnotationAwareAspectJAutoProxyCreator-有什么用" class="headerlink" title="AnnotationAwareAspectJAutoProxyCreator 有什么用?"></a>AnnotationAwareAspectJAutoProxyCreator 有什么用?</h3><p>上一步我们知道了要创建一个什么bean，那么现在问题又来了，这个bean有什么用呢。在aop中又扮演着一个什么样的角色呢。<br>下面是AnnotationAwareAspectJAutoProxyCreator的继承关系图<br><img src="https://brandonxcc.top/AnnotationAwareAspectJAutoProxyCreator%E7%BB%A7%E6%89%BF%E5%85%B3%E7%B3%BB.png" alt="avatar"><br>根据继承关系图我们可以看出，AnnotationAwareAspectJAutoProxyCreator继承了一些后置处理器，以及自动装配了beanFactory。下面我们debug分析这个的功能。</p>
+<ol>
+<li><p>我们debug的断点应该打在哪里</p>
+<p> 在继承关系中，AnnotationAwareAspectJAutoProxyCreator继承了一个AbstractAutoProxyCreator类，这个类还实现了SmartInstantiationAwareBeanPostProcessor。说明这是一个后置处理器。我们先从这个类看，将后置处理器相关的方法(postProcessAfterInitialization、postProcessBeforeInitialization)打上断点，看在初始化前后会发生什么事情。而且这个类还实现了BeanFactoryAware，说明有setBeanFactory()这个是实现BeanFactoryAware接口的。</p>
+<p> 接着进入AbstractAdvisorAutoProxyCreator类中，发现这个类重写了setBeanFactory()方法，并且在方法内部调用了initBeanFactory()方法。所以在这个方法上打上断点</p>
+<p> 接着再进入AnnotationAwareAspectJAutoProxyCreator类。可以看到这个类又重写了initBeanFactory()这个方法。所以我们也在这里打上断点。</p>
+</li>
+<li><p>AnnotationAwareAspectJAutoProxyCreator注册<br>这里本质就是bean的创建 // TODO bean创建的博客总结预计完成在4月18日<br>这里特殊的就是AnnotationAwareAspectJAutoProxyCreator的beanName是 org.springframework.aop.config.internalAutoProxyCreator</p>
+</li>
+<li><p>AnnotationAwareAspectJAutoProxyCreator的执行过程<br>容器中会被注册一个AnnotationAwareAspectJAutoProxyCreator组件，这个组件由于后置处理器不同，会在每个bean创建的时候进行下面一个后置处理器</p>
+ <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 可以把断点打在这里，可以观察到AnnotationAwareAspectJAutoProxyCreator的作用。</span></span><br><span class="line"><span class="comment">// 用来创建代理和切面。</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> Object <span class="title">postProcessBeforeInstantiation</span><span class="params">(Class&lt;?&gt; beanClass, String beanName)</span> </span>&#123;</span><br><span class="line">        Object cacheKey = getCacheKey(beanClass, beanName);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (!StringUtils.hasLength(beanName) || !<span class="keyword">this</span>.targetSourcedBeans.contains(beanName)) &#123;</span><br><span class="line">            <span class="keyword">if</span> (<span class="keyword">this</span>.advisedBeans.containsKey(cacheKey)) &#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span> (isInfrastructureClass(beanClass) || shouldSkip(beanClass, beanName)) &#123;</span><br><span class="line">                <span class="keyword">this</span>.advisedBeans.put(cacheKey, Boolean.FALSE);</span><br><span class="line">                <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br></pre></td></tr></table></figure>
+
+<p> 每一个bean创建之前，调用postProcessBeforeInstantiation()；</p>
+<ul>
+<li>关心MathCalculator和LogAspect的创建<ul>
+<li>1）、判断当前bean是否在advisedBeans中（保存了所有需要增强bean）</li>
+<li>2）、判断当前bean是否是基础类型的Advice、Pointcut、Advisor、AopInfrastructureBean，或者是否是切面（@Aspect）</li>
+<li>3）、是否需要跳过<ul>
+<li>1）、获取候选的增强器（切面里面的通知方法）【List<advisor> candidateAdvisors】每一个封装的通知方法的增强器是 InstantiationModelAwarePointcutAdvisor；判断每一个增强器是否是 AspectJPointcutAdvisor 类型的；返回true</advisor></li>
+<li>2）、永远返回false</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>创建AOP代理</p>
+ <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">postProcessAfterInitialization；</span><br><span class="line"><span class="keyword">return</span> wrapIfNecessary(bean, beanName, cacheKey);<span class="comment">//如果需要包装的情况下</span></span><br></pre></td></tr></table></figure>
+
+<ol>
+<li>获取当前bean的所有增强器（通知方法）  Object[]  specificInterceptors<ol>
+<li>找到候选的所有的增强器（找哪些通知方法是需要切入当前bean方法的）</li>
+<li>获取到能在bean使用的增强器。</li>
+<li>给增强器排序</li>
+</ol>
+</li>
+<li>保存当前bean在advisedBeans中</li>
+<li>如果当前bean需要增强，创建当前bean的代理对象；<ol>
+<li>获取所有增强器（通知方法）</li>
+<li>保存到proxyFactory</li>
+<li>创建代理对象：Spring自动决定<ul>
+<li>JdkDynamicAopProxy(config);jdk动态代理；</li>
+<li>ObjenesisCglibAopProxy(config);cglib的动态代理；</li>
+</ul>
+</li>
+</ol>
+</li>
+<li>给容器中返回当前组件使用cglib增强了的代理对象</li>
+<li>以后容器中获取到的就是这个组件的代理对象，执行目标方法的时候，代理对象就会执行通知方法的流程；</li>
+</ol>
+</li>
+</ol>
+<p>到此aop创建的流程大体上走完了，可能会比较乱，打算在有空的时候，再来好好整理一下。下一次复习的时候，会补上一个流程图。<br><img src="https://brandonxcc.top/20200412.jpg" alt="avatar"></p>
+
+
+  </article>
+  </script>
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js">
+  </script>
+  <div class="busuanzi center">
+    页阅读量:&nbsp;<span id="busuanzi_value_page_pv"></span>&nbsp;・&nbsp;
+    站访问量:&nbsp;<span id="busuanzi_value_site_pv"></span>&nbsp;・&nbsp;
+    站访客数:&nbsp;<span id="busuanzi_value_site_uv"></span>
+  </div>
+
+
+    
+
+
+
+
+
+    </div>
+  </div>
+  <footer class="page-footer"><div class="clearfix">
+</div>
+<div class="right-foot">
+    <div class="firstrow">
+        <a href="#top" target="_self">
+        <svg class="i-caret-right" viewBox="0 0 32 32" width="24" height="24" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="3">
+            <path d="M10 30 L26 16 10 2 Z"></path>
+        </svg>
+        </a>
+        © XXX 2016-2020
+    </div>
+    <div class="secondrow">
+        <a href="https://github.com/gaoryrt/hexo-theme-pln" target="_blank" rel="noopener">
+        Theme Pln
+        </a>
+    </div>
+</div>
+<div class="clearfix">
+</div>
+</footer>
+  <script src="//cdn.bootcss.com/jquery/2.2.1/jquery.min.js"></script>
+<script src="/js/search.min.js"></script>
+<script type="text/javascript">
+
+// disqus scripts
+
+
+// dropdown scripts
+$(".dropdown").click(function(event) {
+  var current = $(this);
+  event.stopPropagation();
+  $(current).children(".dropdown-content")[($(current).children(".dropdown-content").hasClass("open"))?'removeClass':'addClass']("open")
+});
+$(document).click(function(){
+    $(".dropdown-content").removeClass("open");
+})
+
+var path = "/search.xml";
+searchFunc(path, 'local-search-input', 'local-search-result');
+
+</script>
+
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginModelPath":"assets/","model":{"jsonPath":"live2d-widget-model-z16"},"display":{"position":"left","width":150,"height":345},"mobile":{"show":false},"log":false,"pluginJsPath":"lib/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+</html>

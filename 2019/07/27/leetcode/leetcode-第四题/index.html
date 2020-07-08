@@ -1,0 +1,219 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="google-site-verification" content="" />
+  
+  <title>Median of Two Sorted Arrays（中位数问题）</title>
+  <meta name="author" content="brandon">
+  <meta name="description" content="study hard">
+  
+  
+  <meta property="og:title" content="Median of Two Sorted Arrays（中位数问题）"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta property="og:site_name" content="brandon"/>
+  <link href="/apple-touch-icon-precomposed.png" sizes="180x180" rel="apple-touch-icon-precomposed">
+  <link rel="alternate" href="/atom.xml" title="brandon" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/m.min.css">
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML" async></script>
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+<body>
+  <a id="top"></a>
+  <div id="main">
+    <div class="main-ctnr">
+      <div class="behind">
+  <a href="/" class="back black-color">
+    <svg class="i-close" viewBox="0 0 32 32" width="22" height="22" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="3">
+        <path d="M2 30 L30 2 M30 30 L2 2"></path>
+    </svg>
+  </a>
+  <div class="description">
+    &nbsp;
+  </div>
+</div>
+
+
+  <article class="standard [layout]">
+    <div class="title">
+      
+  
+    <h1 class="page-title center">
+        Median of Two Sorted Arrays（中位数问题）
+    </h1>
+  
+
+
+    </div>
+    <div class="meta center">
+      <time datetime="2019-07-27T08:52:56.000Z" itemprop="datePublished">
+  <svg class="i-calendar" viewBox="0 0 32 32" width="16" height="16" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
+    <path d="M2 6 L2 30 30 30 30 6 Z M2 15 L30 15 M7 3 L7 9 M13 3 L13 9 M19 3 L19 9 M25 3 L25 9"></path>
+  </svg>
+  &nbsp;
+  2019-07-27
+</time>
+
+
+    
+    &nbsp;
+    <svg class="i-tag" viewBox="0 0 32 32" width="16" height="16" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
+      <circle cx="24" cy="8" r="2"></circle>
+      <path d="M2 18 L18 2 30 2 30 14 14 30 Z"></path>
+    </svg>
+    &nbsp;
+    <a href="/categories/Java/">Java</a>·<a href="/categories/Java/算法/">算法</a>
+
+
+
+
+    
+    &nbsp;
+    <svg class="i-tag" viewBox="0 0 32 32" width="16" height="16" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
+      <circle cx="24" cy="8" r="2"></circle>
+      <path d="M2 18 L18 2 30 2 30 14 14 30 Z"></path>
+    </svg>
+    &nbsp;
+    <a href="/tags/leetcode/">leetcode</a>
+
+
+    </div>
+    <hr>
+    
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Median-of-Two-Sorted-Arrays"><span class="toc-text">Median of Two Sorted Arrays</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#首先将A集合划分"><span class="toc-text">首先将A集合划分</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#再将B集合划分"><span class="toc-text">再将B集合划分</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#处理A，B集合划分的两个部分"><span class="toc-text">处理A，B集合划分的两个部分</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#算法具体过程"><span class="toc-text">算法具体过程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#现在我们来讨论一下边界问题"><span class="toc-text">现在我们来讨论一下边界问题</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#代码"><span class="toc-text">代码</span></a></li></ol></li></ol>
+    
+    <div class="picture-container">
+      
+    </div>
+    <h1 id="Median-of-Two-Sorted-Arrays"><a href="#Median-of-Two-Sorted-Arrays" class="headerlink" title="Median of Two Sorted Arrays"></a><em>Median of Two Sorted Arrays</em></h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">中位数用于：将两个集合分为长度相同的子集合，其中一个子集合中的元素总是小于另一个集合的元素。</span><br></pre></td></tr></table></figure>
+
+<h3 id="首先将A集合划分"><a href="#首先将A集合划分" class="headerlink" title="首先将A集合划分"></a>首先将A集合划分</h3><p>A集合根据随机的i值分为两个部分，其中，左边最大的总是小于右边最小的。因为A有m个元素，所以可以有m种分法。   </p>
+<ul>
+<li>len(left_A) = i, len(right_A)  = m - i；</li>
+</ul>
+<h3 id="再将B集合划分"><a href="#再将B集合划分" class="headerlink" title="再将B集合划分"></a>再将B集合划分</h3><p>同样的方式，根据一个随机的J值，将B集合分成两个部分。满组A集合划分的两个条件。因为B有n个元素，所以有n种分法</p>
+<h3 id="处理A，B集合划分的两个部分"><a href="#处理A，B集合划分的两个部分" class="headerlink" title="处理A，B集合划分的两个部分"></a>处理A，B集合划分的两个部分</h3><p>将A集合与B集合的左边部分置于同一个集合，右边部分置于同一个集合。将他们命名为left_part, right_part</p>
+<p>我们可以保证的是：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">len(left_part) == len(right_part)</span><br><span class="line">max(left_part) &lt; min(right_part)</span><br></pre></td></tr></table></figure>
+
+<p>所以最后我们将A，B两个集合中的所有元素划分为两个长度相同的集合。一个集合的元素总是小于另一个集合。</p>
+<p>median = $(max(left_p) + min(right_p))/2$</p>
+<p>为了保证上面的两个条件，我们只需要确保</p>
+<ul>
+<li>$i+j = m - i + n - j (or: m - i + n - j + 1)$</li>
+</ul>
+<p>​       if n &gt;= m, we just need to set : i = 0 ~ m, j = (m+n+1)/2 - i​</p>
+<ul>
+<li>B[j - 1] &lt;=  A[i] and A[i - 1] &lt;= B[j] </li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">1. 为了方便考虑，我们假设A[i - 1], B[j - 1], A[i],B[j] 总是有效的，甚至是 i= 0， i=m， j=0,j=n</span><br><span class="line">2. 为什么要保证n&gt;= m？ 这是因为我们要保证j是非负的，从0 &lt;= i &lt;= m 以及 j=(m+n+1)/2 -i可以看出，如果j是负数，就会导致结果错误。</span><br></pre></td></tr></table></figure>
+
+<h2 id="算法具体过程"><a href="#算法具体过程" class="headerlink" title="算法具体过程"></a>算法具体过程</h2><ul>
+<li><p>从[0,m] 中找到一个对象i， 满足：</p>
+<ul>
+<li>​    B[j - 1]&lt;= A[i] and A[i -1] &lt;= B[j] (j = (m+n+1)/2 - i)</li>
+</ul>
+</li>
+<li><p>根据以下步骤，进行二分搜索</p>
+<p>1、设置iMIn = 0, iMax = m, 接着从[iMin,IMax]中间搜索</p>
+<p>2、 令 i = （iMin + iMax)/2,  j = (m+n+1)/2  - i </p>
+<ul>
+<li><p>这一步的意思是：找到A集合的中间值，再找到B集合的中间值，因为两个集合都是已经排序了的</p>
+<p>3、我们已知的条件len(left_part) = len(right_part). 在寻找 中位数的时候，我们将遇到下面三种情况：</p>
+</li>
+<li><p>B[j - 1] &lt;= A[i] and A[i - 1] &lt;= B[j] 如果出现这种情况，说明我们已经找到了 此时的i 值，就是我们要找的中位数的下标</p>
+</li>
+<li><p>B[j - 1] &gt; A[i] 说明A[i] 值小了，我们只需要调整i 使得B[j - 1] &lt;= A[i] 满足</p>
+<ul>
+<li>通过增加 i 的值，如果增加了 i 的值，那么 j 的值就要减小，所以B[j - 1] 的值就要减小，A[i] 的值就要增加，那么就有可能满足B[j - 1 ] &lt;= A[i] 这个条件</li>
+<li>如果我们减小了 i 的值，那么B[j - 1] 的值就会变大，A[i] 的值就会变小，那么永远都无法满足条件。</li>
+<li>所以我们只能增加 i 的值，再跳到第二步，更新 j 的值</li>
+</ul>
+</li>
+<li><p>A[i - 1] &gt; B[j] 说明A[ i - 1] 的值太大，我们必须减小 i 的值，以满足A[i - 1] &lt; B[ j ]</p>
+</li>
+</ul>
+</li>
+<li><p>当我们找到 i 值的时候，那么中位数的求解过程：</p>
+<ul>
+<li>median = max(A[i - 1] , B[j - 1]) 当总的元素个数是奇数的时候</li>
+<li>median = (max(A[i - 1], B[ j - 1] ) + min(A[ i ] , B[ j ]))/ 2 当总的元素个数是偶数的时候</li>
+</ul>
+</li>
+</ul>
+<h2 id="现在我们来讨论一下边界问题"><a href="#现在我们来讨论一下边界问题" class="headerlink" title="现在我们来讨论一下边界问题"></a>现在我们来讨论一下边界问题</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">当 i= 0，i = m, j = 0, j = n的时候，A[i - 1], B[j - 1], A[i], B[j]的值可能不存在的情况。</span><br></pre></td></tr></table></figure>
+
+<p>我们只需要确保max(left_part) &lt;= min(right_part)。如果i 和j 不是边界值，意味着 A[i - 1] , B[j - 1],和A[i]，B[j] 都存在， 那么我们就要检查B[j - 1] &lt;= A[i] 以及 A[i - 1] &lt;= B[j]. 但是如果A[i - 1], B[ j - 1], A[i] , B[j] 他们之中某一个不存在，那么我就不需要再检查其他的条件。例如 如果 i = 0 那么 A[i - 1]就不存在，我们就不需要再检查A[i - 1] &lt;= B[j]。综上所述，我们就可以得到:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">在[0, m]之中找到合适的i值 只需要满足：</span><br><span class="line">	(j = 0 || i = m || B[j - 1] &lt;= A[i]) &amp;&amp; (i = 0 || j = n || A[i - 1] &lt;= B[j]) j = (m + n + 1)/2 - i</span><br></pre></td></tr></table></figure>
+
+<h2 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment"> * @lc app=leetcode id=4 lang=java</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * [4] Median of Two Sorted Arrays</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">double</span> <span class="title">findMedianSortedArrays</span><span class="params">(<span class="keyword">int</span>[] nums1, <span class="keyword">int</span>[] nums2)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> m = nums1.length;</span><br><span class="line">        <span class="keyword">int</span> n = nums2.length;</span><br><span class="line">        <span class="keyword">if</span>(m &gt; n)&#123;</span><br><span class="line">            <span class="keyword">int</span> temp = n; n = m; m = temp;</span><br><span class="line">            <span class="keyword">int</span>[] temps = nums1; nums1 = nums2; nums2 = temps;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">int</span> iMin = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">int</span> iMax = m;</span><br><span class="line">        <span class="keyword">int</span> halfLen = (m + n + <span class="number">1</span>)/<span class="number">2</span>;</span><br><span class="line">        <span class="keyword">while</span>(iMin &lt;= iMax)&#123;</span><br><span class="line">            <span class="keyword">int</span> i = (iMin + iMax)/<span class="number">2</span>;</span><br><span class="line">            <span class="keyword">int</span> j = halfLen - i;</span><br><span class="line">            <span class="keyword">if</span>(i &lt; iMax &amp;&amp; nums2[j - <span class="number">1</span>] &gt; nums1[i])&#123;</span><br><span class="line">                iMin = i + <span class="number">1</span>;</span><br><span class="line">            &#125;<span class="keyword">else</span> <span class="keyword">if</span>(i &gt; iMin &amp;&amp; nums1[i - <span class="number">1</span>] &gt; nums2[j])&#123;</span><br><span class="line">                iMax = i - <span class="number">1</span>;</span><br><span class="line">            &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">                <span class="keyword">int</span> maxLeft = <span class="number">0</span>;</span><br><span class="line">                <span class="keyword">if</span>(i == <span class="number">0</span>)&#123;</span><br><span class="line">                    maxLeft = nums2[j - <span class="number">1</span>];</span><br><span class="line">                &#125;<span class="keyword">else</span> <span class="keyword">if</span> ( j == <span class="number">0</span>)&#123;</span><br><span class="line">                    maxLeft = nums1[i - <span class="number">1</span>];</span><br><span class="line">                &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">                    maxLeft = Math.max(nums1[i - <span class="number">1</span>], nums2[j - <span class="number">1</span>]);</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="keyword">if</span>((m + n)% <span class="number">2</span> != <span class="number">0</span>)&#123;<span class="keyword">return</span> maxLeft;&#125;</span><br><span class="line"></span><br><span class="line">                <span class="keyword">int</span> minRight = <span class="number">0</span>;</span><br><span class="line">                <span class="keyword">if</span>(i == m)&#123;</span><br><span class="line">                    minRight = nums2[j];</span><br><span class="line">                &#125;<span class="keyword">else</span> <span class="keyword">if</span>(j == n)&#123;</span><br><span class="line">                    minRight = nums1[i];</span><br><span class="line">                &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">                    minRight = Math.min(nums1[i], nums2[j]);</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="keyword">return</span> (minRight + maxLeft)/<span class="number">2</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+  </article>
+  </script>
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js">
+  </script>
+  <div class="busuanzi center">
+    页阅读量:&nbsp;<span id="busuanzi_value_page_pv"></span>&nbsp;・&nbsp;
+    站访问量:&nbsp;<span id="busuanzi_value_site_pv"></span>&nbsp;・&nbsp;
+    站访客数:&nbsp;<span id="busuanzi_value_site_uv"></span>
+  </div>
+
+
+    
+
+
+
+
+
+    </div>
+  </div>
+  <footer class="page-footer"><div class="clearfix">
+</div>
+<div class="right-foot">
+    <div class="firstrow">
+        <a href="#top" target="_self">
+        <svg class="i-caret-right" viewBox="0 0 32 32" width="24" height="24" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="3">
+            <path d="M10 30 L26 16 10 2 Z"></path>
+        </svg>
+        </a>
+        © XXX 2016-2020
+    </div>
+    <div class="secondrow">
+        <a href="https://github.com/gaoryrt/hexo-theme-pln" target="_blank" rel="noopener">
+        Theme Pln
+        </a>
+    </div>
+</div>
+<div class="clearfix">
+</div>
+</footer>
+  <script src="//cdn.bootcss.com/jquery/2.2.1/jquery.min.js"></script>
+<script src="/js/search.min.js"></script>
+<script type="text/javascript">
+
+// disqus scripts
+
+
+// dropdown scripts
+$(".dropdown").click(function(event) {
+  var current = $(this);
+  event.stopPropagation();
+  $(current).children(".dropdown-content")[($(current).children(".dropdown-content").hasClass("open"))?'removeClass':'addClass']("open")
+});
+$(document).click(function(){
+    $(".dropdown-content").removeClass("open");
+})
+
+var path = "/search.xml";
+searchFunc(path, 'local-search-input', 'local-search-result');
+
+</script>
+
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginModelPath":"assets/","model":{"jsonPath":"live2d-widget-model-z16"},"display":{"position":"left","width":150,"height":345},"mobile":{"show":false},"log":false,"pluginJsPath":"lib/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+</html>

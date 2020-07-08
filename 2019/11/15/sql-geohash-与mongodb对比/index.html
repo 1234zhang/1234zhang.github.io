@@ -1,0 +1,165 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="google-site-verification" content="" />
+  
+  <title>sql+geohash 与mongodb对比</title>
+  <meta name="author" content="brandon">
+  <meta name="description" content="study hard">
+  
+  
+  <meta property="og:title" content="sql+geohash 与mongodb对比"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta property="og:site_name" content="brandon"/>
+  <link href="/apple-touch-icon-precomposed.png" sizes="180x180" rel="apple-touch-icon-precomposed">
+  <link rel="alternate" href="/atom.xml" title="brandon" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/m.min.css">
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML" async></script>
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+<body>
+  <a id="top"></a>
+  <div id="main">
+    <div class="main-ctnr">
+      <div class="behind">
+  <a href="/" class="back black-color">
+    <svg class="i-close" viewBox="0 0 32 32" width="22" height="22" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="3">
+        <path d="M2 30 L30 2 M30 30 L2 2"></path>
+    </svg>
+  </a>
+  <div class="description">
+    &nbsp;
+  </div>
+</div>
+
+
+  <article class="standard [layout]">
+    <div class="title">
+      
+  
+    <h1 class="page-title center">
+        sql+geohash 与mongodb对比
+    </h1>
+  
+
+
+    </div>
+    <div class="meta center">
+      <time datetime="2019-11-15T12:54:18.000Z" itemprop="datePublished">
+  <svg class="i-calendar" viewBox="0 0 32 32" width="16" height="16" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
+    <path d="M2 6 L2 30 30 30 30 6 Z M2 15 L30 15 M7 3 L7 9 M13 3 L13 9 M19 3 L19 9 M25 3 L25 9"></path>
+  </svg>
+  &nbsp;
+  2019-11-15
+</time>
+
+
+
+
+
+    
+    &nbsp;
+    <svg class="i-tag" viewBox="0 0 32 32" width="16" height="16" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
+      <circle cx="24" cy="8" r="2"></circle>
+      <path d="M2 18 L18 2 30 2 30 14 14 30 Z"></path>
+    </svg>
+    &nbsp;
+    <a href="/tags/mongodb/">mongodb</a>
+
+
+    </div>
+    <hr>
+    
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#mongodb地理索引"><span class="toc-text">mongodb地理索引</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#sql-geohash-地理索引"><span class="toc-text">sql + geohash 地理索引</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#geohash-简单描述"><span class="toc-text">geohash 简单描述</span></a></li></ol>
+    
+    <div class="picture-container">
+      
+    </div>
+    <h2 id="mongodb地理索引"><a href="#mongodb地理索引" class="headerlink" title="mongodb地理索引"></a>mongodb地理索引</h2><p>mongodb 是老牌的空间索引支持着，作为一个文档性的数据库，存储日志和静态数据结构效果较佳，它主要提供两个类型的空间索引：</p>
+<ul>
+<li>2d 索引支持平台普通坐标的索引，使用于2.4版本之前，在大范围上存储和计算时，效率较低，</li>
+<li>2dsphere 索引支持查询在一个类地球的球面上进行计算，使用geoJson对象或者普通坐标对的方式进行存储数据。<br>索引都是使用geohash算法以及b+树来实现。<br>mongodb的空间索引比较灵活，GeoJson对象有点，线，多边形，多条线段，多点，多个多边形。支持包含、相交、临近的查询，也支持多条件查询<br>缺点：<ul>
+<li>在数据比较大的时候，查询效率就会比较低，特别是多个条件符合时，查询效率更加低</li>
+<li>对模糊查询的支持不是太友好，如果是按照地名或者地点名字查询时就需要MySQL</li>
+</ul>
+</li>
+</ul>
+<h2 id="sql-geohash-地理索引"><a href="#sql-geohash-地理索引" class="headerlink" title="sql + geohash 地理索引"></a>sql + geohash 地理索引</h2><p>在存储每个地点位置信息的时候，将经纬度使用geohash算法，将二维坐标转换成一个字符串。并将这个hash字符串设置为索引，从而在获取附近停车场的时候，可以提高查询效率。<br>使用MySQL存储geohash的好处是</p>
+<ul>
+<li>多条件支持，分词，模糊查询。可以解决mongodb无法实现的模糊查询，</li>
+<li>索引的查询效率也不低，同样使用b+树实现。<br>为了逻辑的简单，而且解决更多的问题，在效率相差不大的情况下，所以选择MySQL搭档geohash的方式来实现地图的查找。</li>
+</ul>
+<h2 id="geohash-简单描述"><a href="#geohash-简单描述" class="headerlink" title="geohash 简单描述"></a>geohash 简单描述</h2><p><img src="https://brandonxcc.top/geohash.jpg" alt="avatar"><br>将经纬度的二进制数进行组合，以奇数为纬度，偶数为经度组合，过程如上图。</p>
+<p>然户将获取到的经纬度二进制数以每5个数为一组，将每一组都进行转换成十进制数字。</p>
+<p>然后采用Base32对应编码进行转换可得到编码 wx4g0e这样的可比较的字符串，比如我们的经纬度都分了10次，那么最后生成的字符串的长度就是4，范围是20km，如果我们经纬度都分20次，那么最后生成的字符串的长度就是8，范围可以精确到19m。<br>在此对Base32编码进行一番简单介绍: Base32，是将数字 0~9 ，加上26个字母(去除a,i,l,o 四个)进行组合而成的32个字符编码形式。</p>
+<p>Geohash其实就是将整个地图或者某个分割所得的区域进行一次划分，由于采用的是base32编码方式，即Geohash中的每一个字母或者数字（如wx4g0e中的w）都是由5bits组成（2^5 = 32，base32），这5bits可以有32中不同的组合（0~31），这样我们可以将整个地图区域分为32个区域，通过00000 ~ 11111来标识这32个区域。第一次对地图划分后的情况如下图所示（每个区域中的编号对应于该区域所对应的编码）</p>
+
+
+  </article>
+  </script>
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js">
+  </script>
+  <div class="busuanzi center">
+    页阅读量:&nbsp;<span id="busuanzi_value_page_pv"></span>&nbsp;・&nbsp;
+    站访问量:&nbsp;<span id="busuanzi_value_site_pv"></span>&nbsp;・&nbsp;
+    站访客数:&nbsp;<span id="busuanzi_value_site_uv"></span>
+  </div>
+
+
+    
+
+
+
+
+
+    </div>
+  </div>
+  <footer class="page-footer"><div class="clearfix">
+</div>
+<div class="right-foot">
+    <div class="firstrow">
+        <a href="#top" target="_self">
+        <svg class="i-caret-right" viewBox="0 0 32 32" width="24" height="24" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="3">
+            <path d="M10 30 L26 16 10 2 Z"></path>
+        </svg>
+        </a>
+        © XXX 2016-2020
+    </div>
+    <div class="secondrow">
+        <a href="https://github.com/gaoryrt/hexo-theme-pln" target="_blank" rel="noopener">
+        Theme Pln
+        </a>
+    </div>
+</div>
+<div class="clearfix">
+</div>
+</footer>
+  <script src="//cdn.bootcss.com/jquery/2.2.1/jquery.min.js"></script>
+<script src="/js/search.min.js"></script>
+<script type="text/javascript">
+
+// disqus scripts
+
+
+// dropdown scripts
+$(".dropdown").click(function(event) {
+  var current = $(this);
+  event.stopPropagation();
+  $(current).children(".dropdown-content")[($(current).children(".dropdown-content").hasClass("open"))?'removeClass':'addClass']("open")
+});
+$(document).click(function(){
+    $(".dropdown-content").removeClass("open");
+})
+
+var path = "/search.xml";
+searchFunc(path, 'local-search-input', 'local-search-result');
+
+</script>
+
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginModelPath":"assets/","model":{"jsonPath":"live2d-widget-model-z16"},"display":{"position":"left","width":150,"height":345},"mobile":{"show":false},"log":false,"pluginJsPath":"lib/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+</html>

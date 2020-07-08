@@ -1,0 +1,170 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="google-site-verification" content="" />
+  
+  <title>Spring Ioc的启动过程</title>
+  <meta name="author" content="brandon">
+  <meta name="description" content="study hard">
+  
+  
+  <meta property="og:title" content="Spring Ioc的启动过程"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta property="og:site_name" content="brandon"/>
+  <link href="/apple-touch-icon-precomposed.png" sizes="180x180" rel="apple-touch-icon-precomposed">
+  <link rel="alternate" href="/atom.xml" title="brandon" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/m.min.css">
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML" async></script>
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+<body>
+  <a id="top"></a>
+  <div id="main">
+    <div class="main-ctnr">
+      <div class="behind">
+  <a href="/" class="back black-color">
+    <svg class="i-close" viewBox="0 0 32 32" width="22" height="22" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="3">
+        <path d="M2 30 L30 2 M30 30 L2 2"></path>
+    </svg>
+  </a>
+  <div class="description">
+    &nbsp;
+  </div>
+</div>
+
+
+  <article class="standard [layout]">
+    <div class="title">
+      
+  
+    <h1 class="page-title center">
+        Spring Ioc的启动过程
+    </h1>
+  
+
+
+    </div>
+    <div class="meta center">
+      <time datetime="2019-11-25T09:11:27.000Z" itemprop="datePublished">
+  <svg class="i-calendar" viewBox="0 0 32 32" width="16" height="16" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
+    <path d="M2 6 L2 30 30 30 30 6 Z M2 15 L30 15 M7 3 L7 9 M13 3 L13 9 M19 3 L19 9 M25 3 L25 9"></path>
+  </svg>
+  &nbsp;
+  2019-11-25
+</time>
+
+
+    
+    &nbsp;
+    <svg class="i-tag" viewBox="0 0 32 32" width="16" height="16" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
+      <circle cx="24" cy="8" r="2"></circle>
+      <path d="M2 18 L18 2 30 2 30 14 14 30 Z"></path>
+    </svg>
+    &nbsp;
+    <a href="/categories/spring-源码/">spring 源码</a>
+
+
+
+
+    
+    &nbsp;
+    <svg class="i-tag" viewBox="0 0 32 32" width="16" height="16" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
+      <circle cx="24" cy="8" r="2"></circle>
+      <path d="M2 18 L18 2 30 2 30 14 14 30 Z"></path>
+    </svg>
+    &nbsp;
+    <a href="/tags/spring/">spring</a>
+
+
+    </div>
+    <hr>
+    
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Spring-Ioc的基本概念"><span class="toc-text">Spring Ioc的基本概念</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Spring-Ioc初始化的过程"><span class="toc-text">Spring Ioc初始化的过程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Ioc源码分析"><span class="toc-text">Ioc源码分析</span></a></li></ol>
+    
+    <div class="picture-container">
+      
+    </div>
+    <h2 id="Spring-Ioc的基本概念"><a href="#Spring-Ioc的基本概念" class="headerlink" title="Spring Ioc的基本概念"></a>Spring Ioc的基本概念</h2><p>Ioc(inversion of Control), 被通常翻译为控制反转，或者是DI(dependency Injuction)依赖注入。</p>
+<p>如果我们需要某个对象的功能，不需要人为手动的去创建对象的实例；只需要向框架说明我需要这个对象，框架就会自动的提供这个对象的实例。也就是原来我们需要什么东西需要自己去拿，但是现在框架就会为我们送过来。</p>
+<p>依赖注入的实现主要有三种方式：</p>
+<ul>
+<li>构造方法注入：被注入对象可以通过在其构造方法中声名依赖对象的参数列表，让外部对象（通常是IoC容器）知道它需要哪些依赖对象。IoC Service Provider会检查被注入对象的构造方法，取得它所需要的依赖对象列表，进而为其注入相应的对象。</li>
+<li>setter 方法注入：当前对象只要为其所对应的属性添加setter方法，就可以通过setter方法将相应的依赖对象设置到被注入对象中。</li>
+<li>接口注入</li>
+</ul>
+<h2 id="Spring-Ioc初始化的过程"><a href="#Spring-Ioc初始化的过程" class="headerlink" title="Spring Ioc初始化的过程"></a>Spring Ioc初始化的过程</h2><p>spring Ioc的最基本启动过程</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] arg)</span></span>&#123;</span><br><span class="line">    ApplicationContext context = <span class="keyword">new</span> ClassPathXmlApplicationContext(<span class="string">"classpath:applicationfile.xml"</span>);</span><br><span class="line">&#125; </span><br><span class="line">可以认为是在classPath中找到xml文件，根据xml文件配置applicationContext</span><br></pre></td></tr></table></figure>
+
+<h2 id="Ioc源码分析"><a href="#Ioc源码分析" class="headerlink" title="Ioc源码分析"></a>Ioc源码分析</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">refresh</span><span class="params">()</span> <span class="keyword">throws</span> BeansException, IllegalStateException </span>&#123;</span><br><span class="line">    <span class="comment">// 对这个实例进行加锁处理，</span></span><br><span class="line">    <span class="comment">//避免在applicationContext还未创建完成，</span></span><br><span class="line">    <span class="comment">//就出现另一个线程对这个实例的创建或者销毁操作。</span></span><br><span class="line">        <span class="keyword">synchronized</span>(<span class="keyword">this</span>.startupShutdownMonitor) &#123;</span><br><span class="line">            <span class="comment">//记下启动时间，并且将状态改为正在运行。</span></span><br><span class="line">            <span class="keyword">this</span>.prepareRefresh();</span><br><span class="line">            <span class="comment">// 根据配置信息，解析成一个个的bean定义，并注册到beanFactory中。</span></span><br><span class="line">            <span class="comment">// 创建一个beanName -&gt; beanDefinition的map，只是建立映射，并未初始化。</span></span><br><span class="line">            ConfigurableListableBeanFactory beanFactory = <span class="keyword">this</span>.obtainFreshBeanFactory();</span><br><span class="line">            <span class="comment">// bean的加载器，并加载几个特殊的bean</span></span><br><span class="line">            <span class="keyword">this</span>.prepareBeanFactory(beanFactory);</span><br><span class="line"></span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                <span class="comment">// 如果bean继承了BeanFactoryPostProcess这个接口</span></span><br><span class="line">                <span class="comment">// 在初始化的时候，spring会调用postProcessBeanFactory方法。</span></span><br><span class="line">                <span class="keyword">this</span>.postProcessBeanFactory(beanFactory);</span><br><span class="line"></span><br><span class="line">                <span class="keyword">this</span>.invokeBeanFactoryPostProcessors(beanFactory);</span><br><span class="line">                <span class="keyword">this</span>.registerBeanPostProcessors(beanFactory);</span><br><span class="line">                <span class="keyword">this</span>.initMessageSource();</span><br><span class="line">                <span class="keyword">this</span>.initApplicationEventMulticaster();</span><br><span class="line">                <span class="keyword">this</span>.onRefresh();</span><br><span class="line">                <span class="keyword">this</span>.registerListeners();</span><br><span class="line">                <span class="comment">// 初始化所有的singleton bean</span></span><br><span class="line">                <span class="keyword">this</span>.finishBeanFactoryInitialization(beanFactory);</span><br><span class="line">                <span class="comment">// 广播bean的初始化完成。</span></span><br><span class="line">                <span class="keyword">this</span>.finishRefresh();</span><br><span class="line">            &#125; <span class="keyword">catch</span> (BeansException var9) &#123;</span><br><span class="line">                <span class="keyword">if</span> (<span class="keyword">this</span>.logger.isWarnEnabled()) &#123;</span><br><span class="line">                    <span class="keyword">this</span>.logger.warn(<span class="string">"Exception encountered during context initialization - cancelling refresh attempt: "</span> + var9);</span><br><span class="line">                &#125;</span><br><span class="line"></span><br><span class="line">                <span class="keyword">this</span>.destroyBeans();</span><br><span class="line">                <span class="keyword">this</span>.cancelRefresh(var9);</span><br><span class="line">                <span class="keyword">throw</span> var9;</span><br><span class="line">            &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">                <span class="keyword">this</span>.resetCommonCaches();</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<p>到这里可以明白一个事情，虽然Application继承自beanFactory，但是不应该将ApplicationContext看作beanFactory的实现类；而是应当看作是内部持有一个beanFactory的实例，所有的BeanFacotory操作是委托给context去做的。</p>
+
+
+  </article>
+  </script>
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js">
+  </script>
+  <div class="busuanzi center">
+    页阅读量:&nbsp;<span id="busuanzi_value_page_pv"></span>&nbsp;・&nbsp;
+    站访问量:&nbsp;<span id="busuanzi_value_site_pv"></span>&nbsp;・&nbsp;
+    站访客数:&nbsp;<span id="busuanzi_value_site_uv"></span>
+  </div>
+
+
+    
+
+
+
+
+
+    </div>
+  </div>
+  <footer class="page-footer"><div class="clearfix">
+</div>
+<div class="right-foot">
+    <div class="firstrow">
+        <a href="#top" target="_self">
+        <svg class="i-caret-right" viewBox="0 0 32 32" width="24" height="24" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="3">
+            <path d="M10 30 L26 16 10 2 Z"></path>
+        </svg>
+        </a>
+        © XXX 2016-2020
+    </div>
+    <div class="secondrow">
+        <a href="https://github.com/gaoryrt/hexo-theme-pln" target="_blank" rel="noopener">
+        Theme Pln
+        </a>
+    </div>
+</div>
+<div class="clearfix">
+</div>
+</footer>
+  <script src="//cdn.bootcss.com/jquery/2.2.1/jquery.min.js"></script>
+<script src="/js/search.min.js"></script>
+<script type="text/javascript">
+
+// disqus scripts
+
+
+// dropdown scripts
+$(".dropdown").click(function(event) {
+  var current = $(this);
+  event.stopPropagation();
+  $(current).children(".dropdown-content")[($(current).children(".dropdown-content").hasClass("open"))?'removeClass':'addClass']("open")
+});
+$(document).click(function(){
+    $(".dropdown-content").removeClass("open");
+})
+
+var path = "/search.xml";
+searchFunc(path, 'local-search-input', 'local-search-result');
+
+</script>
+
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginModelPath":"assets/","model":{"jsonPath":"live2d-widget-model-z16"},"display":{"position":"left","width":150,"height":345},"mobile":{"show":false},"log":false,"pluginJsPath":"lib/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+</html>

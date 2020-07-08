@@ -1,0 +1,282 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="google-site-verification" content="" />
+  
+  <title>Java基本数据类型与操作符</title>
+  <meta name="author" content="brandon">
+  <meta name="description" content="study hard">
+  
+  
+  <meta property="og:title" content="Java基本数据类型与操作符"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta property="og:site_name" content="brandon"/>
+  <link href="/apple-touch-icon-precomposed.png" sizes="180x180" rel="apple-touch-icon-precomposed">
+  <link rel="alternate" href="/atom.xml" title="brandon" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/m.min.css">
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML" async></script>
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+<body>
+  <a id="top"></a>
+  <div id="main">
+    <div class="main-ctnr">
+      <div class="behind">
+  <a href="/" class="back black-color">
+    <svg class="i-close" viewBox="0 0 32 32" width="22" height="22" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="3">
+        <path d="M2 30 L30 2 M30 30 L2 2"></path>
+    </svg>
+  </a>
+  <div class="description">
+    &nbsp;
+  </div>
+</div>
+
+
+  <article class="standard [layout]">
+    <div class="title">
+      
+  
+    <h1 class="page-title center">
+        Java基本数据类型与操作符
+    </h1>
+  
+
+
+    </div>
+    <div class="meta center">
+      <time datetime="2019-09-20T13:18:48.000Z" itemprop="datePublished">
+  <svg class="i-calendar" viewBox="0 0 32 32" width="16" height="16" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
+    <path d="M2 6 L2 30 30 30 30 6 Z M2 15 L30 15 M7 3 L7 9 M13 3 L13 9 M19 3 L19 9 M25 3 L25 9"></path>
+  </svg>
+  &nbsp;
+  2019-09-20
+</time>
+
+
+    
+    &nbsp;
+    <svg class="i-tag" viewBox="0 0 32 32" width="16" height="16" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
+      <circle cx="24" cy="8" r="2"></circle>
+      <path d="M2 18 L18 2 30 2 30 14 14 30 Z"></path>
+    </svg>
+    &nbsp;
+    <a href="/categories/Java/">Java</a>·<a href="/categories/Java/Java基础/">Java基础</a>
+
+
+
+
+    
+    &nbsp;
+    <svg class="i-tag" viewBox="0 0 32 32" width="16" height="16" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
+      <circle cx="24" cy="8" r="2"></circle>
+      <path d="M2 18 L18 2 30 2 30 14 14 30 Z"></path>
+    </svg>
+    &nbsp;
+    <a href="/tags/java基础/">java基础</a>
+
+
+    </div>
+    <hr>
+    
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#内置类型"><span class="toc-text">内置类型</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#基本数据类型的注意"><span class="toc-text">基本数据类型的注意</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#包装类型"><span class="toc-text">包装类型</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#缓冲池"><span class="toc-text">缓冲池</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#String"><span class="toc-text">String</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#不变性的用处"><span class="toc-text">不变性的用处</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#可以缓存hash值"><span class="toc-text">可以缓存hash值</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#String-pool的需要"><span class="toc-text">String pool的需要</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#安全性"><span class="toc-text">安全性</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#保证线程安全"><span class="toc-text">保证线程安全</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#String，-StringBuffer，-StringBuilder"><span class="toc-text">String， StringBuffer， StringBuilder</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#可变性"><span class="toc-text">可变性</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#线程安全"><span class="toc-text">线程安全</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#String-Pool"><span class="toc-text">String Pool</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#new-String-“abd”"><span class="toc-text">new String(“abd”)</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#操作符"><span class="toc-text">操作符</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#赋值操作符"><span class="toc-text">赋值操作符</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#参数传递"><span class="toc-text">参数传递</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#float和double"><span class="toc-text">float和double</span></a></li></ol></li></ol>
+    
+    <div class="picture-container">
+      
+    </div>
+    <p>Java数据类型分为内置类型和扩展类型两大类。内置类型就是基础类型，如short, int, long, float, double, boolean, byte, char. 扩展类型就是基本类型的扩展类。</p>
+<h2 id="内置类型"><a href="#内置类型" class="headerlink" title="内置类型"></a>内置类型</h2><table>
+<thead>
+<tr>
+<th align="center">类型名称</th>
+<th align="center">类型定义</th>
+<th align="center">类型取值</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">boolean</td>
+<td align="center">布尔值，做二元判断</td>
+<td align="center">true，false</td>
+</tr>
+<tr>
+<td align="center">byte</td>
+<td align="center">八位有符号整数</td>
+<td align="center">最小值-128, 最大值 127</td>
+</tr>
+<tr>
+<td align="center">short</td>
+<td align="center">16位有符号整数</td>
+<td align="center">最小值-32768， 最大值32767</td>
+</tr>
+<tr>
+<td align="center">int</td>
+<td align="center">32位有符号整数</td>
+<td align="center">最小值-2147483648，最大值2147483647</td>
+</tr>
+<tr>
+<td align="center">long</td>
+<td align="center">64位有符号整数</td>
+<td align="center">最小值(-2^63), 最大值是 2^63-1</td>
+</tr>
+<tr>
+<td align="center">float</td>
+<td align="center">32位浮点数</td>
+<td align="center">1.4E-45~3.4028235E38</td>
+</tr>
+<tr>
+<td align="center">double</td>
+<td align="center">64位浮点数</td>
+<td align="center">4.9E-324~1.7976931348623157E308</td>
+</tr>
+<tr>
+<td align="center">char</td>
+<td align="center">16位Unicode字符</td>
+<td align="center"></td>
+</tr>
+</tbody></table>
+<h3 id="基本数据类型的注意"><a href="#基本数据类型的注意" class="headerlink" title="基本数据类型的注意"></a>基本数据类型的注意</h3><ul>
+<li><p>boolean 只有两个值：true、false，可以使用 1 bit 来存储，但是具体大小没有明确规定。JVM 会在编译时期将 boolean 类型的数据转换为 int，使用 1 来表示 true，0 表示 false。JVM 支持 boolean 数组，但是是通过读写 byte 数组来实现的。</p>
+</li>
+<li><p>浮点数在使用的时候难以确定。在实际应用中，在经历了一系列的运算之后，在逻辑上应该等于某个值，但是使用(==)运算符的时候，可能会返回false,或者比较两个浮点数大小的时候，可能会出现相反的结果。所以我们在比较浮点数的时候，不能简单的使用(==, &lt;,&gt;)运算符，应该规定一个精度，再比较。</p>
+</li>
+</ul>
+<h2 id="包装类型"><a href="#包装类型" class="headerlink" title="包装类型"></a>包装类型</h2><p>每个基本数据类型，都有一个包装类型。包装类型都是使用final关键字修饰的类，所以不能继承。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Integer x = <span class="number">2</span>; <span class="comment">// 装箱，使用了Integer.valueOf(2)</span></span><br><span class="line"><span class="keyword">int</span> y = x; <span class="comment">//拆箱,使用了x.intValue();</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="缓冲池"><a href="#缓冲池" class="headerlink" title="缓冲池"></a>缓冲池</h3><p>new Integer(123) 和 Integer.valueOf(123)的区别是</p>
+<ul>
+<li>new Integer(123) 每次都会创建一个新的对象</li>
+<li>Integer.valueOf(123) 会首先使用缓冲池中的对象，如果没有才重新创建一个新的对象。</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">Integer x1 = <span class="keyword">new</span> Integer(<span class="number">123</span>);</span><br><span class="line">Integer x2 = <span class="keyword">new</span> Integer(<span class="number">123</span>);</span><br><span class="line">System.out.println(x1 == x2); <span class="comment">// false</span></span><br><span class="line">Integer y1 = Integer.valueOf(<span class="number">123</span>);</span><br><span class="line">Integer y2 = Integer.valueOf(<span class="number">123</span>);</span><br><span class="line">System.out.println(y1 == y2); <span class="comment">// true</span></span><br></pre></td></tr></table></figure>
+
+<p>valueOf方法的主要思想是，首先在缓冲池查找相关值是不是在缓冲池中，如果在就直接返回，没有再重新创建。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Integer <span class="title">valueOf</span><span class="params">(<span class="keyword">int</span> i)</span></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(i &gt;= IntegerCache.low &amp;&amp; i &lt;= IntegerCache.high)&#123;</span><br><span class="line">        <span class="keyword">return</span> IntegerCache.cache[i + (-IntegerCache.low)];</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> Integer(i);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在Java8中，缓冲池的大小扩展为-128~127</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 创建缓冲池的代码。</span></span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> low = -<span class="number">128</span>;</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> high;</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">final</span> Integer cache[];</span><br><span class="line">    <span class="keyword">static</span>&#123;</span><br><span class="line">        <span class="keyword">int</span> h = <span class="number">127</span>;</span><br><span class="line">        <span class="comment">// 从属性文件中获取配置</span></span><br><span class="line">        String integerCacheHighPropValue = </span><br><span class="line">            sum.misc.VM.getSgetSavedProperty(<span class="string">"java.lang.Integer.IntegerCache.high"</span>);</span><br><span class="line">        <span class="keyword">if</span>(integerCacheHighPropValue != <span class="keyword">null</span>)&#123;</span><br><span class="line">            <span class="keyword">int</span> i = praseInt(intgerCacheHighPropValue);</span><br><span class="line">            i = Math.max(i, <span class="number">127</span>);</span><br><span class="line">            <span class="comment">// 数组最长的长度是Integer.MAX_VALUE;</span></span><br><span class="line">            h = Math.min(i, Integer.MAX_VALUE - (-low) - <span class="number">1</span>);</span><br><span class="line">        &#125;<span class="keyword">catch</span>( NumberFormatException nfe) &#123;</span><br><span class="line">            <span class="comment">// If the property cannot be parsed into an int, ignore it.</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    high = h;</span><br><span class="line"></span><br><span class="line">    cache = <span class="keyword">new</span> Integer[(high - low) - <span class="number">1</span>];</span><br><span class="line">    <span class="keyword">int</span> j = low;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> k = <span class="number">0</span>; k &lt; cache.length; k++)</span><br><span class="line">        cache[k] = <span class="keyword">new</span> Integer(j++);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// range [-128, 127] must be interned (JLS7 5.1.7)</span></span><br><span class="line">    <span class="keyword">assert</span> IntegerCache.high &gt;= <span class="number">127</span>;</span><br></pre></td></tr></table></figure>
+
+<p>在自动装箱的过程中，会调用valueOf(int i)方法。因此在多个相同的数值而且在缓冲池中，就会直接返回缓冲池中的对象。</p>
+<p>基本数据类型的缓冲池大小：</p>
+<ul>
+<li>boolean values true and false</li>
+<li>all byte values</li>
+<li>short values between -128 and 127</li>
+<li>int values between -128 and 127</li>
+<li>char in the range \u0000 to \u007F<br>如果值在缓冲池中，就会直接返回缓冲池中的内容。</li>
+</ul>
+<h2 id="String"><a href="#String" class="headerlink" title="String"></a>String</h2><p>跟其他包装类一样，String是不可变对象，不能被继承。<br>在java8中，String使用char[]存储数据</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">final</span> <span class="class"><span class="keyword">class</span> <span class="title">String</span> <span class="keyword">implements</span> <span class="title">Serializable</span>,</span></span><br><span class="line"><span class="class"> <span class="title">Comparable</span>&lt;<span class="title">String</span>&gt;,</span></span><br><span class="line"><span class="class">  <span class="title">CharSequence</span></span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> <span class="keyword">char</span> value[];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在Java9之中，使用byte数组存储数据，并用coder来标识使用哪种编码</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">final</span> <span class="class"><span class="keyword">class</span> <span class="title">String</span> <span class="keyword">implements</span> <span class="title">Serializable</span>,</span></span><br><span class="line"><span class="class"><span class="title">Comparable</span>&lt;<span class="title">String</span>&gt;, <span class="title">CharSequence</span></span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> <span class="keyword">byte</span> value[];</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> <span class="keyword">byte</span> coder;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>为了保证String数组的不变性，使用final来修饰value数组，保证在数组初始化之后，不会被改变，并且没有提供修改value数组的方法，从而保证了String的不变性。</p>
+<h3 id="不变性的用处"><a href="#不变性的用处" class="headerlink" title="不变性的用处"></a>不变性的用处</h3><h4 id="可以缓存hash值"><a href="#可以缓存hash值" class="headerlink" title="可以缓存hash值"></a>可以缓存hash值</h4><p>因为String中的hash值经常被使用，例如使用String作为hash的key值，不可变特性可以使得hash值可以不变，只需要进行一次运算。</p>
+<h4 id="String-pool的需要"><a href="#String-pool的需要" class="headerlink" title="String pool的需要"></a>String pool的需要</h4><p>如果一个String的值已经被创建过了，那么就会从String pool中获取到引用。</p>
+<h4 id="安全性"><a href="#安全性" class="headerlink" title="安全性"></a>安全性</h4><p>因为String对象经常被用做参数传递，比较Request中的参数就是使用String来传输的。如果在网络较差的时候，String不能保证不可变性，在传输过程中就会被改变。也在网络连接中，如果String被改变，改变String的乙方以为连接他的是其他主机，但并不是。</p>
+<h4 id="保证线程安全"><a href="#保证线程安全" class="headerlink" title="保证线程安全"></a>保证线程安全</h4><p>在并发条件之下，其他线程不能改变String的值，这就保证了线程安全。</p>
+<h3 id="String，-StringBuffer，-StringBuilder"><a href="#String，-StringBuffer，-StringBuilder" class="headerlink" title="String， StringBuffer， StringBuilder"></a>String， StringBuffer， StringBuilder</h3><h4 id="可变性"><a href="#可变性" class="headerlink" title="可变性"></a>可变性</h4><p>String 不可变<br>StringBuffer和StringBuilder是可变的</p>
+<h4 id="线程安全"><a href="#线程安全" class="headerlink" title="线程安全"></a>线程安全</h4><p>String 是线程安全的， StringBuffer是线程安全的，内部使用Synchronized<br>StringBuilder是线程不安全的。</p>
+<h3 id="String-Pool"><a href="#String-Pool" class="headerlink" title="String Pool"></a>String Pool</h3><p>首先查看一下jvm中的内存简略分布<br><img src="https://brandonxcc.top/jvm.jpg" alt></p>
+<p>String类型的常量池比较特殊，主要使用方法有两种</p>
+<ul>
+<li>直接使用双引号声明出来的String对象会直接存储在常量池中</li>
+<li>使用new关键字声明的String对象，可以使用intern方法，将String对象存放在常量池中。intern会首先判断String对象是否在常量池中，如果不存在就会将String对象存放在常量池中。</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 直接使用双引号声明String对象</span></span><br><span class="line">String a = <span class="string">"aaa"</span>;</span><br><span class="line">String b = <span class="string">"aaa"</span>;</span><br><span class="line"><span class="comment">// 因为使用双引号声明的String对象会首先在String pool中查找，如果有相同的对象，则直接返回引用。</span></span><br><span class="line">System.out.println(a == b); <span class="comment">// true</span></span><br></pre></td></tr></table></figure>
+
+<p>下例是首先使用new String(),创建两个不同的String对象。而s3，s4是s1.intern之后取得的一个引用。intern首先将s1存放在常量池中，然后返回一个引用，所以s3，s4是同一个引用。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">String s1 = <span class="keyword">new</span> String(<span class="string">"bbb"</span>);</span><br><span class="line">String s2 = <span class="keyword">new</span> String(<span class="string">"bbb"</span>);</span><br><span class="line">System.out.println(s1 == s2)  <span class="comment">// false;</span></span><br><span class="line"></span><br><span class="line">String s3 = s1.intern();</span><br><span class="line">String s4 = s1.intern();</span><br><span class="line">System.out.println(s3 == s4);  <span class="comment">// true;</span></span><br></pre></td></tr></table></figure>
+
+<p><a href="https://tech.meituan.com/2014/03/06/in-depth-understanding-string-intern.html" target="_blank" rel="noopener">深入解析String#intern</a></p>
+<h4 id="new-String-“abd”"><a href="#new-String-“abd”" class="headerlink" title="new String(“abd”)"></a>new String(“abd”)</h4><p>在使用new 关键字的时候，会创建两个对象(前提是String pool中没有”abd”)</p>
+<ul>
+<li>“abd” 是字符串字面量，在编译期的时候会创建一个字符串对象，指向”abd”这个字符串字面量</li>
+<li>在Java堆中创建一个字符串对象</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">NewStringTest</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        String s = <span class="keyword">new</span> String(<span class="string">"abc"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">使用javap -verbose进行反编译，获得</span><br><span class="line"></span><br><span class="line"><span class="comment">// ...</span></span><br><span class="line">Constant pool:</span><br><span class="line"><span class="comment">// ...</span></span><br><span class="line">   #2 = Class              #18            // java/lang/String</span><br><span class="line">   #3 = String             #19            // abc</span><br><span class="line"><span class="comment">// ...</span></span><br><span class="line">  #18 = Utf8               java/lang/String</span><br><span class="line">  #19 = Utf8               abc</span><br><span class="line"><span class="comment">// ...</span></span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(java.lang.String[])</span></span>;</span><br><span class="line">    descriptor: ([Ljava/lang/String;)V</span><br><span class="line">    flags: ACC_PUBLIC, ACC_STATIC</span><br><span class="line">    Code:</span><br><span class="line">      stack=<span class="number">3</span>, locals=<span class="number">2</span>, args_size=<span class="number">1</span></span><br><span class="line">         0: new           #2                  // class java/lang/String</span><br><span class="line">         <span class="number">3</span>: dup</span><br><span class="line">         4: ldc           #3                  // String abc</span><br><span class="line">         6: invokespecial #4                  // Method java/lang/String."&lt;init&gt;":(Ljava/lang/String;)V</span><br><span class="line">         <span class="number">9</span>: astore_1</span><br><span class="line"><span class="comment">// ...</span></span><br></pre></td></tr></table></figure>
+
+<p>在 Constant Pool 中，#19 存储这字符串字面量 “abc”，#3 是 String Pool 的字符串对象，它指向 #19 这个字符串字面量。在 main 方法中，0: 行使用 new #2 在堆中创建一个字符串对象，并且使用 ldc #3 将 String Pool 中的字符串对象作为 String 构造函数的参数。</p>
+<h2 id="操作符"><a href="#操作符" class="headerlink" title="操作符"></a>操作符</h2><h3 id="赋值操作符"><a href="#赋值操作符" class="headerlink" title="赋值操作符"></a>赋值操作符</h3><p>“=” 是一个赋值操作符，表示将右边的值复制给左边。右边可以是常数、变量或者复杂表达式(只要能表示一个确切的数)。左边必须是一个明确的、已命名的变量。在对一个对象“赋值”的时候，准确的来说，是操作的对象的引用。实际是上<br>将“引用”从一个地方复制到另一个地方。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Dog</span></span>&#123;</span><br><span class="line">    <span class="keyword">private</span> String name;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Dog</span><span class="params">(String name)</span></span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.name = name;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getName</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">this</span>.name;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">        Dog dog = <span class="keyword">new</span> Dog(<span class="string">"abc"</span>);</span><br><span class="line">        Dog dog1 = dog;</span><br><span class="line">        System.out.println(dog1.getName); <span class="comment">// abc</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="参数传递"><a href="#参数传递" class="headerlink" title="参数传递"></a>参数传递</h4><p>Java方法中的参数的是以值传递的形式传入方法中，并非引用传递</p>
+<p>以下代码中Dog dog的dog是一个指针，存储的是对象的地址。在将一个参数传入方法中的时候，本质上是将对象的地址的值传入到形参中。因此在方法中使指针引用其他对象，那么这两个指针指向的是两个不同的地址。在改变其中一方的所指对象内容的时候，另外一方不受影响</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Dog</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    String name;</span><br><span class="line"></span><br><span class="line">    Dog(String name) &#123;</span><br><span class="line">        <span class="keyword">this</span>.name = name;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function">String <span class="title">getName</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">this</span>.name;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">setName</span><span class="params">(String name)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.name = name;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function">String <span class="title">getObjectAddress</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">super</span>.toString();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">PassByValueExample</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        Dog dog = <span class="keyword">new</span> Dog(<span class="string">"A"</span>);</span><br><span class="line">        System.out.println(dog.getObjectAddress()); <span class="comment">// Dog@4554617c</span></span><br><span class="line">        func(dog);</span><br><span class="line">        System.out.println(dog.getObjectAddress()); <span class="comment">// Dog@4554617c</span></span><br><span class="line">        System.out.println(dog.getName());          <span class="comment">// A</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">func</span><span class="params">(Dog dog)</span> </span>&#123;</span><br><span class="line">        System.out.println(dog.getObjectAddress()); <span class="comment">// Dog@4554617c</span></span><br><span class="line">        dog = <span class="keyword">new</span> Dog(<span class="string">"B"</span>);</span><br><span class="line">        System.out.println(dog.getObjectAddress()); <span class="comment">// Dog@74a14482</span></span><br><span class="line">        System.out.println(dog.getName());          <span class="comment">// B</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="float和double"><a href="#float和double" class="headerlink" title="float和double"></a>float和double</h3><p>Java不能隐式执行向下转型，因为这个会使得精度降低</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1.1</span>字面量属于<span class="keyword">double</span>，不能将<span class="number">1.1</span>直接赋值给<span class="keyword">float</span>型，这是向下转型</span><br><span class="line"><span class="comment">// float t = 1.1;</span></span><br><span class="line"><span class="number">1.1f</span>才是<span class="keyword">float</span>类型</span><br><span class="line"><span class="keyword">float</span> t  = <span class="number">1.1f</span>;</span><br></pre></td></tr></table></figure>
+
+
+
+  </article>
+  </script>
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js">
+  </script>
+  <div class="busuanzi center">
+    页阅读量:&nbsp;<span id="busuanzi_value_page_pv"></span>&nbsp;・&nbsp;
+    站访问量:&nbsp;<span id="busuanzi_value_site_pv"></span>&nbsp;・&nbsp;
+    站访客数:&nbsp;<span id="busuanzi_value_site_uv"></span>
+  </div>
+
+
+    
+
+
+
+
+
+    </div>
+  </div>
+  <footer class="page-footer"><div class="clearfix">
+</div>
+<div class="right-foot">
+    <div class="firstrow">
+        <a href="#top" target="_self">
+        <svg class="i-caret-right" viewBox="0 0 32 32" width="24" height="24" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="3">
+            <path d="M10 30 L26 16 10 2 Z"></path>
+        </svg>
+        </a>
+        © XXX 2016-2020
+    </div>
+    <div class="secondrow">
+        <a href="https://github.com/gaoryrt/hexo-theme-pln" target="_blank" rel="noopener">
+        Theme Pln
+        </a>
+    </div>
+</div>
+<div class="clearfix">
+</div>
+</footer>
+  <script src="//cdn.bootcss.com/jquery/2.2.1/jquery.min.js"></script>
+<script src="/js/search.min.js"></script>
+<script type="text/javascript">
+
+// disqus scripts
+
+
+// dropdown scripts
+$(".dropdown").click(function(event) {
+  var current = $(this);
+  event.stopPropagation();
+  $(current).children(".dropdown-content")[($(current).children(".dropdown-content").hasClass("open"))?'removeClass':'addClass']("open")
+});
+$(document).click(function(){
+    $(".dropdown-content").removeClass("open");
+})
+
+var path = "/search.xml";
+searchFunc(path, 'local-search-input', 'local-search-result');
+
+</script>
+
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginModelPath":"assets/","model":{"jsonPath":"live2d-widget-model-z16"},"display":{"position":"left","width":150,"height":345},"mobile":{"show":false},"log":false,"pluginJsPath":"lib/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+</html>
