@@ -99,7 +99,7 @@
 <p>  VARCHAR类型用于存储可变长字符串，最常见的字符串数据类型。比定长类型更加节省空间。他只使用必要的空间(越短的字符串使用越少的空间)。<br>  VARCHAR需要使用1或2个字节记录字符串的长度：如果列的<code>最大长度小于或等于255字节</code>，则只使用1个字节表示，否则使用2个字节表表示。<br>  VARCHAR节省了存储空间，所以对性能也有帮助。但是由于行是变长的，在UPDATE可能使得行变得比原来更长，这就需要做额外的工作。如果一个行占用的空间增长，并且在页内没有更多的存储空间可以存储。不同的存储引擎对这个解决方法不同，MyISAM会将行拆分成不同的片段存储，InnoDB则需要分裂页来使行可以放进页内。</p>
 </li>
 <li><p>CHAR</p>
-<p>  当存储CHAR值的时候，MySQL会删除所有的末尾空格。CHAR值会根据需要采用空格进行填充以方便比较。以下是对该行为的测试(所用mysql8.0.11)<br>  <img src="https://brandonxcc.top/char%E6%8F%92%E5%85%A5%E8%AF%AD%E5%8F%A5.png" alt><br>  <img src="https://brandonxcc.top/char%E6%9F%A5%E8%AF%A2%E8%AF%AD%E5%8F%A5.png" alt><br>  但是使用varchar就会保存末尾的空格<br>  <img src="https://brandonxcc.top/varchar%E6%9F%A5%E8%AF%A2.png" alt><br>  CHAR适合存储一些很短的字符串，或者所有字符串都接近一个长度。对于经常变更的数据，CHAR也比VARCHAR更好，因为定长的CHAR很少产生一些碎片。对于存储一些非常短的列，char也比varchar更加有优势，比如使用char(1) 来存储只有Y和N的值，如果单个字符集只需要一个字节，但是varchar(1)则需要两个字节，因为还有一个额外记录长度的字节。</p>
+<p>  当存储CHAR值的时候，MySQL会删除所有的末尾空格。CHAR值会根据需要采用空格进行填充以方便比较。以下是对该行为的测试(所用mysql8.0.11)<br>  <img src="https://brandonxcc.top/char%E6%8F%92%E5%85%A5%E8%AF%AD%E5%8F%A5.png"><br>  <img src="https://brandonxcc.top/char%E6%9F%A5%E8%AF%A2%E8%AF%AD%E5%8F%A5.png"><br>  但是使用varchar就会保存末尾的空格<br>  <img src="https://brandonxcc.top/varchar%E6%9F%A5%E8%AF%A2.png"><br>  CHAR适合存储一些很短的字符串，或者所有字符串都接近一个长度。对于经常变更的数据，CHAR也比VARCHAR更好，因为定长的CHAR很少产生一些碎片。对于存储一些非常短的列，char也比varchar更加有优势，比如使用char(1) 来存储只有Y和N的值，如果单个字符集只需要一个字节，但是varchar(1)则需要两个字节，因为还有一个额外记录长度的字节。</p>
 </li>
 <li><p>更大的空间并不是明智的</p>
 <p>使用varchar(5)与使用varchar(200)来存储’hello’所用的空间是一致的。但是更长的列会消耗更多的内存，因为MySQL通常会分配固定大小的内存块来保存内部值。尤其是使用内存临时表进行排序或操作时会特别糟糕。</p>
@@ -147,19 +147,17 @@
 <li><p>全能的枚举</p>
 <p>  防止过度使用枚举(ENUM)。</p>
   <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">create</span> <span class="keyword">table</span> ... (country enum(<span class="string">''</span>, <span class="string">'1'</span>,<span class="string">'2'</span>));</span><br></pre></td></tr></table></figure>
-
 <p>  这样的模式是非常糟糕的。而且在添加枚举值的时候，需要使用alter table来修改整个表的值，在MySQL5.0之前，alter是一个阻塞操作。即便是在MySQL5.0之后如果不是在列表的末尾添加值，也会一样需要alter table</p>
 </li>
 <li><p>变相的枚举</p>
 <p>  枚举列允许在列中存储一组定义值中的单个值，集合(SET)列则允许在列中存储一组定义值的一个或者多个。有时候可能容易导致混乱</p>
   <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">create</span> <span class="keyword">table</span> ... (is_default <span class="keyword">set</span>(<span class="string">'y'</span>,<span class="string">'n'</span>) <span class="keyword">not</span> <span class="literal">null</span> <span class="keyword">default</span> <span class="string">'n'</span>)</span><br></pre></td></tr></table></figure>
-
 <p>  👆 如果是真和假两种情况不会同时出现，那么毫不疑问应该使用枚举列代表集合列</p>
 </li>
 <li><p>非此发明的null</p>
 <p>  之前提及避免使用null，并且应该尽可能的考虑替代方案。即使需要存储一个事实上的“空值”到表中的时候，也不一定使用null，可以使用0、某个特殊值、空字符串来代替。</p>
 <p>  但是遵循这个原则也不要走极端。当确实需要表示未知值的时候，也不要抗拒使用null。在一些场景中，使用null可能会比某个神奇常数更好。从特定类型的值域中选择一个不可能的值，例如使用一个-1表示未知的整数，可能导致代码复杂更多，并且容易引入bug。</p>
-<p>  <img src="https://brandonxcc.top/%E6%A8%B1%E5%90%B9%E9%9B%AA.jpg" alt></p>
+<p>  <img src="https://brandonxcc.top/%E6%A8%B1%E5%90%B9%E9%9B%AA.jpg"></p>
 </li>
 </ul>
 

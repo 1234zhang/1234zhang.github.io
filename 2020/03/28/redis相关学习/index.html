@@ -78,8 +78,7 @@
     <div class="post-content"><h1 id="写在前面的话"><a href="#写在前面的话" class="headerlink" title="写在前面的话"></a>写在前面的话</h1><p>redis作为一个开源的，高级键值存储和一个适用的解决方案，已经越来越在构建<code>高性能</code>，<code>高扩展</code>的WEB应用上发挥着举足轻重的作用。</p>
 <p>当如今互联网技术架构中Redis已经成为应用最为广泛的中间件之一，他也是中高级后端工程技术面试中面试官最喜欢问的工程技能之一，不仅仅要求我们对基本的使用进行掌握，更要求深层次地理解Redis内部实现的细节原理。</p>
 <h1 id="Redis基础篇"><a href="#Redis基础篇" class="headerlink" title="Redis基础篇"></a>Redis基础篇</h1><h2 id="redis的基本概念"><a href="#redis的基本概念" class="headerlink" title="redis的基本概念"></a>redis的基本概念</h2><p>Redis是一个使用c语言编写的，开源的高性能非关系型(NoSQL -&gt; not only sql)的键值对数据库。</p>
-<h2 id="Redis简单的数据结构"><a href="#Redis简单的数据结构" class="headerlink" title="Redis简单的数据结构"></a>Redis简单的数据结构</h2><p>Redis可以存储<code>键</code>和<code>不同类型数据结构值</code>之间的映射关系。键只能是字符串类型，而值除了支持<code>最基本的五种数据类型</code>之外，还支持一些<code>高级数据类型</code>：
-<img src="https://brandonxcc.top/redis%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84.png" alt="avatar"></p>
+<h2 id="Redis简单的数据结构"><a href="#Redis简单的数据结构" class="headerlink" title="Redis简单的数据结构"></a>Redis简单的数据结构</h2><p>Redis可以存储<code>键</code>和<code>不同类型数据结构值</code>之间的映射关系。键只能是字符串类型，而值除了支持<code>最基本的五种数据类型</code>之外，还支持一些<code>高级数据类型</code>：<br><img src="https://brandonxcc.top/redis%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84.png" alt="avatar"></p>
 <h2 id="Redis小结"><a href="#Redis小结" class="headerlink" title="Redis小结"></a>Redis小结</h2><p>与传统数据库不同的是Redis的数据是<code>存在内存中</code>的，所以<code>读写速度</code>非常<code>快</code>,因此Redis被广泛用于缓存方向，每秒可以处理超过10万次读写操作，是已知的性能最快的Key-Value数据库。Redis还经常用来用作分布式锁。</p>
 <h2 id="Redis优缺点"><a href="#Redis优缺点" class="headerlink" title="Redis优缺点"></a>Redis优缺点</h2><h3 id="优点"><a href="#优点" class="headerlink" title="优点"></a>优点</h3><ul>
 <li>读写性能优秀：Redis读的速度是11000次/s，写的速度是8100次/s。</li>
